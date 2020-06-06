@@ -1,0 +1,38 @@
+h1, h2, p, ol, ul, hr, dl {
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+  min-width: 10cm;
+  line-height: 125%;
+}
+
+dt {
+  font-weight: bold;
+}
+
+dd {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+a:link, a:visited, a:active {
+  color: #606060;
+}
+
+a:hover {
+  color: red;
+}
+
+p.bio {
+  oveflow: auto;
+  clear: right;
+  display:table;
+}
+
+img.bio {
+  float:left;
+  margin-right: 6px;
+  height: 128px;
+  width: 128px;
+  border: solid 1px #A0A0A0;
+}
