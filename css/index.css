@@ -15,12 +15,20 @@ dd {
   margin-bottom: 1em;
 }
 
-a:link, a:visited, a:active {
-  color: #606060;
+body.index a:link, body.index a:visited, body.index a:active {
+  color: blue;
+  text-decoration: none;
 }
 
-a:hover {
-  color: red;
+body.content a:link, body.content a:visited, body.content a:active {
+  color: #606060;
+  text-decoration: none;
+  border-bottom: solid 1px #E0E0E0;
+}
+
+body.index a:hover, body.content a:hover {
+  color: blue;
+  text-decoration: underline;
 }
 
 p.bio {
