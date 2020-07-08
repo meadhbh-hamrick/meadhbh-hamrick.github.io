@@ -1,19 +1,57 @@
-h1, h2, p, ol, ul, hr, dl {
-  margin-left: auto;
-  margin-right: auto;
-  width: 50%;
-  min-width: 9cm;
+body {
+  font-family: "Times New Roman", Times, serif;
+}
+
+title {
+  display: block;
+  font-size: 1.5em;
+  font-weight: bold;
+  border-bottom: solid 3px black;
+  line-height: 133%;
+}
+
+h2 {
+  font-size: 1.25em;
+}
+
+pre {
+  margin: -1em 0px 1em 0px;
+  orphans: 4;
+}
+
+@media screen {
+  title, h2, p, ol, ul, hr, dl, pre {
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+    min-width: 9cm;
+  }
+}
+
+@media print {
+  body {
+    font-size: 90%;
+  }
+
+  code {
+    font-size: 85%;
+  }
+}
+
+p, ol, ul, dl, li, hr, br {
   line-height: 125%;
 }
 
-dt {
-  font-weight: bold;
+p, li {
+  text-align: justify;
+  text-justify: inter-word;
 }
 
-dd {
-  margin-top: 1em;
-  margin-bottom: 1em;
-  margin-right: 1em;
+li:not(:last-child) {
+  margin-bottom: .25em;
+}
+code {
+  font-weight: bold;
 }
 
 body.index a:link, body.index a:visited, body.index a:active {
