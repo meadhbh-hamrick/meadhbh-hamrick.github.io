@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" type="text/css" href="../../../css/index.css"/>
+    <title>RISC-V is a Base Instruction Set Plus Extensions</title>
+    <meta charset="utf-8"/>
+    <meta name="description" content="An introduction to RISC-V, in which we describe the instruction set."/>
+  </head>
+  <body class="content">
+    <title>RISC-V is a Base Instruction Set Plus Extensions</title>
+
+    <a name="00_Intro"></a>
+    <section id="00_Intro">
+      <p>
+        This is a brief, informal introduction to the
+        RISC-V Instruction Set Architecture. For the
+        official description, you'll want to see the
+        RISC-V Instruction Set Manual
+        <a href="#ref_1">[1]</a>. This document is
+        intended to give you just enough context to know
+        where to look for definitive answers.
+      </p>
+
+      <p>
+        After reading this document you should know:
+      </p>
+
+      <ul>
+        <li>"RISC-V" is a series of specifications describing an Instruction Set Architecture.</li>
+        <li>The specifications are provided free-of-charge and there is no fee to implement them.</li>
+        <li>There's at least one open-source core generator that takes specifications and produces Verilog.</li>
+        <li>The specifications currently describe 32-bit and 64-bit variants.</li>
+        <li>The instruction set is divided into a base "Integer" specification and a number of extensions.</li>
+        <li>Extensions exist for Floating-Point, Compressed Instructions, Atomic Operations, Hardware Multiplication (and more.)</li>
+        <li>RISC-V is supported by GCC & LLVM and an increasing number of commercial tools.</li>
+      </ul>
+    </section>
+
+    <section id="01_History">
+      
+      <h2>A Bit of History and Business Perspective</h2>
+      
+      <p>
+        Let's start with the most basic question, "What
+        is RISC-V?"
+      </p>
+
+      <p>
+        RISC-V is a family of specifications describing
+        an Instruction Set Architecture (ISA). While
+        there are several chips which implement the
+        RISC-V instruction set, the chips themselves are
+        not "RISC-V." They may implement the RISC-V
+        specifications, but they themselves are not
+        "RISC-V." This is a similar to the ARM™ and
+        MIPS™ processor architectures; the names "ARM"
+        and "MIPS" refer to the description of the
+        architecture and not to any one particular
+        implementation. Like ARM and MIPS (and POWER and
+        SPARC), there are several different
+        implementations from multiple companies.
+      </p>
+
+      <p>
+        Unlike ARM, MIPS and POWER, there's no fee for
+        using the RISC-V specifications to create (and
+        sell) your own implementation. If you've heard
+        one thing about RISC-V, it's probably that it's
+        an "Open Source Instruction Set Architecture."
+        This doesn't mean RISC-V chips are cost-free; it
+        just means that you're free to download the free
+        RISC-V specification(s) and use them. No one's
+        going to come around trying to collect a fee for
+        an architecture license.
+      </p>
+
+      <p>
+        But building chips is expensive. Most chips are
+        designed using customized tools that took
+        hundreds (if not thousands) of man-months to
+        develop. For companies that design chips, these
+        tools are the corporate "crown jewels." This is
+        the software that makes it easy to rapidly
+        iterate on new designs when adding features or
+        fixing bugs so it's no surprise companies guard
+        this software jealously.
+      </p>
+
+      <p>
+        But the RISC-V team went the other way. Instead
+        of making their design software proprietary,
+        they open sourced it. The "Rocket Chip
+        Generator" <a href="#ref_6">[6]</a> software
+        takes a specification for a RISC-V processor and
+        outputs Verilog describing a working RISC-V
+        core. System developers can then take that
+        Verilog and use it for simulation or synthesis.
+      </p>
+
+      <p>
+        And remember, the specifications and many tools
+        are open-source. Google took the Rocket Chip
+        Generator, forked it, added some enhancements and
+        published it back as the BottleRocket RV32IMC
+        Core <a href="#ref_7">[7]</a>. And a slightly
+        different team from UC Berkeley published tooling
+        to generate BOOM : The Berkeley Out-of-Order
+        Machine <a href="#ref_8">[8]</a>.
+      </p>
+
+      <p>
+        There's still a lot expense associated with
+        building chips. Even with the Instruction Set
+        Architecture and the Chip Generator being free
+        downloads, the cost of designing and
+        manufacturing your own chip isn't
+        insubstantial. But with an open specification
+        and at least one open-sourced design package,
+        it's relatively cheap to evaluate the RISC-V
+        architecture and extend the existing software to
+        better suit your needs.
+      </p>
+
+      <p>
+        And that's part of why people are talking about
+        RISC-V. Apart from the technology benefits, the
+        licensing model is pretty compelling from a
+        business perspective.
+      </p>
+
+      <p>
+        So when people talk about RISC-V, they're
+        probably talking about the freely available,
+        license-free Instruction Set Architecture or the
+        open-sourced tools (like the Rocket Chip
+        Generator) that amplify an engineering team's
+        efforts. There's also the RISC-V Foundation,
+        which is a non-profit spun up to officially own
+        the open-sourced design documents and coordinate
+        work on new specifications.
+      </p>
+
+      <p>
+        And from a business perspective, this is all
+        interesting because hardware engineering teams
+        can inexpensively extend the capabilities of the
+        base-level RISC-V cores. Larger companies will
+        find their design costs go down and startups
+        will find their ideas are finally possible.
+      </p>
+
+    </section>
+
+    <section id="02_The_Base_Spec">
+
+      <h2>What's In the Base Spec?</h2>
+
+      <p>
+        The specifications themselves describe an
+        abstract computer architecture, complete with a
+        description of registers, I/O and (more than
+        one) instruction to op-code mappings. If you
+        wanted to build a RISC-V processor or write
+        software for one, your first stop should be the
+        Unprivileged Instruction Set Architecture manual
+        <a href="#ref_1">[1]</a>.
+      </p>
+
+      <p>
+        The RISC-V specification defines a processor
+        architecture with 31 general-purpose registers
+        and a small collection of Control and Status
+        Registers (CSRs). It defines a "base level"
+        instruction set for processors with 32, 64 and
+        128 bit wide registers (though the 128 bit
+        specification is not complete.) The base-level
+        instruction set is fairly bare-bones, so a
+        series of standard extensions have been
+        specified. The idea here is not every chip
+        designer will want to use every extension, but
+        if they do, they should use the specifications
+        defined in the spec. An additional instruction
+        set is defined called RV32E (Embedded) that uses
+        only 15 general-purpose registers.
+      </p>
+
+      <p>
+        The base instruction sets are referred to as
+        RV32I, RV64I and RV128I and each extension is
+        identified with a letter: I for Integer, F for
+        Single-Precision and so on. To date, the most
+        popular extensions have been:
+      </p>
+
+      <ul>
+        <li><strong>I</strong> - Integer (Base)</li>
+        <li><strong>M</strong> - Hardware Multiply</li>
+        <li><strong>A</strong> - Atomic Operations</li>
+        <li><strong>C</strong> - Compressed Op Codes</li>
+        <li><strong>F</strong> - Single-Precision Floating Point</li>
+        <li><strong>D</strong> - Double-Precision Floating Point</li>
+        <li><strong>V</strong> - Vector</li>
+      </ul>
+      
+      <p>
+        To describe a core, it's common practice to add
+        the extensions you support to the end of the
+        base level instruction set. For instance, a 32
+        bit core with 31 registers that supports
+        hardware multiply and compressed instructions
+        would be "RV32IMC." The Integer, Multiply,
+        Atomic, Single and Double Precision Floating
+        Point extensions were considered so common, they
+        have a meta-abbreviation: "G" for
+        General-Purpose. So a RV64GC system is the same
+        as a RV64IMAFDC system.
+      </p>
+
+      <p>
+        The Base Integer instruction set itself defines
+        a standard (but small) set of instructions: load
+        from / store to memory and CSRs, add, branch /
+        jump, shift bits, logical operations,
+        etc. Readers familiar with other RISC
+        architectures will find nothing unusual except
+        maybe how small the base level instruction set
+        is.
+      </p>
+
+      <p>
+        When reading the specifications, it's worth
+        noting there are at least two naming conventions
+        for registers. The first simply names registers
+        x0 through x31. Chapter 25 of the current spec
+        describes the ABI naming convention. The ABI
+        naming convention is useful because it gives
+        semantic meaning to registers 0 through 15 which
+        are important for compressed instructions and
+        the RV32E (Embedded) ISA.
+      </p>
+
+      <p>
+        RISC-V instructions are multiples of 16-bits,
+        but both the 32 and 64 bit base instruction sets
+        define instructions in terms of 32-bits. The "C"
+        (Compressed) extension maps "commonly used"
+        32-bit instructions to 16-bit aliases. The
+        specification explains this was done to make
+        simpler 32-bit-only implementations possible,
+        but providing a standard way to increase code
+        density through 16-bit compressed instructions.
+      </p>
+
+      <p>
+        The RISC-V foundation sponsors projects to add
+        support to popular open source projects
+        including GCC, LLVM, QEMU and Linux. At the time
+        this document was written, RISC-V support had
+        been "up-streamed" to each of these projects.
+      </p>
+
+    </section>
+
+    <section id="02_Privileges">
+
+      <h2>The Privileged Architecture</h2>
+
+      <p>
+        While RISC-V isn't attempting to be all things
+        to all users, it is trying to be many things to
+        many users. The two main types of systems RISC-V
+        supports are small, embedded, single-application
+        devices and large, beefy, high-performance
+        processors that run "real" operating systems like
+        Linux or BSD.
+      </p>
+
+      <p>
+        Modern, secure operating systems essentially
+        require virtual memory support and the separation
+        between User and Supervisor modes. User mode
+        runs application code in a sandbox that doesn't
+        give the app unfettered access to the hardware or
+        other applications. Supervisor mode, which runs
+        the operating system kernel and probably device
+        drivers, <em>does</em> have such access.
+        have that access. User mode runs applications.
+        Supervisor mode runs operating systems. If you've
+        never heard of this before, the Wikipedia has a
+        decent page about protection rings and privilege
+        modes <a href="ref_9">[9]</a>.
+      </p>
+
+      <p>
+        Volume II of the RISC-V Instruction Set Manual
+        <a href="#ref_2">[2]</a> describes different
+        operating modes and the Control and Status
+        Registers (CSRs) that support features like
+        virtual memory.
+      </p>
+
+      <p>
+        The spec defines three modes: Machine, Supervisor
+        and User. We mentioned Supervisor and User above.
+        Machine mode is for embedded devices with no
+        mode-based security, or Hypervisors. Hypervisors
+        are like "super-operating-systems" that let
+        multiple instances of operating systems on one
+        physical CPU. Hypervisors are extremely important
+        to the modern tech ecosystem. Most cloud based
+        applications run in a hypervisor-enabled virtual
+        machine in someone's data center, somewhere.
+        If you're unfamiliar with hypervisors, the
+        Wikipedia has a decent article about the
+        concept <a href="#ref_10">[10]</a>.
+      </p>
+
+      <p>
+        With three defined modes, you may think there
+        are seven supported combinations of modes. But
+        modes build on each other. You'll never see a
+        RISC-V CPU without the Machine mode and if a
+        RISC-V CPU supports Supervisor mode, it will
+        also support User mode.  The spec defines three
+        combinations of modes and gives hints as to what
+        they would be used for:
+      </p>
+
+      <ul>
+        <li><strong>M</strong> - Used for simple embedded
+          systems.</li>
+        <li><strong>M, U</strong> - Used for secure
+          embedded systems.</li>
+        <li><strong>M, S, U</strong> - For systems
+          running modern Unix-like operating systems</li>
+      </ul>
+    </section>
+    
+    <section id="04_Everything_Else">
+      <h2>Everything Else</h2>
+
+      <p>
+        But there's way more to RISC-V than a couple of
+        spec documents. Even the list of extensions
+        mentioned above isn't complete. There's an
+        extension for Vector operations which should
+        accelerate complex math operations used in
+        cryptography and machine learning significantly
+        <a href="#ref_3">[3]</a>.
+      </p>
+
+      <p>
+        A pair of specifications: the debug spec
+        <a href="#ref_4">[4]</a> and the trace spec
+        <a href="#ref_5">[5]</a> define standard
+        interfaces debug tools can use to understand
+        what's happening in the CPU.
+      </p>
+
+      <p>
+        For a more complete picture of standardized
+        extensions, check out the Technical Working
+        Groups <a href="#ref_11">[11]</a> page at the
+        RISC-V Foundation Web Page
+        <a href="#ref_12">[12]</a>.
+      </p>
+    </section>
+    
+    <section id="03_References">
+      <h2>References</h2>
+
+      <p><strong>RISC-V Specifications &amp; Drafts</strong></p>
+
+      <ol>
+        <a name="ref_1"></a>
+        <li><a href="https://riscv.org/specifications/isa-spec-pdf/">RISC-V Instruction Set Manual - Volume I : Unprivileged ISA</a></li>
+
+        <a name="ref_2"></a>
+        <li><a href="https://riscv.org/specifications/privileged-isa/">RISC-V Instruction Set Manual - Volume II : Privileged Architecture</a></li>
+
+        <a name="ref_3"></a>
+        <li><a href="https://github.com/riscv/riscv-v-spec">Working Draft : RISC-V Vector Specification</a></li>
+
+        <a name="ref_4"></a>
+        <li><a href="https://riscv.org/specifications/debug-specification/">RISC-V External Debug Specification</a></li>
+
+        <a name="ref_5"></a>
+        <li><a href="https://github.com/riscv/riscv-trace-spec/blob/master/riscv-trace-spec.pdf">RISC-V Trace Specification</a></li>
+      </ol>
+
+      <p><strong>RISC-V Core Generators</strong></p>
+
+      <ol start="6">
+
+        <a name="ref_6"></a>
+        <li><a href="https://www2.eecs.berkeley.edu/Pubs/TechRpts/2016/EECS-2016-17.html">The Rocket Chip Generator</a></li>
+
+        <a name="ref_7"></a>
+        <li><a href="https://github.com/google/bottlerocket">Bottle-Rocket (an extension of the Rocket Chip Generator)</a></li>
+
+        <a name="ref_8"></a>
+        <li><a href="https://www2.eecs.berkeley.edu/Pubs/TechRpts/2017/EECS-2017-157.html">BOOM v2: an open-source out-of-order RISC-V core</a></li>
+      </ol>
+
+      <p><strong>Other References</strong></p>
+
+      <ol start="9">
+
+        <a name="ref_9"></a>
+        <li><a href="https://en.wikipedia.org/wiki/Protection_ring#SUPERVISOR-MODE">Protection Ring / Modes [Wikipedia]</a></li>
+
+        <a name="ref_10"></a>
+        <li><a href="https://en.wikipedia.org/wiki/Hypervisor">Hypervisor [Wikipedia]</a></li>
+
+        <a name="ref_11"></a>
+        <li><a href="https://riscv.org/directory-of-working-groups/">Directory of Working Groups [riscv.org]</a></li>
+
+        <a name="ref_12"></a>
+        <li><a href="https://riscv.org/">The RISC-V Foundation</a></li>
+      </ol>
+    </section>
+    
+    <section><p>
+      This page was last updated on July 9, 2020. This
+      page is a part of the <a href="../index.html">Technical
+      Section</a>, which is part of
+      <a href="../../../index.html">Meadhbh Hamrick's Web
+        Site</a>.      
+    </p></section>
+  </body>
+</html>
