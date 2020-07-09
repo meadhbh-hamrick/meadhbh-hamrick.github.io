@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" type="text/css" href="../../css/index.css"/>
+    <title>Meadhbh Hamrick's Technical Pages</title>
+    <meta charset="utf-8"/>
+    <meta name="description" content="An index of technical essays at Meadhbh Hamrick's web site"/>
+  </head>
+  <body class="index">
+    <title>Technical Documents</title>
+
+    <section id="00_Intro"><p>
+      Sometimes I write technical words. Other times I
+      do technical things.
+    </p>
+
+    <p>
+      And when I write about technical things, I mostly
+      write to communicate concepts or "wisdom" I've
+      learned the hard way. The first bit of technical
+      wisdom here is a story about parsers, messages and
+      loosely coupled systems called "<a href="goldilocks_and_the_11_parsers.html">Goldilocks
+      and the 11 Parsers</a>" (remember, in binary, "11" is how you
+      write out the number "3".)
+    </p>
+
+    <p>
+      One of the more popular technical things I wrote
+      was the "<a href="strange_programmer_habits/index.html">Strange
+      Programmer Habits</a>" series. Originally on a
+      long-forgotten blog, it inspired a number of
+      seasoned programmers to either violently agree
+      with me or tell me I was an idiot.
+    </p>
+
+    <p>
+      The next bit of wisdom is a (very) short essay
+      based on my experience helping customers adopt ERP
+      (Enterprise Resource Planning) software packages
+      and in writing ERP software. The essay "<a href="using_sap_software_does_not_make_your_enterprise_better.html">Using
+      SAP Software Does Not Make Your Enterprise
+      Better</a>" probably sounds like it's going to be
+      a slam on SAP R/3, but it's not. For the record,
+      I'm a fan of SAP software; but not all
+      organizations are ready for SAP. My assertion here
+      is that changing your organization so you can make
+      use of ERP packages is *MUCH* more useful than the
+      software itself.
+    </p>
+
+    <p>
+      The opinion article titled "<a href="on_the_usefulness_of_ar_vr_headsets.html">On
+      the Usefulness of VR/AR Headsets</a>" is from an
+      earlier time when everyone was going crazy about
+      headsets. Having used VR and AR systems "back in
+      the day" and watched the tools evolve over the
+      last 25 years, I'm hoping to throw a tiny bit of
+      cold water on the over-hyped expectations.
+    </p>
+
+    <p>
+      If you're a fan of Virtual Worlds, you may be
+      interested in the Virtual Worlds Region Agent
+      Protocol (VWRAP). It was an attempt I helped
+      manage at Linden Lab to standardize the "Next
+      Generation Second Life Protocol."  I collected a
+      number of blog posts and references and put them
+      on the "<a href="what_is_vwrap.html">What is
+      VWRAP?</a>" page.
+    </p>
+
+    <p>
+      Not all of my technical writing is abstract. When
+      I hit on an interesting pattern (or anti-pattern)
+      I like to write about it. One of the more
+      controversial things I wrote was a simple article
+      about how I preferred to put my app configuration
+      settings in a place outside the app. This lets me
+      change them without worrying I accidentally
+      introduced a bug in my code. It also allows me to
+      segregate access to the code vs. access to the
+      config info. (This is important in many
+      environments where they don't want app developers
+      to have unfettered access to production system
+      database passwords and the like.) If this is
+      something that interests you, check out "<a href="is_node_env_an_anti_pattern.html">Is
+      NODE_ENV an Anti-Pattern?</a>"
+    </p></section>
+   
+    <section id="01_Information_Security">
+      <h2>Information Security</h2>
+
+      <ul>
+        <li><a href="considerations_for_passwords_in_secure_systems.html">Considerations for Passwords in Secure Systems</a></li>
+        <li><a href="how_to_generate_a_key_pair_for_pgp.html">How to Generate a Key Pair for PGP</a></li>
+        <li><a href="generating_self_signed_x509_certificates.html">Generating Self-Signed X.509 Certificates</a></li>
+      </ul>
+    </section>
+
+    <section id="02_RISCV">
+      <h2>Byte-Sized RISC-V Bits</h2>
+
+      <ul>
+        <li><a href="riscv/the_riscv_base_instruction_set_plus_extensions.html">The RISC-V Base Instruction Set Plus Extensions</a></li>
+      </ul>
+    </section>
+
+    <section id="03_Unix">
+      <h2>Unix / Linux</h2>
+
+      <ul>
+        <li><a href="unix_permissions_for_shared_directories.html">Unix Permissions for Shared Directories</a></li>
+        <li><a href="usb_udev_and_idential_devices_with_no_serial_numbers">USB, UDEV and Identical Devices with No Serial Numbers</a></li>
+      </ul>
+    </section>
+
+    <section id="04_Technology">
+      <h2>About Technology</h2>
+
+      <ul>
+        <li><a href="dynamic_structured_data.html">Dynamic Structured Data</a></li>
+        <li><a href="xml_json_or_binary_does_it_matter.html">XML, JSON or Binary : Does It Matter?</a></li>
+        <li><a href="goldilocks_and_the_11_parsers.html">Goldilocks and the 11 Parsers</a></li>
+        <li><a href="is_node_env_an_anti_pattern.html">Is NODE_ENV an Anti-Pattern?</a></li>
+        <li><a href="on_the_usefulness_of_vr_ar_headsets.html">On the Usefulness of VR/AR Headsets</a></li>
+        <li><a href="on_internet_enabled_watches.html">On Internet Enabled Watches</a></li>
+        <li><a href="strange_programmer_habits/index.html">Strange Programmer Habits</a></li>
+      </ul>
+    </section>
+
+    <section id="05_Use_Of_Technology">
+      <h2>The Use of Technology</h2>
+
+      <ul>
+        <li><a href="using_sap_software_does_not_make_your_enterprise_better.html">Using SAP Software Does Not Make Your Enterprise Better</a></li>
+        <li><a href="the_persistent_myth_of_product.html">The Persistent Myth of Product</a></li>
+      </ul>
+    </section>
+
+    <section id="06_Virtual_Worlds">
+      <h2>Virtual Worlds</h2>
+
+      <ul>
+        <li><a href="what_is_vwrap.html">What is VWRAP?</a></li>
+        <li><a href="second_life_hits_and_misses.html">Second Life : Hits and Misses</a></li>
+        <li><a href="second_life_and_emotional_closeness.html">Second Life and Emotional Closeness</a></li>
+      </ul>
+    </section>
+
+    <section id="07_Essays">
+      <h2>Essays</h2>
+
+      <ul>
+        <li><a href="the_terminals_shine.html">The Terminals Shine</a></li>
+        <li><a href="talking_with_michael_about_software.html">Talking with Michael About Software</a></li>
+        <li><a href="six_hot_languages_programmers_should_learn.html">Six Hot Languages Programmers Should Learn</a></li>
+      </ul>
+    </section>
+    
+    <section><p>
+      This page was last updated on July 8, 2020. It is
+      part of <a href="../../index.html">Meadhbh Hamrick's
+      Web Site</a>.
+    </p></section>
+  </body>
+</html>
