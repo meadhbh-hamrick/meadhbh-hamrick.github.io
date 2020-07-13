@@ -43,14 +43,14 @@
         Consider the following C program:
       </p>
 
-      <pre>
+      <pre class="code">
+#include &lt;stdio.h&gt;
 
-  #include &lt;stdio.h&gt;
-  int main( int argc, char *argv[] ) {
-    char *start = "1234";
-    int a = 2;
-    printf( "%s\n", (start + a ) );
-  }</pre>
+int main( int argc, char *argv[] ) {
+  char *start = "1234";
+  int a = 2;
+  printf( "%s\n", (start + a ) );
+}</pre>
 
       <p>
         When you compile and run this program, it prints
@@ -58,13 +58,12 @@
         this JavaScript function:
       </p>
 
-      <pre>
-
-  function foo() {
-    var start = "1234";
-    var a = 2;
-    console.log( start + a );
-  }</pre>
+      <pre class="code">
+function foo() {
+  var start = "1234";
+  var a = 2;
+  console.log( start + a );
+}</pre>
 
       <p>
         It should print out the string "12342".
@@ -92,11 +91,10 @@
         string "1236":
       </p>
 
-      <pre>
-
-  $start = "1234";
-  $a = 2;
-  echo ( $start + $a );</pre>
+      <pre class="code">
+$start = "1234";
+$a = 2;
+echo ( $start + $a );</pre>
 
       <p>
         PHP peeks inside the variable $start, sees that
@@ -121,18 +119,16 @@
         to do things like this in javascript:
       </p>
 
-      <pre>
-
-  var a = 12;
-  console.log( "" + a );</pre>
+      <pre class="code">
+var a = 12;
+console.log( "" + a );</pre>
 
       <p>or</p>
 
-      <pre>
-
-  var b = '34';
-  console.log( 1 * b );  // Common for people coming to JavaScript from PHP
-  console.log( b|0 );    // More commonly used in the V8 / WebAssembly community</pre>
+      <pre class="code">
+var b = '34';
+console.log( 1 * b );  // Common for people coming to JavaScript from PHP
+console.log( b|0 );    // More commonly used in the V8 / WebAssembly community</pre>
 
       <p>
         Adding an empty string to a number in JavaScript

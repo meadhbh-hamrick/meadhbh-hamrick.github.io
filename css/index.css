@@ -50,6 +50,7 @@ p, li {
 li:not(:last-child) {
   margin-bottom: .25em;
 }
+
 code {
   font-weight: bold;
 }
@@ -82,4 +83,11 @@ img.bio {
   height: 128px;
   width: 128px;
   border: solid 1px #A0A0A0;
+}
+
+pre.code {
+  margin-top: 1em;
+  padding: .5em;
+  width: calc( 50% - 5em );
+  background-color: #F4F4F4;
 }

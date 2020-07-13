@@ -30,13 +30,12 @@
         Consider this JavaScript code:
       </p>
 
-      <pre>
-
-  function foo( aString ) {
-    if( ":error" == aString ) {
-      handleError();
-    }
-  }</pre>
+      <pre class="code">
+function foo( aString ) {
+  if( ":error" == aString ) {
+    handleError();
+  }
+}</pre>
 
       <p>
         Why did the author of this code put the variable
@@ -53,13 +52,12 @@
         Here, look at this code:
       </p>
 
-      <pre>
-
-  function foo( aString ) {
-    if( aString = ":error" ) {
-      handleError();
-    }
-  }</pre>
+      <pre class="code">
+function foo( aString ) {
+  if( aString = ":error" ) {
+    handleError();
+  }
+}</pre>
 
       <p>
         Do you see the error? The programmer has
@@ -78,13 +76,12 @@
         fragment into it:
       </p>
 
-      <pre>
-
-  ( function ( aString ) {
-      if( ":error" = aString ) {
-        console.log( "looks like we were passed an error token." );
-      }
-    } ) ( "blarg" );</pre>
+      <pre class="code">
+( function ( aString ) {
+  if( ":error" = aString ) {
+    console.log( "looks like we were passed an error token." );
+  }
+} ) ( "blarg" );</pre>
 
       <p>
         You should get a syntax error, which would clue

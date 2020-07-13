@@ -30,45 +30,43 @@
         So, consider this C program:
       </p>
           
-      <pre>
+      <pre class="code">
+#include &lt;stdio.h&gt;
 
-  #include &lt;stdio.h&gt;
+#define _VERB_LENGTH 5
 
-  #define _VERB_LENGTH 5
+char *verbs[] = {
+  "quit"
+, "score"
+, "inventory"
+, "go"
+, "get"
+};
 
-  char *verbs[] = {
-    "quit"
-  , "score"
-  , "inventory"
-  , "go"
-  , "get"
-  };
+int main() {
+  int i;
 
-  int main() {
-    int i;
-
-    for( i = 0; i &lt; _VERB_LENGTH; i++ ) {
-      printf( "verb %02d: %s\n", i, verbs[ i ] );
-    }
-  }</pre>
+  for( i = 0; i &lt; _VERB_LENGTH; i++ ) {
+    printf( "verb %02d: %s\n", i, verbs[ i ] );
+  }
+}</pre>
 
       <p>
         or it's javascript equivalent:
       </p>
 
-      <pre>
+      <pre class="code">
+var verbs = [
+    "quit"
+  , "score"
+  , "inventory"
+  , "go"
+  , "get"
+];
 
-  var verbs = [
-      "quit"
-    , "score"
-    , "inventory"
-    , "go"
-    , "get"
-  ];
-
-  for( var i = 0, il = verbs.length; i &lt; il; i++ ) {
-    console.log( "verb " + i + ": " + verbs[ i ] )
-  }</pre>
+for( var i = 0, il = verbs.length; i &lt; il; i++ ) {
+  console.log( "verb " + i + ": " + verbs[ i ] )
+}</pre>
 
       <p>
         Both these programs declare an array of strings
@@ -124,26 +122,25 @@
         example is this code:
       </p>
 
-      <pre>
+      <pre class="code">
+#include &lt;stdio.h&gt;
 
-  #include &lt;stdio.h&gt;
+char *verbs[] = {
+  "quit" ,
+  "score" ,
+  "inventory",
+  "go",
+  "get",
+  NULL
+};
 
-  char *verbs[] = {
-    "quit" ,
-    "score" ,
-    "inventory",
-    "go",
-    "get",
-    NULL
-  };
+int main() {
+  int i;
 
-  int main() {
-    int i;
-
-    for( i = 0; verbs[i] != NULL; i++ ) {
-      printf( "verb %02d: %s\n", i, verbs[ i ] );
-    }
-  }</pre>
+  for( i = 0; verbs[i] != NULL; i++ ) {
+    printf( "verb %02d: %s\n", i, verbs[ i ] );
+  }
+}</pre>
 
       <p>
         This code is functionally equivalent to the C program above, but removing the NULL pointer from the list of verbs will break this code. Thus, you're sort of guaranteed to never want to remove the last item. Again, not trying to convince you to do this. Just pointing out this is something people sometimes do.
