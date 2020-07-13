@@ -20,7 +20,7 @@ pre {
 }
 
 @media screen {
-  title, h2, p, ol, ul, hr, dl, pre {
+  title, h2, p, ol, ul, hr, dl, pre, table {
     margin-left: auto;
     margin-right: auto;
     width: 50%;

@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" type="text/css" href="../../../css/index.css"/>
+    <link rel="stylesheet" href="keys.css"/>
+    <title>Chorded Keyboard Mock-up</title>
+    <meta charset="utf-8"/>
+    <meta name="description" content="A simple web application that emulates a five key chorded keyboard."/>
+    <script src="keys.js"></script>
+  </head>
+  <body class="content">
+    <title>Chorded Keyboard Mock-up</title>
+
+    <section id="00_Intro">
+
+      <p>
+        This is a simple test to try out a chording
+        keyboard system. I'm building a physical device,
+        but wanted to build a web mock-up so
+        collaborators could try it out before the
+        firmware was finalized.
+      </p>
+
+      <p>
+        This demo is meant for desktop computers with
+        physical keyboards. I can't imagine the
+        experience will be satisfactory on a mobile
+        device.
+      </p>
+
+      <p>
+        The <a href="background.html">Quick Word About
+        Chorded Keyboards page</a> provides a brief
+        background about chorded keyboards and this
+        project.
+      </p>
+
+      <p>
+        To see the demo, put your mouse in your left
+        hand and your right hand's fingers over the
+        space bar, J-key, K-key, L-key and semi-colon
+        key. Now press the J & K keys at the same
+        time. Then the space bar, J & L keys. Then the J
+        & L keys. Then the J, K & L keys.
+        Congratulations! You've spelled "THIS."
+      </p>
+
+      <p>
+        The space bar makes a space, the J key is
+        Backspace and the K key is Enter. There are four
+        "character sets" you can cycle through with the
+        "Shift Top" and "Shift Next" key chords. The L
+        key takes you to the first set and the L & Space
+        Bar together take you to the next set. There's a
+        table below, see if you can make sense of it.
+      </p>
+
+      <p>
+        <textarea id="_console" readonly="true"></textarea>
+      </p>
+
+      <table>
+        <tr>
+          <td id="_set_0" class="active">Upper</td>
+          <td id="_set_1" class="inactive">Lower</td>
+          <td id="_set_2" class="inactive">Symbol 1</td>
+          <td id="_set_3" class="inactive">Symbol 2</td>
+        </tr>
+      </table>
+
+      <table class="keys" id="_keys_0">
+        <tr>
+          <td>-JKL;<br/>[NUL]</td>
+          <td><span class="active">-</span>JKL;<br/>[SPACE]</td>
+          <td>-<span class="active">J</span>KL;<br/>[BS]</td>
+          <td><span class="active">-</span><span class="active">J</span>KL;<br/>E</td>
+          <td>-J<span class="active">K</span>L;<br/>[ENTER]</td>
+          <td><span class="active">-</span>J<span class="active">K</span>L;<br/>O</td>
+          <td>-<span class="active">J</span><span class="active">K</span>L;<br/>T</td>
+          <td><span class="active">-</span><span class="active">J</span><span class="active">K</span>L;<br/>N</td>
+        </tr>
+        <tr>
+          <td>-JK<span class="active">L</span>;<br/>[NEXT]</td>
+          <td><span class="active">-</span>JK<span class="active">L</span>;<br/>[TOP]</td>
+          <td>-<span class="active">J</span>K<span class="active">L</span>;<br/>I</td>
+          <td><span class="active">-</span><span class="active">J</span>K<span class="active">L</span>;<br/>H</td>
+          <td>-J<span class="active">K</span><span class="active">L</span>;<br/>A</td>
+          <td><span class="active">-</span>J<span class="active">K</span><span class="active">L</span>;<br/>R</td>
+          <td>-<span class="active">J</span><span class="active">K</span><span class="active">L</span>;<br/>S</td>
+          <td><span class="active">-</span><span class="active">J</span><span class="active">K</span><span class="active">L</span>;<br/>D</td>
+        </tr>
+        <tr>
+          <td>-JKL<span class="active">;</span><br/>L</td>
+          <td><span class="active">-</span>JKL<span class="active">;</span><br/>W</td>
+          <td>-<span class="active">J</span>KL<span class="active">;</span><br/>M</td>
+          <td><span class="active">-</span><span class="active">J</span>KL<span class="active">;</span><br/>G</td>
+          <td>-J<span class="active">K</span>L<span class="active">;</span><br/>F</td>
+          <td><span class="active">-</span>J<span class="active">K</span>L<span class="active">;</span><br/>Y</td>
+          <td>-<span class="active">J</span><span class="active">K</span>L<span class="active">;</span><br/>P</td>
+          <td><span class="active">-</span><span class="active">J</span><span class="active">K</span>L<span class="active">;</span><br/>J</td>
+        </tr>
+        <tr>
+          <td>-JK<span class="active">L</span><span class="active">;</span><br/>U</td>
+          <td><span class="active">-</span>JK<span class="active">L</span><span class="active">;</span><br/>B</td>
+          <td>-<span class="active">J</span>K<span class="active">L</span><span class="active">;</span><br/>K</td>
+          <td><span class="active">-</span><span class="active">J</span>K<span class="active">L</span><span class="active">;</span><br/>Q</td>
+          <td>-J<span class="active">K</span><span class="active">L</span><span class="active">;</span><br/>C</td>
+          <td><span class="active">-</span>J<span class="active">K</span><span class="active">L</span><span class="active">;</span><br/>X</td>
+          <td>-<span class="active">J</span><span class="active">K</span><span class="active">L</span><span class="active">;</span><br/>V</td>
+          <td><span class="active">-</span><span class="active">J</span><span class="active">K</span><span class="active">L</span><span class="active">;</span><br/>Z</td>
+        </tr>
+      </table>
+      <table class="keys invisible" id="_keys_1">
+        <tr>
+          <td>-JKL;<br/>[NUL]</td>
+          <td><span class="active">-</span>JKL;<br/>[SPACE]</td>
+          <td>-<span class="active">J</span>KL;<br/>[BS]</td>
+          <td><span class="active">-</span><span class="active">J</span>KL;<br/>e</td>
+          <td>-J<span class="active">K</span>L;<br/>[ENTER]</td>
+          <td><span class="active">-</span>J<span class="active">K</span>L;<br/>o</td>
+          <td>-<span class="active">J</span><span class="active">K</span>L;<br/>t</td>
+          <td><span class="active">-</span><span class="active">J</span><span class="active">K</span>L;<br/>n</td>
+        </tr>
+        <tr>
+          <td>-JK<span class="active">L</span>;<br/>[NEXT]</td>
+          <td><span class="active">-</span>JK<span class="active">L</span>;<br/>[TOP]</td>
+          <td>-<span class="active">J</span>K<span class="active">L</span>;<br/>i</td>
+          <td><span class="active">-</span><span class="active">J</span>K<span class="active">L</span>;<br/>h</td>
+          <td>-J<span class="active">K</span><span class="active">L</span>;<br/>a</td>
+          <td><span class="active">-</span>J<span class="active">K</span><span class="active">L</span>;<br/>r</td>
+          <td>-<span class="active">J</span><span class="active">K</span><span class="active">L</span>;<br/>s</td>
+          <td><span class="active">-</span><span class="active">J</span><span class="active">K</span><span class="active">L</span>;<br/>d</td>
+        </tr>
+        <tr>
+          <td>-JKL<span class="active">;</span><br/>l</td>
+          <td><span class="active">-</span>JKL<span class="active">;</span><br/>w</td>
+          <td>-<span class="active">J</span>KL<span class="active">;</span><br/>m</td>
+          <td><span class="active">-</span><span class="active">J</span>KL<span class="active">;</span><br/>g</td>
+          <td>-J<span class="active">K</span>L<span class="active">;</span><br/>f</td>
+          <td><span class="active">-</span>J<span class="active">K</span>L<span class="active">;</span><br/>y</td>
+          <td>-<span class="active">J</span><span class="active">K</span>L<span class="active">;</span><br/>p</td>
+          <td><span class="active">-</span><span class="active">J</span><span class="active">K</span>L<span class="active">;</span><br/>j</td>
+        </tr>
+        <tr>
+          <td>-JK<span class="active">L</span><span class="active">;</span><br/>u</td>
+          <td><span class="active">-</span>JK<span class="active">L</span><span class="active">;</span><br/>b</td>
+          <td>-<span class="active">J</span>K<span class="active">L</span><span class="active">;</span><br/>k</td>
+          <td><span class="active">-</span><span class="active">J</span>K<span class="active">L</span><span class="active">;</span><br/>q</td>
+          <td>-J<span class="active">K</span><span class="active">L</span><span class="active">;</span><br/>c</td>
+          <td><span class="active">-</span>J<span class="active">K</span><span class="active">L</span><span class="active">;</span><br/>x</td>
+          <td>-<span class="active">J</span><span class="active">K</span><span class="active">L</span><span class="active">;</span><br/>v</td>
+          <td><span class="active">-</span><span class="active">J</span><span class="active">K</span><span class="active">L</span><span class="active">;</span><br/>z</td>
+        </tr>
+      </table>
+      <table class="keys invisible" id="_keys_2">
+        <tr>
+          <td>-JKL;<br/>[NUL]</td>
+          <td><span class="active">-</span>JKL;<br/>[SPACE]</td>
+          <td>-<span class="active">J</span>KL;<br/>[BS]</td>
+          <td><span class="active">-</span><span class="active">J</span>KL;<br/>0</td>
+          <td>-J<span class="active">K</span>L;<br/>[ENTER]</td>
+          <td><span class="active">-</span>J<span class="active">K</span>L;<br/>3</td>
+          <td>-<span class="active">J</span><span class="active">K</span>L;<br/>1</td>
+          <td><span class="active">-</span><span class="active">J</span><span class="active">K</span>L;<br/>5</td>
+        </tr>
+        <tr>
+          <td>-JK<span class="active">L</span>;<br/>[NEXT]</td>
+          <td><span class="active">-</span>JK<span class="active">L</span>;<br/>[TOP]</td>
+          <td>-<span class="active">J</span>K<span class="active">L</span>;<br/>4</td>
+          <td><span class="active">-</span><span class="active">J</span>K<span class="active">L</span>;<br/>7</td>
+          <td>-J<span class="active">K</span><span class="active">L</span>;<br/>2</td>
+          <td><span class="active">-</span>J<span class="active">K</span><span class="active">L</span>;<br/>8</td>
+          <td>-<span class="active">J</span><span class="active">K</span><span class="active">L</span>;<br/>6</td>
+          <td><span class="active">-</span><span class="active">J</span><span class="active">K</span><span class="active">L</span>;<br/>9</td>
+        </tr>
+        <tr>
+          <td>-JKL<span class="active">;</span><br/>:</td>
+          <td><span class="active">-</span>JKL<span class="active">;</span><br/>@</td>
+          <td>-<span class="active">J</span>KL<span class="active">;</span><br/>.</td>
+          <td><span class="active">-</span><span class="active">J</span>KL<span class="active">;</span><br/>&</td>
+          <td>-J<span class="active">K</span>L<span class="active">;</span><br/>?</td>
+          <td><span class="active">-</span>J<span class="active">K</span>L<span class="active">;</span><br/>#</td>
+          <td>-<span class="active">J</span><span class="active">K</span>L<span class="active">;</span><br/><</td>
+          <td><span class="active">-</span><span class="active">J</span><span class="active">K</span>L<span class="active">;</span><br/>-</td>
+        </tr>
+        <tr>
+          <td>-JK<span class="active">L</span><span class="active">;</span><br/>/</td>
+          <td><span class="active">-</span>JK<span class="active">L</span><span class="active">;</span><br/>></td>
+          <td>-<span class="active">J</span>K<span class="active">L</span><span class="active">;</span><br/>"</td>
+          <td><span class="active">-</span><span class="active">J</span>K<span class="active">L</span><span class="active">;</span><br/>(</td>
+          <td>-J<span class="active">K</span><span class="active">L</span><span class="active">;</span><br/>=</td>
+          <td><span class="active">-</span>J<span class="active">K</span><span class="active">L</span><span class="active">;</span><br/>,</td>
+          <td>-<span class="active">J</span><span class="active">K</span><span class="active">L</span><span class="active">;</span><br/>+</td>
+          <td><span class="active">-</span><span class="active">J</span><span class="active">K</span><span class="active">L</span><span class="active">;</span><br/>)</td>
+        </tr>
+      </table>
+      <table class="keys invisible" id="_keys_3">
+        <tr>
+          <td>-JKL;<br/>[NUL]</td>
+          <td><span class="active">-</span>JKL;<br/>[SPACE]</td>
+          <td>-<span class="active">J</span>KL;<br/>[BS]</td>
+          <td><span class="active">-</span><span class="active">J</span>KL;<br/>0</td>
+          <td>-J<span class="active">K</span>L;<br/>[ENTER]</td>
+          <td><span class="active">-</span>J<span class="active">K</span>L;<br/>3</td>
+          <td>-<span class="active">J</span><span class="active">K</span>L;<br/>1</td>
+          <td><span class="active">-</span><span class="active">J</span><span class="active">K</span>L;<br/>5</td>
+        </tr>
+        <tr>
+          <td>-JK<span class="active">L</span>;<br/>[NEXT]</td>
+          <td><span class="active">-</span>JK<span class="active">L</span>;<br/>[TOP]</td>
+          <td>-<span class="active">J</span>K<span class="active">L</span>;<br/>4</td>
+          <td><span class="active">-</span><span class="active">J</span>K<span class="active">L</span>;<br/>7</td>
+          <td>-J<span class="active">K</span><span class="active">L</span>;<br/>2</td>
+          <td><span class="active">-</span>J<span class="active">K</span><span class="active">L</span>;<br/>8</td>
+          <td>-<span class="active">J</span><span class="active">K</span><span class="active">L</span>;<br/>6</td>
+          <td><span class="active">-</span><span class="active">J</span><span class="active">K</span><span class="active">L</span>;<br/>9</td>
+        </tr>
+        <tr>
+          <td>-JKL<span class="active">;</span><br/>{</td>
+          <td><span class="active">-</span>JKL<span class="active">;</span><br/>[</td>
+          <td>-<span class="active">J</span>KL<span class="active">;</span><br/>]</td>
+          <td><span class="active">-</span><span class="active">J</span>KL<span class="active">;</span><br/>\</td>
+          <td>-J<span class="active">K</span>L<span class="active">;</span><br/>;</td>
+          <td><span class="active">-</span>J<span class="active">K</span>L<span class="active">;</span><br/>|</td>
+          <td>-<span class="active">J</span><span class="active">K</span>L<span class="active">;</span><br/>_</td>
+          <td><span class="active">-</span><span class="active">J</span><span class="active">K</span>L<span class="active">;</span><br/>$</td>
+        </tr>
+        <tr>
+          <td>-JK<span class="active">L</span><span class="active">;</span><br/>}</td>
+          <td><span class="active">-</span>JK<span class="active">L</span><span class="active">;</span><br/>*</td>
+          <td>-<span class="active">J</span>K<span class="active">L</span><span class="active">;</span><br/>^</td>
+          <td><span class="active">-</span><span class="active">J</span>K<span class="active">L</span><span class="active">;</span><br/>~</td>
+          <td>-J<span class="active">K</span><span class="active">L</span><span class="active">;</span><br/>'</td>
+          <td><span class="active">-</span>J<span class="active">K</span><span class="active">L</span><span class="active">;</span><br/>`</td>
+          <td>-<span class="active">J</span><span class="active">K</span><span class="active">L</span><span class="active">;</span><br/>%</td>
+          <td><span class="active">-</span><span class="active">J</span><span class="active">K</span><span class="active">L</span><span class="active">;</span><br/>!</td>
+        </tr>
+      </table>
+    </section>
+
+    <section><p>
+      This page was last updated on July 13, 2020. This
+      page is a part of the
+      <a href="../index.html">Design Section</a>,
+      which is part of
+      <a href="../../../index.html">Meadhbh Hamrick's Web
+        Site</a>.      
+    </p></section>
+
+  </body>
+</html>
