@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" type="text/css" href="../../../css/index.css"/>
+    <title>Number and String Mutation</title>
+    <meta charset="utf-8"/>
+    <meta name="description" content="A discussion about number and string conversion in C and JavaScript."/>
+  </head>
+  <body class="content">
+    <title>Number and String Mutation</title>
+
+    <section>
+      
+      <p>
+        This is another in a series of
+        "<a href="index.html">Strange Programmer
+        Habits</a>" articles. In each article we
+        highlight a strange-looking construction that
+        looks wrong at first glance, but has a
+        legitimate purpose. You don't have to use this
+        construct to be a decent programmer. You don't
+        even have to agree with it's justification. But
+        after reading this article, you'll hopefully
+        understand what was going through the mind of
+        the programmer that used the construction it
+        describes.
+      </p>
+
+      <p>
+        Some of my favorite programming languages allow
+        you to be "fast and loose" with data
+        types. JavaScript and PHP, for instance, will
+        convert variables between number and string
+        types as needed. Some consider this behavior to
+        be "sub-optimal," while others don't. But
+        understanding how your programming language
+        converts literals or variables between types is
+        important, no matter what language you're using.
+      </p>
+
+      <p>
+        Consider the following C program:
+      </p>
+
+      <pre>
+
+  #include &lt;stdio.h&gt;
+  int main( int argc, char *argv[] ) {
+    char *start = "1234";
+    int a = 2;
+    printf( "%s\n", (start + a ) );
+  }</pre>
+
+      <p>
+        When you compile and run this program, it prints
+        out the string "34" and then exits. Now look at
+        this JavaScript function:
+      </p>
+
+      <pre>
+
+  function foo() {
+    var start = "1234";
+    var a = 2;
+    console.log( start + a );
+  }</pre>
+
+      <p>
+        It should print out the string "12342".
+        Understanding why C does one thing and
+        JavaScript does another is important. C
+        aficionados can probably quickly point out that
+        the printf() function was taking a pointer to an
+        array of characters as it's input. Adding the
+        integer 2 to the pointer caused it to point 2
+        bytes ahead. When interpreted as a string,
+        "(start + a)" is simply a two byte string with
+        the value "34".
+      </p>
+
+      <p>
+        JavaScript, on the other hand, converts the
+        number 2 into the string '2' and appends it to
+        the string.
+      </p>
+
+      <p>
+        Doing the same thing in PHP yields even
+        different results. Executing the following PHP
+        fragment will cause the system to print the
+        string "1236":
+      </p>
+
+      <pre>
+
+  $start = "1234";
+  $a = 2;
+  echo ( $start + $a );</pre>
+
+      <p>
+        PHP peeks inside the variable $start, sees that
+        it looks like a number and then converts it to
+        an integer and performs the addition.
+      </p>
+
+      <p>
+        JavaScript provides functions to convert numbers
+        to strings and vice versa. The "String( val )"
+        function attempts to convert the argument 'val'
+        to a string while the "Number( val )" function
+        attempts to convert 'val' to a number. People
+        went to the trouble of specifying these
+        functions and documenting them, so you might as
+        well use them.
+      </p>
+
+      <p>
+        Some people, their minds perhaps addled by
+        exposure to early versions of PHP have been seen
+        to do things like this in javascript:
+      </p>
+
+      <pre>
+
+  var a = 12;
+  console.log( "" + a );</pre>
+
+      <p>or</p>
+
+      <pre>
+
+  var b = '34';
+  console.log( 1 * b );  // Common for people coming to JavaScript from PHP
+  console.log( b|0 );    // More commonly used in the V8 / WebAssembly community</pre>
+
+      <p>
+        Adding an empty string to a number in JavaScript
+        will (should) cause the interpreter to convert
+        the value of a into a string. Multiplying the
+        string b by one should do the opposite (convert
+        the string into a number.)
+      </p>
+
+      <p>
+        Some people believe this type of conversion is
+        faster, others think it's just plain ugly. It is
+        certainly the case that "standard" functions
+        exist to do the same thing, and might convey the
+        programmer's intent more clearly. To complicate
+        matters further, the WebAssembly community uses
+        a series of in-line conversions instead of
+        explicit calls to Number() or String(). In an
+        ideal world, the JavaScript JITter would
+        recognize both (b|0) and Number(b) as equivalent
+        statements and generate the same code. We don't
+        live in an ideal world, however.
+      </p>
+
+      <p>
+        It's entirely up to you how you use to coerce a
+        value to a particular type. But if you inherit
+        code with superfluous additions, or's and
+        multiplications, this might be what's going on.
+      </p>
+
+    </section>
+        
+    <section><p>
+      This page was last updated on July 12, 2020. This
+      page is a part of the <a href="../index.html">Technical
+      Section</a>, which is part of
+      <a href="../../../index.html">Meadhbh Hamrick's Web
+        Site</a>.      
+    </p></section>
+  </body>
+</html>

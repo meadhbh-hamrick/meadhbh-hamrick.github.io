@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" type="text/css" href="../../../css/index.css"/>
+    <title>Commas at the Beginnings of Lines</title>
+    <meta charset="utf-8"/>
+    <meta name="description" content="An article that describes why you should put commas separating array element members at the beginnings of lines and not the ends."/>
+  </head>
+  <body class="content">
+    <title>Commas at the Beginnings of Lines</title>
+
+    <section>
+      
+      <p>
+        This is another in a series of
+        "<a href="index.html">Strange Programmer Habits</a>"
+        articles. In each article we highlight a
+        strange-looking construction that looks wrong at
+        first glance, but has a legitimate purpose. You
+        don't have to use this construct to be a decent
+        programmer. You don't even have to agree with
+        it's justification. But after reading this
+        article, you'll hopefully understand what was
+        going through the mind of the programmer that
+        used the construction it describes.
+      </p>
+
+      <p>
+        So, consider this C program:
+      </p>
+          
+      <pre>
+
+  #include &lt;stdio.h&gt;
+
+  #define _VERB_LENGTH 5
+
+  char *verbs[] = {
+    "quit"
+  , "score"
+  , "inventory"
+  , "go"
+  , "get"
+  };
+
+  int main() {
+    int i;
+
+    for( i = 0; i &lt; _VERB_LENGTH; i++ ) {
+      printf( "verb %02d: %s\n", i, verbs[ i ] );
+    }
+  }</pre>
+
+      <p>
+        or it's javascript equivalent:
+      </p>
+
+      <pre>
+
+  var verbs = [
+      "quit"
+    , "score"
+    , "inventory"
+    , "go"
+    , "get"
+  ];
+
+  for( var i = 0, il = verbs.length; i &lt; il; i++ ) {
+    console.log( "verb " + i + ": " + verbs[ i ] )
+  }</pre>
+
+      <p>
+        Both these programs declare an array of strings
+        and then print them out. But contrary to popular
+        convention, the commas separating individual
+        elements of the verbs array come not at the end
+        of the line, but at the beginning.
+      </p>
+
+      <p>
+        The compiler (or interpreter) couldn't care less
+        about this stylistic convention, of course. All
+        it cares about is if there are commas between
+        array elements. The comma-first style is there
+        to make it easier for you to add, delete or move
+        single lines in the array. By putting the comma
+        at the beginning of the line, you move the
+        elements in the array around without having to
+        manually add (or remove) a trailing comma at the
+        end of the array.
+      </p>
+
+      <p>
+        This strange habit doesn't effect the output
+        your compiler produces and it's main benefit is
+        to save a couple milliseconds when cutting and
+        pasting entries in an array. But a small number
+        of programmers (myself included) have gotten
+        used to seeing arrays that look like this, so
+        don't be surprised if you see this style from
+        time to time.
+      </p>
+
+      <p>
+        At this point, you might be thinking, "this is
+        crazy, it's just as likely you'll want to move
+        an item from the beginning of an array where you
+        don't have a leading comma as it is you'll want
+        to move an item at the end of an array where
+        there's no trailing comma."
+      </p>
+
+      <p>
+        And you're right.
+      </p>
+
+      <p>
+        This strange habit is only beneficial if you
+        seldom modify the beginning of an array. In this
+        case I'm not trying to convince you this is a
+        thing you should do as try to explain what
+        someone was thinking when they did it. A counter
+        example is this code:
+      </p>
+
+      <pre>
+
+  #include &lt;stdio.h&gt;
+
+  char *verbs[] = {
+    "quit" ,
+    "score" ,
+    "inventory",
+    "go",
+    "get",
+    NULL
+  };
+
+  int main() {
+    int i;
+
+    for( i = 0; verbs[i] != NULL; i++ ) {
+      printf( "verb %02d: %s\n", i, verbs[ i ] );
+    }
+  }</pre>
+
+      <p>
+        This code is functionally equivalent to the C program above, but removing the NULL pointer from the list of verbs will break this code. Thus, you're sort of guaranteed to never want to remove the last item. Again, not trying to convince you to do this. Just pointing out this is something people sometimes do.
+      </p>
+
+    </section>
+        
+    <section><p>
+      This page was last updated on July 12, 2020. This
+      page is a part of the <a href="../index.html">Technical
+      Section</a>, which is part of
+      <a href="../../../index.html">Meadhbh Hamrick's Web
+        Site</a>.      
+    </p></section>
+  </body>
+</html>

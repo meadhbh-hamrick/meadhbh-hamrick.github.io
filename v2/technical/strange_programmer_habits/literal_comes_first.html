@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" type="text/css" href="../../../css/index.css"/>
+    <title>Literal Comes First in a Comparison</title>
+    <meta charset="utf-8"/>
+    <meta name="description" content="If you put a literal value on the left side of an == sign in a comparison, you'll get an error if you accidentally type = instead of ==."/>
+  </head>
+  <body class="content">
+    <title>Literal Comes First in a Comparison</title>
+
+    <section>
+      <p>
+        This is the first in a series of
+        "<a href="index.html">Strange Programmer
+        Habits</a>" articles. In each article we
+        highlight a strange-looking construction that
+        looks wrong at first glance, but has a
+        legitimate purpose. You don't have to use this
+        construct to be a decent programmer. You don't
+        even have to agree with it's justification. But
+        after reading this article, you'll hopefully
+        understand what was going through the mind of
+        the programmer that used the construction it
+        describes.
+      </p>
+
+      <p>
+        Consider this JavaScript code:
+      </p>
+
+      <pre>
+
+  function foo( aString ) {
+    if( ":error" == aString ) {
+      handleError();
+    }
+  }</pre>
+
+      <p>
+        Why did the author of this code put the variable
+        reference (aString) after the string
+        literal (":error") ?
+      </p>
+      
+      <p>
+        Likely so you wouldn't accidentally turn the
+        comparison into an assignment.
+      </p>
+
+      <p>
+        Here, look at this code:
+      </p>
+
+      <pre>
+
+  function foo( aString ) {
+    if( aString = ":error" ) {
+      handleError();
+    }
+  }</pre>
+
+      <p>
+        Do you see the error? The programmer has
+        accidentally dropped one of the equal signs in
+        the comparison operator. You may have spotted
+        the problem straight-away, but if this code was
+        being edited at 4AM the day before a big
+        demo… believe me, it would be hard to spot.
+      </p>
+
+      <p>
+        If we put the literal first and then forgot the
+        extra equals sign, we would get an error. Go
+        ahead and try it. Open up the javascript
+        debugger in your browser and copy this code
+        fragment into it:
+      </p>
+
+      <pre>
+
+  ( function ( aString ) {
+      if( ":error" = aString ) {
+        console.log( "looks like we were passed an error token." );
+      }
+    } ) ( "blarg" );</pre>
+
+      <p>
+        You should get a syntax error, which would clue
+        you off that you forgot an equals sign. This is
+        a programmer habit seen in most "curley brace"
+        languages (C, C++, Java, Python, etc.)
+      </p>
+
+      <p>
+        When I first saw this I thought it was
+        stupid. And then one day I got bit by the
+        "mistyped == as =" bug and realized I wasn't
+        perfect. I use this construction all the time
+        now and don't worry about accidentally
+        forgetting an equals sign.
+      </p>
+
+    </section>
+        
+    <section><p>
+      This page was last updated on July 12, 2020. This
+      page is a part of the <a href="../index.html">Technical
+      Section</a>, which is part of
+      <a href="../../../index.html">Meadhbh Hamrick's Web
+        Site</a>.      
+    </p></section>
+  </body>
+</html>

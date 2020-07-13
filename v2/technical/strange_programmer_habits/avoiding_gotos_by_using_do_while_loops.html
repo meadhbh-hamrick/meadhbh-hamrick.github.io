@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" type="text/css" href="../../../css/index.css"/>
+    <title>Avoiding GOTOs by Using do…while Loops</title>
+    <meta charset="utf-8"/>
+    <meta name="description" content="Everyone says GOTOs are bad, but you can get a similar affect by using a do while loop that never repeats."/>
+  </head>
+  <body class="content">
+    <title>Avoiding GOTOs by Using do…while Loops</title>
+
+    <section>
+      
+      <p>
+        This is another in a series of
+        "<a href="index.html">Strange Programmer Habits</a>"
+        articles. In each article we highlight a
+        strange-looking construction that looks wrong at
+        first glance, but has a legitimate purpose. You
+        don't have to use this construct to be a decent
+        programmer. You don't even have to agree with
+        it's justification. But after reading this
+        article, you'll hopefully understand what was
+        going through the mind of the programmer that
+        used the construction it describes.
+      </p>
+
+      <p>
+        In the early days of computer software,
+        programmers were using languages like assembly,
+        FORTRAN, COBOL and LISP to produce reasonably
+        small programs to compute trajectories, maintain
+        inventory databases or accounting systems and
+        whatnot. Computing systems weren't big enough to
+        allow programmers to make the massive software
+        systems like modern operating systems, web
+        browsers or computer games.
+      </p>
+
+      <p>
+        This is probably why it took a couple decades
+        for people to understand how bad "spaghetti
+        code" was; it's easy to dismiss spaghetti being
+        a problem when your complete software system is
+        one or two pages long. But when a printout of
+        your system requires you to chop down a medium
+        sized forest, concepts like "structured
+        programming" and "design patterns" really start
+        to become important.
+      </p>
+
+      <p>
+        One of the popular issues around the
+        programmers' water-cooler in the 1980's was
+        whether or not people who use GOTO's should have
+        their fingers chopped off. Edsger Djikstra
+        penned the canonical software engineering
+        jeremiad about this subject entitled “GO-TO
+        Statement Considered Harmful” [PDF]. You can
+        probably guess his opinion from the paper's
+        title.
+      </p>
+
+      <p>
+        In the 80's and 90's, software engineers were
+        taught that GOTO's led to un-maintainable
+        software, headaches and all manner of social
+        ills ranging from global warming to bad
+        movies. "Use a GOTO," they would say, "and it's
+        like asking the local DJ to play Disco Duck on
+        the radio." Structured programming, good
+        software engineering technique and eschewing
+        GOTO's would lead to a new era of increasingly
+        good Cure albums, Alien sequels that didn't suck
+        and fewer midnight sessions at the office
+        debugging the crap code you wrote last year.
+      </p>
+
+      <p>
+        But, like the "one true ring," the expressive
+        power of the GOTO is difficult to resist. Many
+        software wizards, on their way to a life of
+        perdition (i.e. - writing video games) countered
+        that the GOTO could be used on occasion, if done
+        correctly. Consider the following routine; it
+        tries to open a file and read a few bytes. If
+        there are errors along the way, it uses a goto
+        to branch to clean-up routine before exiting:
+      </p>
+
+      <pre>
+
+  int doSomething( char *filename ) {
+    int err = 0;
+    FILE *file = (FILE *) NULL;
+    char buffer[ 80 ];
+    size_t bytesRead = 0;
+
+    if( NULL == filename ) {
+      err = -1; goto exuent_omnis;
+    }
+
+    if( (FILE *)NULL == ( file = fopen( filename, “r” ) ) ) {
+      err = errno; goto exuent_omnis;
+    }
+
+    bytesRead = fread( buffer, 80, 1, file );
+
+    if( ferror( file ) ) {
+      err = -2; goto exuent_omnis;
+    }
+
+    /* more code here that actually does something */
+
+  exuent_omnis:
+
+    if( (FILE *) NULL != file ) {
+      fclose( file );
+    }
+
+    return( err );
+  }</pre>
+
+      <p>
+        "What could be wrong with this?" the pro-GOTO
+        lobby would ask. IMHO, this example is pretty
+        readable, and the GOTO does actually increase
+        readability. Especially if you consider that
+        nested if's are frequently offered as the
+        alternative:
+      </p>
+
+      <pre>
+
+  int doSomething( char *filename ) { 
+    int err = 0;
+    FILE *file = (FILE *) NULL;
+    char buffer[ 80 ];
+    size_t bytesRead = 0;
+
+    if( NULL != filename ) {
+      if( (FILE *)NULL != ( file = fopen( filename, “r” ) ) ) {
+        bytesRead = fread( buffer, 80, 1, file );
+        if( ! ferror( file ) ) {
+          /* more code here */
+        } else {
+          err = -2;
+        }
+        fclose( file ):
+      } else {
+        err = errno;
+      }
+    } else {
+      err = -1;
+    }
+    return( err );
+  }</pre>
+
+      <p>
+        People who propose extensive use of nested if's
+        should have their thumbs broken. This example
+        isn't that bad, but when nested ifs start
+        spanning pages, they can get a bit difficult to
+        read. The alternative to using GOTOs in this
+        example would be to use a do...while() loop
+        whose repeat condition has been explicitly set
+        to zero (or false for C++ users.):
+      </p>
+
+      <pre>
+
+  int doSomething( char *filename ) {
+    int err = 0;
+    char buffer[ 80 ];
+    size_t bytesRead = 0;
+
+    do {
+      if( NULL == filename ) {
+        err = -1; break;
+      }
+
+      if( (FILE *)NULL == ( file = fopen( filename, “r” ) ) ) {
+        err = errno; break;
+      }
+
+      bytesRead = fread( buffer, 80, 1, file );
+
+      if( ferror( file ) ) {
+        err = -2; break;
+      }
+
+      /* more code here */
+
+    } while( 0 );
+
+    if( (FILE *) NULL != file ) {
+      fclose( file );
+    }
+
+    return( err );
+  }</pre>
+
+      <p>
+        Developers who like this kind of code will tell
+        you it captures the succinct directness of a
+        GOTO without actually having a GOTO. Because we
+        break out of the loop, there's only one place
+        control can go: to the statement after the
+        while( 0 ); And we avoid nested if's. I've
+        encountered at least one developer who believes
+        this technique is harmful; it uses the
+        do...while language feature for something it was
+        not intended for, and as such, could be
+        confusing to younger programmers.
+      </p>
+
+      <p>
+        Whether you make Djikstra cry by using a GOTO,
+        produce deep levels of indents or use a
+        do...while(0) that confuse inexpert programmers
+        is entirely up to you. But hopefully this
+        article will have made you aware of the
+        different techniques you'll encounter in the
+        wild.
+      </p>
+
+    </section>
+        
+    <section><p>
+      This page was last updated on July 9, 2020. This
+      page is a part of the <a href="../index.html">Technical
+      Section</a>, which is part of
+      <a href="../../../index.html">Meadhbh Hamrick's Web
+        Site</a>.      
+    </p></section>
+  </body>
+</html>
