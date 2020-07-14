@@ -41,14 +41,125 @@
         what the original author was thinking.
       </p>
 
-      <ul>
-        <li><a href="literal_comes_first.html">Literal Comes First in a Comparison</a></li>
-        <li><a href="commas_at_the_beginnings_of_lines.html">Commas at the Beginnings of Lines</a></li>
-        <li><a href="avoiding_gotos_by_using_do_while_loops.html">Avoiding Gotos by Using do…while loops</a></li>
-        <li><a href="number_and_string_mutation.html">Number and String Mutation</a></li>
-      </ul>
     </section>
-        
+
+    <a name="01_Literal_Comparison"></a>
+    <section id="01_Literal_Comparison">
+      <h2>When Comparing a Variable with a Literal Value</h2>
+      <p>
+        When comparing a variable with a literal value,
+        most programmers put the variable first and the
+        literal value second, creating code that looks
+        like this:
+      </p>
+
+      <pre class="code">
+
+   if( pointer == NULL ) {
+     /* do something */
+   }</pre>
+      
+      <p>
+        But sometimes you'll run across code where this
+        is reversed and it looks like this:
+      </p>
+
+      <pre class="code">
+
+   if( NULL == pointer ) {
+     /* do something */
+   }</pre>
+
+      <p>
+        It turns out there's a decent reason to do this.
+        Click over to <a href="literal_comes_first.html">Literal
+        Comes First in a Comparison</a> to learn more.
+      </p>
+    </section>
+
+    <a name="02_Do_While_Break"></a>
+    <section id="02_Do_While_Break">
+      <h2>Using a Break in a Do...While Loop Instead of a Goto</h2>
+
+      <p>
+        The debate about GOTOs has been raging for
+        decades. Most people agree, GOTOs are bad.
+        Programmers should use structured programming
+        features: loops, class dispatch, switch
+        statements and nested if's.
+      </p>
+
+      <p>
+        Used sparingly, GOTOs can be used to quickly
+        exit the middle of a routine on an error
+        condition. This comes up in Plain ol' C where
+        you can't use or if you're using Async I/O.
+      </p>
+
+      <p>
+        There is an alternative, however. See
+        <a href="avoiding_gotos_by_using_do_while_loops.html">Avoiding
+          Gotos by Using Do...While Loops</a> for more
+        details.
+      </p>
+    </section>
+
+    <a name="03_Commas"></a>
+    <section id="03_Commas">
+      <h2>Commas at the Beginnings of Lines</h2>
+
+      <p>
+        Modern languages don't think a trailing comma
+        in an array definition is an error. Even C
+        doesn't complain about trailing commas anymore.
+        But every now and again you'll see someone who
+        separates elements in an array with a comma at
+        the beginning of a line, like this:
+      </p>
+
+      <pre class="code">
+
+   char *items[] = {
+       "one"
+     , "two"
+     , "three"
+   }</pre>
+
+      <p>
+        There's a reason people used to do this. Read
+        more at <a href="commas_at_the_beginnings_of_lines.html">Commas
+        at the Beginnings of Lines</a>.
+      </p>
+
+    </section>
+
+    <a href="04_Type_Mutation"></a>
+    <section id="04_Type_Mutation">
+      <h2>Converting Numbers to Strings and Back Again</h2>
+
+      <p>
+        You would think with decades of experience
+        converting integers to strings, humanity could
+        come up with an elegant syntax and semantics
+        regarding type mutation. But you would probably
+        be wrong. Language designers more often than
+        not pick syntax and semantics for convenience,
+        not purity. And that's probably okay.
+      </p>
+
+      <p>
+        But it does mean that weird things happen when
+        converting between strings and integral types,
+        especially in dynamic "scripting" languages like
+        JavaScript or PHP. Check out
+        <a href="number_and_string_mutation.html">Number
+          and String Mutation</a> to see how funky
+        code can get when dealing with type conversion
+        in dynamic languages.
+      </p>
+
+    </section>
+    
     <section><p>
       This page was last updated on July 9, 2020. This
       page is a part of the <a href="../index.html">Technical
