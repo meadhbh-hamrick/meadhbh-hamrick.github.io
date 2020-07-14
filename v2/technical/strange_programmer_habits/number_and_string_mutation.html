@@ -44,13 +44,14 @@
       </p>
 
       <pre class="code">
-#include &lt;stdio.h&gt;
 
-int main( int argc, char *argv[] ) {
-  char *start = "1234";
-  int a = 2;
-  printf( "%s\n", (start + a ) );
-}</pre>
+   #include &lt;stdio.h&gt;
+
+   int main( int argc, char *argv[] ) {
+     char *start = "1234";
+     int a = 2;
+     printf( "%s\n", (start + a ) );
+   }</pre>
 
       <p>
         When you compile and run this program, it prints
@@ -59,11 +60,12 @@ int main( int argc, char *argv[] ) {
       </p>
 
       <pre class="code">
-function foo() {
-  var start = "1234";
-  var a = 2;
-  console.log( start + a );
-}</pre>
+
+   function foo() {
+     var start = "1234";
+     var a = 2;
+     console.log( start + a );
+   }</pre>
 
       <p>
         It should print out the string "12342".
@@ -92,9 +94,10 @@ function foo() {
       </p>
 
       <pre class="code">
-$start = "1234";
-$a = 2;
-echo ( $start + $a );</pre>
+
+   $start = "1234";
+   $a = 2;
+   echo ( $start + $a );</pre>
 
       <p>
         PHP peeks inside the variable $start, sees that
@@ -120,15 +123,17 @@ echo ( $start + $a );</pre>
       </p>
 
       <pre class="code">
-var a = 12;
-console.log( "" + a );</pre>
+
+   var a = 12;
+   console.log( "" + a );</pre>
 
       <p>or</p>
 
       <pre class="code">
-var b = '34';
-console.log( 1 * b );  // Common for people coming to JavaScript from PHP
-console.log( b|0 );    // More commonly used in the V8 / WebAssembly community</pre>
+
+   var b = '34';
+   console.log( 1 * b );  // Common for people coming to JavaScript from PHP
+   console.log( b|0 );    // More commonly used in the V8 / WebAssembly community</pre>
 
       <p>
         Adding an empty string to a number in JavaScript

@@ -90,36 +90,37 @@
       </p>
 
       <pre class="code">
-int doSomething( char *filename ) {
-  int err = 0;
-  FILE *file = (FILE *) NULL;
-  char buffer[ 80 ];
-  size_t bytesRead = 0;
 
-  if( NULL == filename ) {
-    err = -1; goto exuent_omnis;
-  }
+   int doSomething( char *filename ) {
+     int err = 0;
+     FILE *file = (FILE *) NULL;
+     char buffer[ 80 ];
+     size_t bytesRead = 0;
 
-  if( (FILE *)NULL == ( file = fopen( filename, “r” ) ) ) {
-    err = errno; goto exuent_omnis;
-  }
+     if( NULL == filename ) {
+       err = -1; goto exuent_omnis;
+     }
 
-  bytesRead = fread( buffer, 80, 1, file );
+     if( (FILE *)NULL == ( file = fopen( filename, “r” ) ) ) {
+       err = errno; goto exuent_omnis;
+     }
 
-  if( ferror( file ) ) {
-    err = -2; goto exuent_omnis;
-  }
+     bytesRead = fread( buffer, 80, 1, file );
 
-  /* more code here that actually does something */
+     if( ferror( file ) ) {
+       err = -2; goto exuent_omnis;
+     }
 
-exuent_omnis:
+     /* more code here that actually does something */
 
-  if( (FILE *) NULL != file ) {
-    fclose( file );
-  }
+   exuent_omnis:
 
-  return( err );
-}</pre>
+     if( (FILE *) NULL != file ) {
+       fclose( file );
+     }
+
+     return( err );
+   }</pre>
 
       <p>
         "What could be wrong with this?" the pro-GOTO
@@ -131,29 +132,30 @@ exuent_omnis:
       </p>
 
       <pre class="code">
-int doSomething( char *filename ) { 
-  int err = 0;
-  FILE *file = (FILE *) NULL;
-  char buffer[ 80 ];
-  size_t bytesRead = 0;
 
-  if( NULL != filename ) {
-    if( (FILE *)NULL != ( file = fopen( filename, “r” ) ) ) {
-      bytesRead = fread( buffer, 80, 1, file );
-      if( ! ferror( file ) ) {
-        /* more code here */
-      } else {
-        err = -2;
-      }
-      fclose( file ):
-    } else {
-      err = errno;
-    }
-  } else {
-    err = -1;
-  }
-  return( err );
-}</pre>
+   int doSomething( char *filename ) { 
+     int err = 0;
+     FILE *file = (FILE *) NULL;
+     char buffer[ 80 ];
+     size_t bytesRead = 0;
+
+     if( NULL != filename ) {
+       if( (FILE *)NULL != ( file = fopen( filename, “r” ) ) ) {
+         bytesRead = fread( buffer, 80, 1, file );
+         if( ! ferror( file ) ) {
+           /* more code here */
+         } else {
+           err = -2;
+         }
+         fclose( file ):
+       } else {
+         err = errno;
+       }
+     } else {
+       err = -1;
+     }
+     return( err );
+   }</pre>
 
       <p>
         People who propose extensive use of nested if's
@@ -167,36 +169,37 @@ int doSomething( char *filename ) {
       </p>
 
       <pre class="code">
-int doSomething( char *filename ) {
-  int err = 0;
-  char buffer[ 80 ];
-  size_t bytesRead = 0;
 
-  do {
-    if( NULL == filename ) {
-      err = -1; break;
-    }
+   int doSomething( char *filename ) {
+     int err = 0;
+     char buffer[ 80 ];
+     size_t bytesRead = 0;
 
-    if( (FILE *)NULL == ( file = fopen( filename, “r” ) ) ) {
-      err = errno; break;
-    }
+     do {
+       if( NULL == filename ) {
+         err = -1; break;
+       }
 
-    bytesRead = fread( buffer, 80, 1, file );
+       if( (FILE *)NULL == ( file = fopen( filename, “r” ) ) ) {
+         err = errno; break;
+       }
 
-    if( ferror( file ) ) {
-      err = -2; break;
-    }
+       bytesRead = fread( buffer, 80, 1, file );
 
-    /* more code here */
+       if( ferror( file ) ) {
+         err = -2; break;
+       }
 
-  } while( 0 );
+       /* more code here */
 
-  if( (FILE *) NULL != file ) {
-    fclose( file );
-  }
+     } while( 0 );
 
-  return( err );
-}</pre>
+     if( (FILE *) NULL != file ) {
+       fclose( file );
+     }
+
+     return( err );
+   }</pre>
 
       <p>
         Developers who like this kind of code will tell
