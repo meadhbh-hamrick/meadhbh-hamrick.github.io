@@ -15,7 +15,8 @@ h2 {
 }
 
 pre {
-  margin: -1em 0px 1em 0px;
+  margin: 1em 0px 1em 0px;
+  padding-bottom: 1em;
   orphans: 4;
 }
 
@@ -86,8 +87,7 @@ img.bio {
 }
 
 pre.code {
-  margin-top: 1em;
-  padding: .5em;
   width: calc( 50% - 5em );
   background-color: #F4F4F4;
+  overflow: hidden;
 }
