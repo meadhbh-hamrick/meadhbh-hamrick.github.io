@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" type="text/css" href="../../../css/index.css"/>
+    <title>Explicit End Indexes in For Loops</title>
+    <meta charset="utf-8"/>
+    <meta name="description" content="Part of the 'Strange Programmer Habit' series, this page talks about explicitly calculating an exit condition when a for loop is initialized."/>
+  </head>
+  <body class="content">
+    <title>Explicit End Indexes in For Loops</title>
+
+    <a name="00_Intro"></a>
+    <section id="00_Intro">
+      
+      <p>
+        This is another entry in the <a href="index.html">Strange
+        Programmer Habits</a>" series. In each article we
+        investigate a strange-looking construction which
+        has a legitimate, but non-obvious purpose.
+      </p>
+
+      <p>
+        In this article, we look at why we might want to
+        set up the exit condition of a for loop when
+        it's initialized. Let's start by looking at a
+        "normal" loop in JavaScript:
+      </p>
+
+      <pre class="code">
+
+   var str = "I am a test string";
+
+   for( var i = 0; i &lt; str.length; i++ ) {
+     var char = str.substr( i, 1 );
+     console.log( `Character ${i} is ${char}` );
+   }</pre>
+
+      <p>
+        Nothing could be clearer: loop through each
+        character in the string, printing out a message
+        on the console for each character. But every now
+        and again, you'll see something like this
+        instead:
+
+      <pre class="code">
+
+   for( var i = 0, il = str.length; i &lt; il; i++ ) {
+     var char = str.substr( i, 1 );
+     console.log( `Character ${i} is ${char}` );
+   }</pre>
+
+      <p>
+        Why did they do this? Should you do it to?
+      </p>
+
+      <p>
+        The answer to the second question is "probably
+        not" if you're a JavaScript programmer and "it
+        depends" if you're a C programmer.
+      </p>
+
+      <p>
+        In the early days of JavaScript, implementations
+        were not horribly efficient. (Looking at you,
+        Rhino.) Old implementations weren't smart enough
+        to know strings like the one in the example
+        above weren't changing each time through the
+        loop. So it punted and called strlen() or Java's
+        String.length() method each time through the
+        loop.
+      </p>
+
+      <p>
+        By calculating the length once, assigning it to
+        a variable and <em>then</em> looping through the
+        loop, you could recover a small amount of
+        execution time.
+      </p>
+
+      <p>
+        Most programmers probably didn't need to worry
+        about this; they weren't coding nested loops that
+        looped over large arrays. But the few programmers
+        I met who did do this insisted they got a speed
+        boost from it.
+      </p>
+
+      <p>
+        Your mileage may vary, though. Most modern
+        JavaScript implementations are fast and can make
+        decent guesses about whether or not an array or
+        string is changing as you iterate across its
+        members.
+      </p>
+        
+      <p>
+        C programmers don't have it so easy, however.
+        While JavaScript is single threaded except in
+        well defined cases, C programs could be
+        single-threaded or a multi-threaded, and the
+        compiler might not know ahead of time. If you
+        coded a loop that depends on the length of a
+        string or an array being consistent across
+        iterations, it's up to you to figure out if the
+        memory you're accessing is getting changed by
+        another thread.
+      </p>
+
+      <p>
+        Because the compiler can't guarantee a string's
+        length won't change without warning, it won't
+        aggressively memoize the results of function
+        calls. If you execute this code in C, it will
+        call strlen() each time through the loop.
+      </p>
+
+      <pre class="code">
+
+   #include &lt;stdio.h&gt;
+   #include &lt;string.h&gt;
+
+   int main() {
+     char * teststr = "I am a test string.";
+
+     for( int i = 0; i &lt; strlen( teststr ); i++ ) {
+       printf( "Char %d is %c\n", i, teststr[i] );
+     }
+
+     return( 0 );
+   }</pre>
+
+      <p>
+        So, if you know you're not in a multi-threaded
+        environment, you might want to modify the loop
+        to look something more like this. It'll only
+        call strlen() once.
+      </p>
+        
+      <pre class="code">
+
+   for( int i = 0, il = strlen( teststr ); i &lt; il; i++ ) {
+</pre>
+    </section>
+        
+    <section><p>
+      This page was last updated on July 9, 2020. This
+      page is a part of the <a href="../index.html">Technical
+      Section</a>, which is part of
+      <a href="../../../index.html">Meadhbh Hamrick's Web
+        Site</a>.      
+    </p></section>
+  </body>
+</html>

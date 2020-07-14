@@ -160,6 +160,45 @@
 
     </section>
     
+    <a href="05_Explicit_End"></a>
+    <section id="05_Explicit_End">
+
+      <h2>Explicit End Index in For Loops</h2>
+
+      <p>
+        Every now and again, you'll see a for loop where
+        the end condition is set as a variable in the
+        loop initialization clause, like this JavaScript
+        fragment:
+      </p>
+
+      <pre class="code">
+
+   var a = [ "one", "two", "three" ];
+
+   for( var i = 0, il = a.length; i < il; i++ ) {
+     console.log( a[i] );
+   }</pre>
+
+      <p>
+        Why would a programmer do this when it's just as
+        easy to do this?
+      </p>
+
+      <pre class="code">
+
+   for( var i = 0; i < a.length; i++ ) {
+     console.log( a[i] );
+   }</pre>
+
+      <p>
+        The answer has to do with inefficient JavaScript
+        implementations, C programming and inertia. Learn
+        more by reading <a href="explicit_end_index_in_loops.html">Explicit
+        End Indexes in For Loops</a>.
+      </p>
+    </section>
+
     <section><p>
       This page was last updated on July 9, 2020. This
       page is a part of the <a href="../index.html">Technical
