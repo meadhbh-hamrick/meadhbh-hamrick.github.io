@@ -52,6 +52,12 @@ li:not(:last-child) {
   margin-bottom: .25em;
 }
 
+section#footer > p:first-child {
+  border-top: solid 1px black;
+  margin-top: 1em;
+  padding-top: .33em;
+}
+
 code {
   font-weight: bold;
 }
@@ -91,3 +97,4 @@ pre.code {
   background-color: #F4F4F4;
   overflow: hidden;
 }
+
