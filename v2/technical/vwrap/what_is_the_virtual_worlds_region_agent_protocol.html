@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" type="text/css" href="../../../css/index.css"/>
+    <title>What is the Virtual Worlds Region Agent Protocol</title>
+    <meta charset="utf-8"/>
+    <meta name="description" content="A brief run-down of what the Virtual Worlds Region Agent Protocol (VWRAP) is."/>
+  </head>
+  <body class="content">
+    <title>What is the Virtual Worlds Region Agent Protocol</title>
+
+    <a name="00_Intro"></a>
+    <section id="00_Intro">
+      
+      <p>
+        I recently had the pleasure of talking with
+        Maria Korolov at HypergridBusiness.Com.
+        <a href="#ref_1">[1]</a> She was interested in
+        understanding the differences between Hypergrid
+        and VWRAP. (Who knows, maybe there will be a
+        story about it in the near future?) But this got
+        me thinking; there are very few places an
+        interested non-specialist can go to learn about
+        VWRAP, it's goals and approach to virtual
+        worlds. This blog post is an effort to fill that
+        gap.
+      </p>
+
+    </section>
+
+    <a name=""01_What_Is_VWRAP"></a>
+    <section id="01_What_Is_VWRAP">
+      <h2>What is VWRAP?</h2>
+
+      <p>
+        The Virtual World Region Agent Protocol (aka
+        VWRAP) is an application layer wire protocol
+        used to create "inter-operable virtual
+        experiences." It is also the name of the working
+        group inside the Internet Engineering Task Force
+        (IETF) developing the protocol.
+      </p>
+
+      <p>
+        Okay... that's a mouthful; let's break it down.
+      </p>
+
+      <p>
+        A "wire protocol" is a set of conventions and
+        standards describing data flowing over a
+        network. HTTP for instance, or SMTP are both
+        wire protocols; they describe the format of
+        messages web browsers or email clients
+        generate. A protocol doesn't equal an
+        implementation. The Apache web server, for
+        instance, implements the HTTP protocol, but does
+        not define it. So it is with VWRAP virtual
+        worlds: the protocol lists what data is
+        exchanged in between systems cooperating to
+        "create" the virtual world. VWRAP is expected to
+        be implemented by server software at Linden Lab
+        <a href="#ref_2">[2]</a>, the OpenSimulator
+        project <a href="#ref_3">[3]</a> and SimianGrid
+        (formerly Cable Beach.) <a href="#ref_4">[4]</a>
+      </p>
+
+      <p>
+        We say that it's an "Application Layer Protocol"
+        because it makes use of familiar net protocols
+        for moving information around. That is, VWRAP
+        messages are carried by HTTP and (possibly) RTP,
+        the protocols responsible for the web and VoIP.
+      </p>
+
+      <p>
+        And what's an "inter-operable virtual
+        experience?" This just means that virtual world
+        viewers can use VWRAP protocols to simulate a
+        virtual world shared by multiple participants. i
+        like to say "virtual experiences" these days as
+        I've been involved in some pretty heated debates
+        as to what the term "Virtual World" means.
+      </p>
+
+      <p>
+        So VWRAP is a protocol and a community of people
+        working to build systems that let users have a
+        "Second Life-Like" experience, but in an "open"
+        virtual world. That is, you can have an
+        experience that looks like Second Life, but does
+        not require your virtual locations or virtual
+        belongings to be hosted by machines owned by
+        Linden Lab.
+      </p>
+    </section>
+
+    <a name=""02_Why_is_VWRAP_not"></a>
+    <section id="02_Why_is_VWRAP_not">
+      <h2>Why is VWRAP not like Hypergrid or OpenWonderland or Croquet or ... ?</h2>
+
+      <p>
+        There are several virtual worlds out there
+        ranging from the game-like World of Warcraft™ to
+        the open-ended Second Life™. Some are open
+        source projects like Croquet
+        <a href="#ref_5">[5]</a>, RealXtend
+        <a href="#ref_6">[6]</a>, OpenWonderland
+        <a href="#ref_7">[7]</a> or OpenSimulator
+        <a href="#ref_3">[3]</a>. Others are
+        commercial services like ReactionGrid
+        <a href="#ref_8">[8]</a> or cooperatives like
+        OSGrid. <a href="#ref_9">[9]</a>
+      </p>
+
+      <p>
+        VWRAP is not an implementation or (like
+        Hypergrid <a href="#ref_10">[10]</a>) an
+        extension to an existing implementation. It is
+        an open protocol, developed by a community of
+        interested parties with the intent that anyone
+        can choose to implement it. So VWRAP will not be
+        a new product, but likely a new feature to
+        existing implementations and services that will
+        make it easier for them to communicate with each
+        other (though there are sure to be "sample
+        implementations" of the VWRAP specifications.)
+      </p>
+
+      <p>
+        VWRAP is "Second Life-Like" in that it assumes a
+        virtual world somewhat like Second Life™ or one
+        created with OpenSimulator. World of Warcraft™,
+        Croquet and OpenWonderland use protocols that
+        are significantly different from the ones for
+        Second Life-Like worlds. And the way they think
+        avatars will interact is a little
+        different. It's not impossible for these systems
+        to use VWRAP, but they're not what VWRAP was
+        intended to support (though there may be ways
+        for these systems to use pieces of VWRAP; more
+        on this later.)
+      </p>
+
+      <p>
+        Another important feature about VWRAP: some
+        people will consider it incomplete. The people
+        behind VWRAP chose to NOT standardize certain
+        features of virtual worlds. VWRAP does not
+        include standards relating to eCommerce or "game
+        script" like linden dollars. Nor does it
+        describe standards for virtual land ownership
+        like Second Life's parcels and estates.
+      </p>
+
+      <p>
+        It does, however, make it easy to define new
+        services and to extend existing services. so it
+        should be pretty easy to extend Linden Lab's
+        SnowGlobe viewer (and other open source viewers)
+        to support different, world-specific eCommerce
+        and land ownership features. You may not get to
+        use linden dollars on OSGrid, but if a region
+        owner wants to support something else, it should
+        be pretty easy for the viewer developers to code
+        it.
+      </p>
+
+      <p>
+        In other words, virtual worlds users should find
+        the software they use get a little more robust
+        and should see new features emerge a little
+        faster.
+      </p>
+
+      <p>
+        So to recap: VWRAP is a set of protocols, not an
+        implementation. VWRAP protocols are expected to
+        not only be the basis for new products, but also
+        to be added to existing systems as extensions.
+      </p>
+
+    </section>
+
+    <a name="03_What_is_the_IETF"></a>
+    <section id="03_What_is_the_IETF">
+      <h2>What is the IETF and Why is it Important to this Discussion?</h2>
+
+      <p>
+        The internet engineering task force (IETF)
+        <a href="#ref_11">[11]</a> is a "standards
+        development organization" which focuses on
+        internet protocols. It is well known for being
+        the professional forum where TCP/IP (a very
+        popular networking technology) and SMTP (the
+        standard email protocol) were developed. the
+        IETF is not a commercial organization; it's more
+        like a non-profit or NGO. it's stated goal is to
+        improve people's lives by making network
+        equipment and software work together.
+      </p>
+
+      <p>
+        An interesting feature of the IETF is that when
+        protocols are developed under it's auspices,
+        they're considered "open" and "public." That is,
+        there is no charge to implement them. you don't
+        have to sign non-disclosure agreements and you
+        don't have to pay money to download
+        them. membership in the working groups that
+        define standards is open to the public; anyone
+        can participate. When Linden and IBM approached
+        the IETF saying they wanted to develop a "next
+        generation" protocol as an IETF activity, they
+        were explicitly agreeing to public commentary
+        and participation in the process.
+      </p>
+
+      <p>
+        That being said, there are some intellectual
+        property issues. Apecifically, there is a patent
+        held by IBM that may or may not have bearing on
+        the implementation of VWRAP services. The IETF
+        process requires participants to disclose any
+        known patents related to the work. This allows
+        developers to decide if they want to participate
+        or agree to make a standard that may be covered
+        by software patents. in this case, IBM filed the
+        requisite disclosure <a href="#ref_12">[12]</a>
+        and has offered VWRAP developers a blanket
+        license to use their intellectual property for
+        the purpose of implementing the VWRAP
+        standard(s). i am not a lawyer, however. You
+        should get competent legal authority to verify
+        what i just wrote.
+      </p>
+    </section>
+
+    <a name="04_How_will_we_know"></a>
+    <section id="04_How_will_we_know">
+      <h2>How Will We Know If We've Succeeded?</h2>
+
+      <p>
+        There's been a little confusion about what we're
+        trying to do with VWRAP. we're not trying to
+        compete with Hypergrid or Croquet or
+        OpenWonderland. rather, we're trying to define
+        the protocol for services that anyone could
+        implement, even 2d web services.
+      </p>
+
+      <p>
+        We'll know we've succeeded when after publishing
+        our specifications, users can log into virtual
+        worlds using their twitter or WikiMedia account
+        credentials. Or if they're able to use the
+        WikiMedia commons as an asset server. Or if they
+        can teleport between OSGrid and Second Life™.
+      </p>
+
+      <p>
+    </section>
+    
+    <a name="05_How_Can_You_Help"></a>
+    <section id="05_How_Can_You_Help">
+      <h2>How Can You Help?</h2>
+
+      <p>
+        The VWRAP working group is made up predominantly
+        of implementers. That is, people who write
+        software are disproportionately represented. We
+        need more input from people who deploy virtual
+        worlds and from people who live in them. Most of
+        the discussions will be highly technical in
+        nature, and that might be intimidating to some.
+      </p>
+
+      <p>
+        But it is an open process; everyone is welcome
+        to listen to the discussion. As long as you're
+        not abusive to other list participants, you are
+        welcome to post comments or questions. Keep in
+        mind that the answers may not be exactly what
+        you want to hear, and questions should be
+        focused on the technology (and not Linden or
+        OSGrid policy.) But as technology developers, we
+        need to know what your use cases are.
+      </p>
+
+      <p>
+        The mailing list for this group is
+        vwrap@ietf.org <a href="#ref_13">[13]</a>. A
+        good place to start is by  reading the "Intro
+        and Goals" <a href="#ref_14">[14]</a> internet
+        draft.
+      </p>
+
+      <p>
+        I hope this answers a few questions about the
+        VWRAP protocol and working group.
+      </p>
+    </section>
+    
+    <section id="98_References">
+      
+      <h2>References</h2>
+
+      <ol>
+        <a name="ref_1"></a>
+        <li><a href="https://hypergridbusiness.com/">HyperGridBusiness.Com</a></li>
+
+        <a name="ref_2"></a>
+        <li><a href="https://www.lindenlab.com/">Linden Lab ® [WWW]</a></li>
+
+        <a name="ref_3"></a>
+        <li><a href="http://opensimulator.org/wiki/Main_Page">OpenSimulator [WWW]</a></li>
+
+        <a name="ref_4"></a>
+        <li><a href="https://code.google.com/archive/p/openmetaverse/">Open Metaverse [WWW]</a></li>
+
+        <a name="ref_5"></a>
+        <li><a href="https://en.wikipedia.org/wiki/Open_Cobalt">Open Cobalt (fomerly Croquet) [WikiPedia]</a></li>
+
+        <a name="ref_6"></a>
+        <li><a href="https://realxtend.org/">realXtend [WWW]</a></li>
+
+        <a name="ref_7"></a>
+        <li><a href="http://openwonderland.org/">OpenWonderland [WWW]</a></li>
+
+        <a name="ref_8"></a>
+        <li><a href="http://reactiongrid.com/">Reaction Grid [WWW]</a></li>
+
+        <a name="ref_9"></a>
+        <li><a href="https://www.osgrid.org/">OSGrid [WWW]</a></li>
+
+        <a name="ref_10"></a>
+        <li><a href="http://opensimulator.org/wiki/Hypergrid">The Hypergrid [OpenSimulator Wiki]</a></li>
+
+        <a name="ref_11"></a>
+        <li><a href="https://en.wikipedia.org/wiki/Internet_Engineering_Task_Force">Internet Engineering Task Force [Wikipedia]</a></li>
+
+        <a name="ref_12"></a>
+        <li><a href="https://datatracker.ietf.org/ipr/1294/">IPR Details</a></li>
+
+        <a name="ref_13"></a>
+        <li><a href="https://www.ietf.org/mailman/listinfo/vwrap">vwrap@ietf.org [Mailing List]</a></li>
+
+        <a name="ref_14"></a>
+        <li><a href="https://tools.ietf.org/html/draft-hamrick-vwrap-intro-00">VWRAP: Introduction and Goals [Internet Draft]</a></li>
+
+      </ol>
+      
+    </section>
+    
+    <section id="footer"><p>
+      This page was last updated on July 9, 2020. This
+      page is a part of the <a href="../index.html">Technical
+      Section</a>, which is part of
+      <a href="../../../index.html">Meadhbh Hamrick's Web
+        Site</a>.      
+    </p></section>
+  </body>
+</html>
