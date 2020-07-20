@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" type="text/css" href="../../../css/index.css"/>
+    <title>What Does It Mean for a Virtual World to be Second-Life Like?</title>
+    <meta charset="utf-8"/>
+    <meta name="description" content="What are the features of a virtual world that make it 'Second-Life-Like'?"/>
+  </head>
+  <body class="content">
+    <title>What Does It Mean for a Virtual World to be Second-Life Like?</title>
+
+    <a name="00_Intro"></a>
+    <section id="00_Intro">
+      
+      <p>
+        <em>[This article originally appeared on my blog
+          on April 12th, 2010.]</em>
+      </p>
+
+      <p>
+        So the VWRAP working group is off to a good
+        start. We've completed the chartering process
+        and published a few Internet Drafts. We also had
+        a face-to-face meeting a couple weeks ago that
+        identified a couple defects in some of our draft
+        documents.
+      </p>
+
+      <p>
+        Now it's time to start recruiting people to help
+        with the effort. The documents we produce will
+        require a number of participants documenting use
+        cases, writing documents, creating sample code
+        implementations, checking the technical contents
+        of draft documents and reviewing the group's
+        output to make sure it just plain makes sense.
+      </p>
+
+      <p>
+        But every time i ask someone to help out, they
+        want to read our background documents. And this
+        is where i start getting kind of embarrassed; we
+        don't have nearly as many as we need. I'm
+        writing a series of blog posts about it to give
+        an informal and informational introduction to
+        VWRAP, the Virtual World Region Agent Protocol.
+      </p>
+
+      <p>
+        If you're new to VWRAP, you may want to read the
+        "What is VWRAP" <a href="#ref_1">[1]</a>. For
+        more detailed info, you may want to read the
+        "VWRAP : Introduction and Goals" document.
+        <a href="#ref_2">[2]</a> The current draft is 32
+        pages and is written to be as precise as
+        possible. Because it was written with
+        "correctness" in mind, it can be a bit wordy at
+        times so my first couple blog posts will be high
+        level discussions about what we're trying to
+        accomplish.
+      </p>
+
+      <p>
+        Several people have used the term "Second
+        Life-Like" to describe the type of virtual world
+        we're hoping to create. But that's a bit of a
+        fail; it's bad form to describe something new by
+        saying "Hey, it's just like this other thing,
+        only a little different." So maybe the first
+        question to ask is...
+      </p>
+
+    </section>
+
+    <section>
+      <h2>What Does it Mean to be Second Life-Like ?</h2>
+
+      <p>
+        If you've visited Second Life™ as a user and
+        then visited World of Warcraft™ or EVE Online™,
+        you know they're each pretty different
+        experiences. WoW is mostly about fighting. Sure,
+        you can be social in some corners of the world,
+        but what you're paying for is the ability to
+        reign down hurt on other players. EVE Online is
+        about dueling spaceships while Second Life is
+        about capturing the experience of burning man by
+        socializing and building interesting bits of
+        art. Or maybe its about business and education;
+        we're still trying to figure that one out. But
+        it's clearly more open ended than other popular
+        massively multi-participant systems.
+      </p>
+
+      <p>
+        But for software developers and virtual world
+        deployers, it's probably a good idea to have a
+        better description of the protocol than "Oh,
+        it's sorta like Second Life or OpenSim." In the
+        "Intro and Goals" document referenced above,
+        there are three primary features of VWRAP
+        virtual worlds:
+      </p>
+
+      <ol>
+        <li>The virtual world exists independently of the participants,</li>
+        <li>Avatars have a single, unique presence in a single virtual world, and,</li>
+        <li>The virtual world contains persistent objects.</li>
+      </ol>
+
+      <p>
+        Let's look at these features in more depth:
+      </p>
+    </section>
+
+    <section>
+      <h2>The Virtual World Exists Independently of the Participants</h2>
+
+      <p>
+        Some readers will remember VRML (Virtual Reality
+        Markup Language.) It was a text based language
+        for describing virtual world scene graphs. There
+        was an interactivity model for VRML, so you
+        could get objects to do things by interacting
+        with the virtual environment. But for the most
+        part, tools that used VRML rendered scene graphs
+        on local systems and did not interact with
+        remote systems or users.
+      </p>
+
+      <p>
+        So you loaded a virtual experience from local
+        storage or from the web, rendered the scene,
+        twirled around to look at the objects and could
+        optionally interact with this "pocket universe."
+      </p>
+
+      <p>
+        Some of the tools seemed advanced (even for
+        today) and you could mock up some relatively
+        interesting scenes. But, at the end of the day,
+        there were no standards for how to invite other
+        participants into your virtual creation.
+      </p>
+
+      <p>
+        This is NOT what VWRAP is all about. VWRAP is
+        about multiple individuals accessing the same
+        scene graph hosted on a public server somewhere
+        and everyone sees the same thing when they log
+        in. VWRAP worlds are inherently shared
+        experiences, not pocket universes on someone's
+        desktop system.
+      </p>
+    </section>
+
+    <section>
+     
+      <h2>Avatars Have a Single, Unique Presence in a Single Virtual World</h2>
+
+      <p>
+        Like the reified world, the virtual world is a
+        social space. The locus of social activity in
+        the virtual world is the user's avatar; each
+        avatar representing a single user. With due
+        respect to even the best "real world"
+        multi-taskers, you can still only be in one
+        place at a time; so it is with avatars in the
+        virtual world.
+      </p>
+
+      <p>
+        It also means that for every different virtual
+        world, there is only one of you. By default, you
+        can interact with everyone else in the world and
+        they can interact with you.
+      </p>
+
+    </section>
+
+    <section>
+      <h2>The Virtual World Contains Persistent Objects</h2>
+
+      <p>
+        Objects in the virtual world, like virtual
+        worlds themselves, persist beyond a user's
+        presence in the virtual world. If a user created
+        a desk and chairs in a VWRAP virtual world, it
+        would continue to exist until explicitly
+        deleted. So the user could log in, create an
+        object in a particular location in the virtual
+        world and then log out. When another user logs
+        in and travels to the same location, they would
+        see that object.
+      </p>
+
+      <p>
+        The "Intro and Goals" draft referenced above
+        describes these characteristics in more detail,
+        but the text here describes the basics of VWRAP
+        virtual worlds: there's only one of you, there's
+        stuff in the world and the world doesn't
+        disappear when you turn your back.
+      </p>
+
+    </section>
+    
+    <section id="XX_References">
+      
+      <h2>References</h2>
+
+      <ol>
+        <a name="ref_1"></a>
+        <li><a href="what_is_the_virtual_worlds_region_agent_protocol.html">What is the Virtual Worlds Region Agent Protocol?</a></li>
+
+        <a name="ref_2"></a>
+        <li><a href="https://tools.ietf.org/html/draft-ietf-vwrap-intro-00">VWRAP : Introduction and Goals</a></li>
+      </ol>
+      
+    </section>
+    
+    <section id="footer"><p>
+      This page was last updated on July 20, 2020. This
+      page is a part of the <a href="../index.html">Technical
+      Section</a>, which is part of
+      <a href="../../../index.html">Meadhbh Hamrick's Web
+        Site</a>.      
+    </p></section>
+  </body>
+</html>
