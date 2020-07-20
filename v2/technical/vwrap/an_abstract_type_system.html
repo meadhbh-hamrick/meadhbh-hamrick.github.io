@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" type="text/css" href="../../../css/index.css"/>
+    <title>An Abstract Type System? Hunh?</title>
+    <meta charset="utf-8"/>
+    <meta name="description" content="A brief overview of the LLSD Abstract Type System used for VWRAP."/>
+  </head>
+  <body class="content">
+    <title>An Abstract Type System? Hunh?</title>
+
+    <a name="00_Intro"></a>
+    <section id="00_Intro">
+      
+      <p>
+        [ This article originally appeared on my blog on
+        April 15th, 2010. -Ed.]
+      </p>
+
+      <p>
+        Today's VWRAP essentials post is for a more
+        technical audience. If you're reading this, I'm
+        going to assume you're familiar with VWRAP, the
+        Virtual World Region Agent Protocol. if you need
+        a refresher, you can look at "What is VWRAP?"
+        <a href="#ref_1">[1]</a> post on this blog, read
+        the VWRAP Working Group Charter
+        <a href="#ref_2">[2]</a>, or read the latest
+        draft of the "VWRAP : Intro and Goals"
+        <a href="#ref_3">[3]</a> document.
+      </p>
+
+      <p>
+        Early in the list of technical deliverables for
+        the VWRAP working group is the document titled
+        "Abstract Type System for the Transmission of
+        Dynamic Structured Data."
+        <a href="#ref_4">[4]</a> In this post we're
+        going to answer the question "What is an
+        abstract type system and why should I care?"
+      </p>
+    </section>
+    
+    <a name="02_languages"></a>
+    <section id="02_languages">  
+      <h2>c? c++? python? c#? php? javascript?</h2>
+
+      <p>
+        There are a bunch of languages used by virtual
+        world programmers. Which one should we
+        standardize on? If you answered "we shouldn't
+        standardize on any of them," then you gave the
+        right answer. VWRAP is a wire protocol intended
+        to be implementable by any language. If you can
+        open a network socket and receive arbitrary HTTP
+        requests, we're hoping you can use it to
+        implement VWRAP.
+      </p>
+
+      <p>
+        But this introduces a bit of a quandry. The type
+        behavior of languages is mildly
+        different. Integers in c are 32 bits in length,
+        unless they're 16 or 64. JavaScript seems to not
+        have a limit, transparently converting regular
+        integers into multi-precision integers (except
+        when it doesn't.) And in some languages the
+        results of adding integers to strings isn't the
+        same as others.
+      </p>
+
+      <p>
+        While most languages provide a plethora of types
+        (like integers, strings, dates, etc.) the rules
+        for adding them together or converting them to
+        other types are inconsistent. In normal
+        development this isn't too much of a problem; on
+        the rare occasion programmers have to code in
+        different languages, there are frequently tools
+        to manage the differences. These tools usually
+        only work on a specific system, however. they're
+        designed not to work in the general case, but
+        tailored for a particular development
+        environment.
+      </p>
+
+      <p>
+        It's still really nice to be able to use
+        familiar types like integers, strings, dates and
+        so on when describing protocol messages. But if
+        there's no easy way to convert between types
+        used in different implementations, what do you
+        do?
+      </p>
+    </section>
+
+    <a name="03_LLSD"></a>
+    <section id="03_LLSD">
+      <h2>The LLSD Abstract Type System</h2>
+
+      <p>
+        An early version of the LLSD abstract type
+        system was introduced internally in 2005 and was
+        intended to hide type system differences between
+        C++, python and ruby based services. The intent
+        was to store structured data independent of
+        language-based type behavior. When a python
+        program read data written by a C++ program, it
+        would know what the rules were. Integers were
+        ALWAYS 32 bits wide. Dates were ALWAYS stored in
+        the same format; not a 32 bit int on some
+        systems or a string on others.
+      </p>
+
+      <p>
+        Over the past five years, LLSD has been refined
+        somewhat, but the basic rules are the same:
+        there are a fixed number of types that all
+        languages SHOULD be able to understand. There
+        are a fixed number of serialization formats
+        (currently there are three) each with fixed
+        rules about how data is serialized and later
+        de-serialized.
+      </p>
+
+      <p>
+        The benefit of this system is if you specify
+        your abstract type system used to store or
+        transmit data, and you make the serialization
+        rules easy to implement, future programming
+        languages, environments and operating systems
+        should have minimal problems parsing the data.
+      </p>
+    </section>
+
+    <a name="04_LLSD_For_The_Impatient"></a>
+    <section id="04_LLSD_For_The_Impatient">
+      <h2>LLSD for the Impatient</h2>
+
+      <p>
+        The LLSD abstract type system defines 11 types:
+        undefined, boolean, integer, real, string, date,
+        URI, UUID, binary, array and map. The last two
+        are "collections" meaning
+        they're... well... they're collections of other
+        types. Arrays are (as you might have guessed)
+        collections indexed by position while maps are
+        indexed by keys. The undefined type is present
+        to represent situations where the existence of
+        an item is implied, but there's not enough
+        information to assign a type to a data
+        element. An example of when you attempt to
+        retrieve an array or map element that doesn't
+        exist. Instead of getting an error, you get an
+        undefined.
+      </p>
+
+      <p>
+        LLSD defines conversions between types that your
+        implementing language should support. type
+        conversions will get more important later when
+        we talk about the LLIDL interface description
+        language and programming styles that support
+        loosely coupled systems. But for now just know
+        that if you really want to convert the type of a
+        data element, that's fine, but LLSD has a few
+        rules about the conversion.
+      </p>
+
+      <p>
+        LLSD also defined default values for each
+        type. Defaults surface when you make an illegal
+        type conversion. so if you convert a date to a
+        boolean, you'll get the boolean default value
+        (false.) If you convert an undefined value into
+        any other type, you get the default value for
+        that type. So if you attempted to read past the
+        end of an array and cast that value as an
+        integer, you would get 0, the default integer.
+      </p>
+
+      <p>
+        LLSD has three serialization schemes: XML, JSON
+        and Binary. Each scheme is, in theory, no better
+        than the other, but they were each designed for
+        slightly different use cases. The XML
+        serialization scheme is useful for environments
+        that already use XML for other reasons. JSON is
+        useful for web services and the Binary
+        serialization scheme is useful for systems that
+        need low message processing overhead.
+      </p>
+
+      <p>
+        Better examples of serialized LLSD data can be
+        found in the internet draft referenced above,
+        but here is a very simple example of a map with
+        three members: an integer, a string and an
+        array:
+      </p>
+
+      <pre>
+
+&lt;llsd&gt;
+  &lt;map&gt;
+    &lt;key&gt;name&lt;/key&gt;
+    &lt;string&gt;Zocalo Merchants&lt;/string&gt;
+    &lt;key&gt;priority&lt;/key&gt;
+    &lt;int&gt;12&lt;/int&gt;
+    &lt;key&gt;position&lt;/key&gt;
+    &lt;array&gt;
+      &lt;int&gt;128&lt;/int&gt;
+      &lt;int&gt;192&lt;/int&gt;
+      &lt;int&gt;20&lt;/int&gt;
+    &lt;/array&gt;
+  &lt;/map&gt;
+&lt;/llsd&gt;</pre>
+
+    </section>
+
+    <a name="05_Maddening_Weirdness"></a>
+    <section id="05_Maddening_Weirdness">
+      <h2>Maddening Weirdness Can Be Your Friend</h2>
+
+      <p>
+        There has been some criticism of LLSD's behavior
+        regarding undefined type conversions and what to
+        do when accessing a non-existent collection
+        element. There are some very good arguments in
+        favor of raising an exception. The primary
+        benefit is that if there's an error involving
+        type conversion weirdness, developers are more
+        likely to catch it if the system signals an
+        exception rather than "fails silently."
+      </p>
+
+      <p>
+        But there are two arguments against raising an
+        execption. First, it's more complicated and
+        requires that error handling be added to the
+        abstract type system. Secondly, it may lead to
+        redundant error checking and brittle systems.
+      </p>
+
+      <p>
+        The argument goes something like this: "if i'm
+        writing a service consuming an LLSD message, i'm
+        probably going to be checking values at the
+        application layer to make sure they make
+        sense. if i'm checking them there, why do i need
+        the presentation layer to check that they make
+        sense?"
+      </p>
+
+      <p>
+        This argument implies that erroring out when you
+        find an "illegal" type conversion doesn't really
+        buy you anything, and you would have to
+        complicate the specification to support it.
+      </p>
+    </section>
+
+    <a name="06_Conclusion"></a>
+    <section id="06_Conclusion">
+      <h2>Conclusion</h2>
+
+      <p>
+        So that's it. LLSD is a pretty small
+        specification. There are already several oepn
+        source implementations for the curious, and the
+        most recent specification is available at the
+        ietf.org web site. Please take a look at it and
+        give us feedback on the
+        <a href="https://www.ietf.org/mailman/listinfo/vwrap">vwrap
+          mailing list</a>.
+      </p>
+
+      <p>
+    </section>
+    
+    <section id="98_References">
+      
+      <h2>References</h2>
+
+      <ol>
+        <a name="ref_1"></a>
+        <li><a href="what_is_the_virtual_worlds_region_agent_protocol.html">What Is VWRAP?</a></li>
+
+        <a name="ref_2"></a>
+        <li><a href="https://tools.ietf.org/wg/vwrap/charters">VWRAP Working Group Charter</a></li>
+
+        <a name="ref_3"></a>
+        <li><a href="https://tools.ietf.org/html/draft-ietf-vwrap-intro-00">VWRAP : Intro  and Goals</a></li>
+
+       <a name="ref_4"></a>
+        <li><a href="https://tools.ietf.org/html/draft-ietf-vwrap-type-system-00">Abstract Type System for the Transmission of Dynamic Structured Data</a></li>
+      </ol>
+      
+    </section>
+    
+    <section id="footer"><p>
+      This page was last updated on July 9, 2020. This
+      page is a part of the <a href="../index.html">Technical
+      Section</a>, which is part of
+      <a href="../../../index.html">Meadhbh Hamrick's Web
+        Site</a>.      
+    </p></section>
+  </body>
+</html>
