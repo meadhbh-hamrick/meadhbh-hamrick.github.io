@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" type="text/css" href="../../../css/index.css"/>
+    <title>Notes on the History of the VWRAP Working Group</title>
+    <meta charset="utf-8"/>
+    <meta name="description" content="Notes on the History of the VWRAP Working Group"/>
+  </head>
+  <body class="content">
+    <title>Notes on the History of the VWRAP Working Group</title>
+
+    <a name="00_Intro"></a>
+    <section id="00_Intro">      
+      <p>
+        After my last post about VWRAP, a couple people
+        pinged me asking about it's history. Here is a
+        quick narrative of how VWRAP came to be and
+        where it might be headed next.
+      </p>
+
+      <p>
+        The effort to establish the VWRAP working group
+        has been ongoing for about a year, and it has a
+        surprisingly rich history for an effort that's
+        been ongoing for that short of a period of
+        time. <em>[This post was originally dated April
+        7th, 2010, -ed]</em> Our group is certainly not
+        the first attempt to develop inter-operable
+        virtual worlds standards; that's been going on
+        for quite a while.
+      </p>
+      
+      <p>
+        VWRAP recent history begins with an
+        interoperability test sponsored by IBM and
+        Linden Lab in the summer of 2008. Using ideas
+        that had been discussed in the Second Life™
+        architecture working group, several users were
+        able to teleport their avatars from Linden-owned
+        to systems owned by third parties.
+      </p>
+
+      <p>
+        There were significant limitations
+        however. Avatar appearance was inconsistent
+        across regions and cross-grid access to
+        inventory was more or less nonexistent. But as a
+        first step, it showed that cross-grid
+        teleportation were possible.
+      </p>
+
+      <p>
+        Interested users can find documentation of the
+        Open Grid Protocol (OGP) used by these early
+        interop trials on the Second Life™ wiki:
+      </p>
+
+      <ol>
+        <li>Introduction <a href="#ref_1">[1]</a></li>
+        <li>LLSD <a href="#ref_2">[2]</a></li>
+        <li>Authentication <a href="#ref_3">[3]</a></li>
+        <li>Teleport <a href="#ref_4">[4]</a></li>
+      </ol>
+
+      <p>
+        Later that year we entered a time of economic
+        uncertainty. Virtual world interoperability did
+        not seem to contribute to the bottom line, and
+        there were significant near-term opportunity
+        costs. The consensus was we should type up a
+        report on our experiences, publish our final OGP
+        drafts and focus on less risky things for a few
+        months before coming back to it. We were in the
+        process of mothballing the interop effort when
+        things took an interesting turn.
+      </p>
+
+      <p>
+        Inside the lab, we knew the UDP-based legacy
+        Second Life protocol had some serious
+        scalability problems; we wanted to move more
+        services to LLSD over HTTP. Most of our work
+        serialized LLSD messages as XML documents and
+        sent them over the internet. As part of our
+        "wrapping up" process, we figured we should
+        register the MIME types we used for LLSD. this
+        was the motivation for the original "LLSD
+        Abstract Type System" <a href="#ref_5">[5]</a>
+        draft published in early 2009.
+      </p>
+
+      <p>
+        At around this same time, the Bidirectional HTTP
+        (Bi-Di) effort inside the IETF was heating up
+        and Mark Lentczner was asked to submit a draft
+        and a presentation on "Reverse HTTP"
+        <a href="#ref_6">[6]</a> which was based on
+        previous work at the lab with Donovan Preston.
+      </p>
+
+      <p>
+        Originally intended to be small, stand-alone
+        drafts with a limited scope, we began the task
+        of publishing an informational RFC for the
+        purpose of registering the LLSD MIME types.
+      </p>
+
+      <p>
+        Starting a virtual worlds working group in the
+        IETF was not a new idea. The SWMP mailing list
+        had been setup in 2007 to discuss the idea. It
+        eventually failed to result in a working group
+        for reasons that are too complicated to discuss
+        here. There was considerable resistance to the
+        idea, but around this time, David Lavine at IBM
+        started asking "what's next with interop?" David
+        and Suzy Deffeyes had invested a fair amount of
+        effort in the 2008 interop trail, so it was a
+        reasonable question.
+      </p>
+
+      <p>
+        The more we talked about it, the more it seemed
+        like a good idea. In early 2009, Mark Lentczner
+        and I lobbied inside the lab for the idea while
+        David and Suzy pushed the idea inside IBM. The
+        IETF does not officially recognize corporate
+        members, people who show up at IETF meetings
+        represent themselves. But if a working group was
+        ever to be formed, none of us felt comfortable
+        pushing the idea without the support of our
+        management.
+      </p>
+
+      <p>
+        We eventually produced an argument for interop
+        good enough to garner support inside IBM and
+        Linden, so in January of 2009, David Lavine of
+        IBM and i approached the IETF informally with a
+        proposal to sponsor the work of developing a
+        virtual worlds interoperability prototype. At
+        the time, we had hoped to develop a protocol
+        that would work for a broad range of virtual
+        experiences.
+      </p>
+
+      <p>
+        IETF process calls for a "Birds of a Feather" or
+        BoF meeting to be held to see if there is
+        sufficient interest to justify creation of an
+        official working group. On march 24th, 2009 the
+        "MMOX BoF" was held at the 74th IETF meeting in
+        San Francisco, CA.
+      </p>
+
+      <p>
+        It did not go as well as we had hoped, but it
+        didn't go as bad as we feared it could.
+      </p>
+
+      <p>
+        We were unable to reach consensus for "broad
+        interoperability." we would not be able to, as
+        David Lavine once hoped, "meet with your raiding
+        party in the sims online, teleport over to world
+        of warcraft, slay a dragon and then teleport to
+        a pub in Second Life to celebrate."
+      </p>
+
+      <p>
+        But we did find there were enough people at
+        Linden Lab and in the OpenSimulator community
+        that were interested in cross-world
+        interoperability. The IETF allowed us to
+        redefine our scope and hold a second BoF
+        session. On july 28th, 2009, the "OGPX BoF" was
+        held to discuss the scope of the work (OGPX
+        standing for "Open Grid Protocol X".) This
+        meeting went well and following some discussion
+        on the ogpx@ietf.org mailing list, we were able
+        to agree to a group charter.
+      </p>
+
+      <p>
+        In the IETF, a working group charter defines
+        what the group is supposed to be working on and
+        what documents it proposes to produce. you can
+        view the current charter for the group at the
+        IETF's site <a href="#ref_7">[7]</a>. Along
+        the way, a number of people objected to the name
+        "OGP" or "Open Grid Protocol" as they felt it
+        implied the objective of the protocol was to
+        manage cloud or grid based systems. Many
+        alternate names were proposed including my
+        favorites Open Virtual EnviRonments (OVER) and
+        Agent BackbOne for Virtual Environments (ABOVE).
+      </p>
+
+      <p>
+        Eventually, we settled on the name "VWRAP:
+        Virtual Worlds Region Agent Protocol."
+      </p>
+
+      <p>
+        As an aside, after changing the name from OGPX
+        to VWRAP, we forgot to change the name of the
+        mailing list until very recently. the current
+        mailing list is <a href="https://www.ietf.org/mailman/listinfo/vwrap">vwrap@ietf.org</a>,
+        though there has been significant discussion on <a href="https://www.ietf.org/mailman/listinfo/ogpx">ogpx@ieft.org</a>
+        and <a href="https://www.ietf.org/mailman/listinfo/mmox">mmox@ietf.org</a>.
+      </p>
+
+      <p>
+        On march 23rd, 2010, the working group held it's
+        first official face to face meeting in Anaheim,
+        California. it was a mixed reality event with
+        approximately 15-20 people being present in
+        incarnate reality and 50 avatars attending in
+        the virtual world.
+      </p>
+
+      <p>
+        The work continues on the vwrap mailing list,
+        and anyone with an interest in virtual worlds
+        interoperability is encouraged to participate.
+      </p>
+
+    </section>
+    
+    <section id="98_References">
+      
+      <h2>References</h2>
+
+      <ol>
+        <a name="ref_1"></a>
+        <li><a href="http://wiki.secondlife.com/wiki/OGP_Base_Draft_3">OGP Base Draft 3</a></li>
+
+        <a name="ref_2"></a>
+        <li><a href="http://wiki.secondlife.com/wiki/OGP_LLSD_Draft_3">OGP LLSD Draft 3</a></li>
+
+        <a name="ref_3"></a>
+        <li><a href="http://wiki.secondlife.com/wiki/OGP_Authentication_Draft_3">OGP Authentication Draft 3</a></li>
+
+        <a name="ref_4"></a>
+        <li><a href="http://wiki.secondlife.com/wiki/OGP_Teleport_Draft_5">OGP Teleport Draft 5</a></li>
+
+        <a name="ref_5"></a>
+        <li><a href="https://datatracker.ietf.org/doc/draft-hamrick-llsd/">Linden Lab Structured Data</a></li>
+
+        <a name="ref_6"></a>
+        <li><a href="https://datatracker.ietf.org/doc/draft-lentczner-rhttp/">Reverse HTTP</a></li>
+        
+        <a name="ref_1"></a>
+        <li><a href="https://datatracker.ietf.org/wg/vwrap/charter/">VWRAP Working Group Charter</a></li>
+      </ol>
+      
+    </section>
+    
+    <section id="footer"><p>
+      This page was last updated on July 20, 2020. This
+      page is a part of the <a href="../index.html">Technical
+      Section</a>, which is part of
+      <a href="../../../index.html">Meadhbh Hamrick's Web
+        Site</a>.      
+    </p></section>
+  </body>
+</html>
