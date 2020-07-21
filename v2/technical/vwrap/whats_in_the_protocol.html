@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" type="text/css" href="../../../css/index.css"/>
+    <title>What's in the Protocol?</title>
+    <meta charset="utf-8"/>
+    <meta name="description" content="A brief description of what the VWRAP family of protocol specifications describes."/>
+  </head>
+  <body class="content">
+    <title>What's in the Protocol?</title>
+
+    <a name="00_Intro"></a>
+    <section id="00_Intro">
+      
+      <p>
+        <em>[ This article appeared on my blog on April
+          13th, 2010, -Ed. ]</em>
+      </p>
+
+      <p>
+        It's no secret VWRAP <a href="#ref_1">[1]</a> is
+        heavily influenced by  Second Life's next
+        generation OGP protocol <a href="#ref_2">[2]</a>.
+        One view of how the OGP effort became the VWRAP
+        working group can be found in "Notes on the
+        History of the VWRAP Working Group."
+        <a href="#ref_3">[3]</a> It's not surprising
+        many people believe every feature of Second
+        Life™ will be found in the VWRAP protocol suite.
+      </p>
+
+      <p>
+        But this isn't the case; there will be many
+        features of Linden's virtual world that won't be
+        found in VWRAP. in this post, we're going to
+        look at the VWRAP charter
+        <a href="#ref_1">[1]</a>, a recent presentation
+        by josh bell <a href="#ref_4">[4]</a>, and talk about why it's not
+        a big deal some things are left out. But let's
+        start with what's in and what's out.
+      </p>
+
+      <p>
+        What follows is a list of features that are
+        widely believed to be "in" and "out." This is
+        not an authoritative list; the feature list will
+        only be official when the internet drafts
+        describing VWRAP become RFCs. There's still time
+        to influence the VWRAP protocol suite; join the
+        vwrap@ietf.org <a href="#ref_5">[5]</a> mailing
+        list and make your voice heard.
+      </p>
+    </section>
+
+    <section>
+      <h2>What's In : Authentication and Trust</h2>
+
+      <p>
+        The first step a client application should take
+        when dealing with the virtual world is to
+        authenticate themselves. In VWRAP the
+        authentication process begins with the
+        presentation of credentials and ends with the
+        client application receiving a "seed capability"
+        or "seed cap." You can find more information
+        about this process in the "VWRAP Trust Model and
+        User Authentication" <a href="#ref_6">[6]</a>
+        draft.
+      </p>
+
+      <p>
+        The seed cap is a randomly generated, difficult
+        to guess web address (URL.) When queried it
+        returns information about where to find other
+        services (like how to place your avatar in a
+        region or manipulate your inventory.)
+      </p>
+
+      <p>
+        Some members of the VWRAP mailing list have
+        suggested that a virtual world open to anyone
+        without authentication would be a productive use
+        of the protocol. To support this use case, the
+        authenticator in an authentication message is
+        optional. The protocol does not require an
+        authenticator like a hashed password to
+        accompany a login message, but the virtual world
+        you connect to might.
+      </p>
+
+      <p>
+        It's also been pointed out that using Transport
+        Layer Security (TLS) client certificates, OAuth
+        or even HTTP authentication may be useful in
+        some situations. It may be more accurate to call
+        the "authentication" phase more of an
+        "identification with optional authentication"
+        phase.
+      </p>
+
+      <p>
+        No matter what technique you use to successfully
+        authenticate your client application to your
+        authentication service, after it's over, the
+        client has a seed capability and the
+        authentication service has enough information to
+        identify the client's user.
+      </p>
+    </section>
+
+    <section>
+      <h2>What's In : Inventory, Assets and Basic Permissions</h2>
+
+      <p>
+        Developers should expect a "streamlined" asset
+        system. There is a requirement to maintain
+        positive copy control on objects for users who
+        want such control. But the existing inventory /
+        asset system used in Second Life™ is starting to
+        show it's age.
+      </p>
+
+      <p>
+        Assets in VWRAP will be represented as LLSD
+        maps, retrieved using resources defined using
+        the LLIDL interface description language, most
+        likely over HTTP. An "asset" in VWRAP is a
+        collection of meta-data and data. The "data" of
+        an asset is tightly constrained by the asset's
+        type: cubes are represented by cube data;
+        textures with texture data; etc. Asset meta-data
+        will identify the creator, describe base
+        permissions, and include textual descriptions of
+        the object. Assets will use URLs to reference
+        other assets, and not UUIDs. for example, when a
+        cube references a texture for each of it's
+        faces, it will use URLs to point to the
+        textures.
+      </p>
+
+      <p>
+        The SimianGrid project <a href="#ref_7">[7]</a>,
+        which was born out of the Cable Beach Asset
+        Server, has announced they will be participating
+        in the development of the VWRAP inventory and
+        asset system. Linden Research has not made a
+        public statement of support of VWRAP inventory,
+        but is expected to participate in it's
+        development.
+      </p>
+
+      <p>
+        It should also be mentioned that regions could
+        have region-specific assets. ground textures,
+        the shape of buildings, etc. All might be stored
+        in an asset server associated with the region
+        and not with the user who created them.
+      </p>
+    </section>
+
+    <section>
+      <h2>What's In : Spatial, User-to-User and Group Text and Voice</h2>
+
+      <p>
+        Text chat in Second Life's legacy protocol is
+        mildly broken. Spatial chat has reasonable
+        performance, but uses the same protocol to carry
+        text chat as to carry friend requests, inventory
+        offers and such-like. Group chat performance is
+        much worse, mostly the result of an arcane
+        architecture involving routing chat messages
+        though a simulator on the way to the user's
+        viewer. Simplification and performance
+        enhancement is expected in both spatial and
+        group text chat.
+      </p>
+
+      <p>
+        VWRAP will define a service for spatial,
+        user-to-user and group text chat. There has been
+        significant interest in using XMPP (or other
+        established IM protocols) to carry text
+        chat. This is a natural fit for user-to-user and
+        group text chat.
+      </p>
+
+      <p>
+        Voice is expected to work in radically the same
+        way, but using SIP and RTP protocols instead of
+        XMPP.
+      </p>
+    </section>
+
+    <section>
+      <h2>What's In : Basic Agent Information</h2>
+
+      <p>
+        This does not mean "profile info." Basic
+        information would likely include very basic
+        presence information like "this user is logged
+        in" or "you can find this agent in this region."
+        Basic agent information is there to support
+        other protocol functions (like teleportation and
+        retrieving avatar shape info.)
+      </p>
+    </section>
+
+    <section>
+      <h2>What's In : Teleport and Region Crossing</h2>
+
+      <p>
+        Teleportation has changed radically from the
+        Second Life legacy protocol. The biggest change
+        is the idea that an agent's presence information
+        can potentially be stored in two locations. OGP
+        experimented with the idea that agent-oriented
+        services should be segregated from
+        simulation-oriented services. So if you wanted
+        to know what region a user's avatar was rezzed
+        in, you would query a service associated with
+        that user, not with the region.
+      </p>
+
+      <p>
+        Remember, in the OGP world, there may be several
+        organizations that operate simulation
+        regions. Querying each of them to ask, "is this
+        avatar located here?" is sub-optimal.
+      </p>
+
+      <p>
+        This means that BOTH agent oriented services and
+        region oriented services need to know where the
+        user's avatar is. VWRAP is proposing extending
+        the OGP Draft 5 Teleport specification
+        <a href="#ref_8">[8]</a> to manage the intricate
+        dance of moving an agent from one region to
+        another.
+      </p>
+    </section>
+
+    <section>
+      <h2>What's In : Avatar Shape Information</h2>
+
+      <p>
+        We mentioned above that an agent's avatar will
+        be available through the basic agent info
+        service. it's unclear now what format avatar
+        meshes will take. The existing Linden legacy
+        format could be used. As could MPEG-V's ADML
+        (avatar data markup language.) Or maybe both.
+      </p>
+
+      <p>
+        Whatever the format, a user's avatar will be
+        made available to both client applications and
+        simulation services.
+      </p>
+    </section>
+
+    <section>
+      <h2>What's In : the Scene Graph and Object Updates</h2>
+
+      <p>
+        When your avatar is rezzed into a region, the
+        user's client application may pull a description
+        of the scene graph. That is, the list of 3d
+        objects observable in a given field of view.
+      </p>
+
+      <p>
+        There are several ways to communicate this
+        information. For instance, the simulator could
+        package up references to all items in the
+        avatar's field of view and send it to the client
+        as one large chunk. Or it could just start
+        sending a stream of messages; one message per
+        object.
+      </p>
+
+      <p>
+        In the past, object update messages have been
+        carried over raw UDP. In the future, object
+        updates may be carried over RTP or an HTTP event
+        queue.
+      </p>
+
+    </section>
+
+    <section>
+      <h2>What's In : Object Presence and Physics Simulation</h2>
+
+      <p>
+        Objects in the virtual world persist. once
+        they're rezzed, they should stay where they are
+        until acted upon by an external force. "Object
+        presence" services will allow a client to query
+        objects rezzed in the world for information like
+        internal state, an object control channel (if
+        you have rights to control it), etc.
+      </p>
+
+      <p>
+        Objects that are subject to physical simulation
+        may be moved or rotated by the simulation
+        software running on the region they're rezzed
+        in.
+      </p>
+
+      <p>
+        One of the fundamental features of VWRAP is that
+        physics simulation happens centrally. That is,
+        we don't do co-simulation where each client
+        simulates physical interactions and then check
+        with each other to see if any clients are out of
+        sync.
+      </p>
+    </section>
+
+    <section>
+      <h2>What's In : Region Adjacency Information</h2>
+
+      <p>
+        Second Life regions are rectangles, 256 meters
+        on a side in the x and y dimension and
+        stretching to infinity along the z axis. Second
+        Life itself is a collection of these regions
+        arranged in a grid. VWRAP will likely NOT
+        mandate this shape as the standard for virtual
+        worlds.
+      </p>
+
+      <p>
+        Proposals have surfaced that describe the
+        virtual world with spherical, cylindrical and
+        toroidal coordinates. But even flat "grids" may
+        have non-rectangular regions in the future. to
+        help client applications figure out which
+        systems to query for object information, a
+        service is needed to describe the shape and
+        partitioning of the virtual world.
+      </p>
+
+      <p>
+        This is not a map service per se, but something
+        more fundamental. The virtual world is composed
+        of multiple regions being stitched together to
+        give the illusion of a seamless
+        multi-dimensional space.
+      </p>
+    </section>
+
+    <section>
+      <h2>What's In : Object and Avatar Control</h2>
+
+      <p>
+        A virtual world would be pretty boring if you
+        couldn't move or animate your avatar. VWRAP will
+        provide a simple, extensible protocol for
+        sending control information to your avatar. The
+        same protocol may be used to control other
+        objects; think of virtual vehicles you climb in
+        and drive.
+      </p>
+    </section>
+
+    <section>
+      <h2>What's Out?</h2>
+
+      <p>
+        What's being left out of VWRAP is at least as
+        interesting as what's going in. Here's a rundown
+        of major Second Life features you won't find in
+        the spec.
+      </p>
+    </section>
+
+    <section>
+      <h2>What's Out : Game Script</h2>
+
+      <p>
+        Do not look for linden dollars in the VWRAP
+        drafts; you won't find them. Or at least you
+        won't find them now. Linden expressed a
+        preference that the linden dollar interface not
+        be made part of the official
+        specification. There are multiple reasons why
+        this could be the case. VWRAP is still a
+        technology under construction; a design flaw in
+        VWRAP could lead to a very real vulnerability
+        costing thousands if not millions of
+        dollars. Linden also charges a fee for linden
+        dollar transactions. It is possible they want to
+        maintain control of the specification for purely
+        mercantile reasons; to prevent VWRAP from
+        letting third parties to wedge into the linden
+        dollar exchange business.
+      </p>
+
+      <p>
+        Some OpenSim <a href="#ref_9">[9]</a> developers
+        expressed a desire to prevent Linden from
+        encroaching on their turf. Typical of their
+        position is the statement, "why should i let
+        Linden take a cut of my OpenSim based business?"
+        The fear is that if a linden dollar API was
+        included in the specifications, it would be
+        considered mandatory. Many OpenSim grid
+        operators would not accept a mandatory linden
+        dollar economy.
+      </p>
+
+      <p>
+        This is one of the most obvious places where
+        business interest meets standards development,
+        and it will be interesting to see what happens
+        in the future. Maybe Linden will open up a
+        private VWRAP-like API for trusted partners. If
+        you're an OpenSim operator not focused on
+        eCommerce, this may be something you would be
+        interested in. Maybe third parties like two fish
+        / live gamer <a href="#ref_10">[10]</a> will
+        produce an alternative specification? It will
+        certainly be interesting to watch the market
+        develop.
+      </p>
+    </section>
+
+    <section>
+      <h2>What's Out : Land Ownership</h2>
+
+      <p>
+        Before I start any rumors, I should say that
+        Linden is NOT going to eliminate private land
+        ownership on it's grid. Land ownership is not
+        part of the VWRAP protocol suite because it's
+        expected that different virtual worlds will
+        manage land ownership differently.
+      </p>
+
+      <p>
+        VWRAP clients are expected to be able to query a
+        region for "information about the place my
+        user's avatar is at right now" and get a URL to
+        a human readable, HTML web page. If the region
+        supports land ownership, the web page will list
+        that info. But the land ownership schema from
+        Second Life will not be forced on all VWRAP
+        virtual worlds.
+      </p>
+
+      <p>
+        This may be an issue for viewer
+        developers. Different protocols for land
+        management will require client developers to
+        know how to query a region for information about
+        if and how ownership is represented and how to
+        present it to the user.
+      </p>
+    </section>
+
+    <section>
+      <h2>What's Out : Building</h2>
+
+      <p>
+        So far there's been no mention of building as a
+        use case for VWRAP. This doesn't mean it won't
+        be supported, but it may be that building is
+        handled by way of the generic object and avatar
+        control protocol.
+      </p>
+    </section>
+
+    <section>
+      <h2>What's Out : Media Attached to Prims</h2>
+
+      <p>
+        Second Life has had "parcel media" for a while
+        and recently added the ability to add media to a
+        prim face. To date, this use case hasn't been
+        discussed at length in the VWRAP working
+        group. This is not to say it's not important,
+        but it may be that the participants are happy to
+        develop this standard later; perhaps after
+        seeing what happens with Linden's "media on a
+        prim" feature.
+      </p>
+    </section>
+
+    <section>
+      <h2>What's Out : Detailed Avatar and User Profiles</h2>
+
+      <p>
+        Second Life users are likely familiar with the
+        standard user profile. Imagine the ability to
+        extend your profile to include information YOU
+        think is important. This is what we're hoping to
+        achieve by moving the profile information out of
+        the core protocol and rebuild it as a simple web
+        application. In the future, expect seeing a HTML
+        page with protocol information instead of a
+        fixed "floater" window in your favorite
+        viewer. About the only thing the core protocol
+        will specify is how to find the URL to the HTML
+        profile page.
+      </p>
+
+      <p>
+        It sounds scary. but trust me; it'll be better.
+      </p>
+    </section>
+
+    <section>
+      <h2>Why the Sky is Not Falling</h2>
+
+      <p>
+        Some Second Life™ users may have an uneasy
+        feeling, hearing that important features like
+        game script, building and profile management
+        WON'T be in the VWRAP protocol.
+      </p>
+
+      <p>
+        Don't Panic.
+      </p>
+
+      <p>
+        Just because a feature is not in the VWRAP
+        specification, it doesn't mean that feature will
+        disappear from Second Life or any other virtual
+        world. What it means is that Linden and the
+        OpenSim developers may diverge on how they want
+        to implement those features.
+      </p>
+
+      <p>
+        The lack of a feature in the specification means
+        only that the participants could not find
+        consensus on the feature's functionality. VWRAP
+        will be complete enough to provide a rich
+        experience. By agreeing to core functionality,
+        it frees us to experiment with solutions for
+        other, high-margin features.
+      </p>
+
+      <p>
+        It will, however, make client application
+        coder's lives a little more complicated. where
+        Second Life and OpenSimulator diverge, viewer
+        developers will have to know how to work with
+        both systems. This isn't as bad as it might
+        seem; Linden's stock viewer already uses well
+        known techniques to cope with protocol
+        divergence. But more on that later...
+      </p>
+
+      <p>
+        In conclusion, let me encourage readers to
+        subscribe to the vwrap mailing list
+        <a href="#ref_5">[5]</a> where these
+        specifications are being discussed. What to
+        leave in and what to take out will certainly be
+        the subject of continuing discussions. If you
+        don't speak up now, you don't get to complain
+        later.
+      </p>
+
+    </section>
+    
+    <section id="98_References">
+      
+      <h2>References</h2>
+
+      <ol>
+        <a name="ref_1"></a>
+        <li><a href="https://tools.ietf.org/wg/vwrap/charters">The VWRAP Working Group Charter [IETF]</a></li>
+
+        <a name="ref_2"></a>
+        <li><a href="http://wiki.secondlife.com/wiki/OGP">Open Grid Protocol [Second Life Wiki]</a></li>
+
+        <a name="ref_3"></a>
+        <li><a href="notes_on_the_history_of_the_vwrap_working_group.html">Notes on the History of the VWRAP Working Group</a></li>
+
+        <a name="ref_4"></a>
+        <li><a href="https://www.ietf.org/proceedings/10mar/slides/vwrap-6.pdf">What's *not* in VWRAP [PDF]</a></li>
+
+        <a name="ref_5"></a>
+        <li><a href="https://www.ietf.org/mailman/listinfo/vwrap">The VWRAP Mailing List [IETF]</a></li>
+
+        <a name="ref_6"></a>
+        <li><a href="https://tools.ietf.org/html/draft-ietf-vwrap-authentication-00">VWRAP Trust Model and User Authentication [IETF]</a></li>
+
+        <a name="ref_7"></a>
+        <li><a href="https://code.google.com/archive/p/openmetaverse/">SimianGrid Project at Open Metaverse Foundation Software</a></li>
+
+        <a name="ref_8"></a>
+        <li><a href="http://wiki.secondlife.com/wiki/OGP_Teleport_Draft_5">Open Grid Protocol: Teleport Draft 5 [Second Life Wiki]</a></li>
+
+        <a name="ref_9"></a>
+        <li><a href="http://opensimulator.org/wiki/Main_Page">The OpenSimulator Project</a></li>
+
+        <a name="ref_10"></a>
+        <li><a href="https://web.archive.org/web/20100206193402/http://twofish.com/">TwoFish / LiveGamer [archive.org]</a></li>
+
+      </ol>
+      
+    </section>
+    
+    <section id="footer"><p>
+      This page was last updated on July 21, 2020. This
+      page is a part of the <a href="../index.html">Technical
+      Section</a>, which is part of
+      <a href="../../../index.html">Meadhbh Hamrick's Web
+        Site</a>.      
+    </p></section>
+  </body>
+</html>
