@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" type="text/css" href="../../../css/index.css"/>
+    <title>Capabilities</title>
+    <meta charset="utf-8"/>
+    <meta name="description" content="How Web Capabilities are used in VWRAP."/>
+  </head>
+  <body class="content">
+    <title>Capabilities</title>
+
+    <a name="00_Intro"></a>
+    <section id="00_Intro">
+      
+      <p>
+        <em>[ This article originally appeared on my
+          blog on July 19th, 2010. -Ed. ]</em>
+      </p>
+
+      <p>
+        I recently got an email from a VWRAP document
+        reviewer asking if web capabilities could be
+        considered "security by obscurity." the simple
+        answer is, "no. as long as you treat a web
+        capability as a one time use password for a
+        resource, you should be fine."
+      </p>
+
+      <p>
+        But i realized then there are a number of people
+        who don't grok caps. If you're unfamiliar with
+        the terms "capabilities" or "caps" or "webcaps,"
+        this blog post may be for you. (Note, i'm
+        cribbing a lot of the text of this post from an
+        earlier message i wrote on the OGPX mailing list
+        )
+      </p>
+    </section>
+    
+    <section>
+      <h2>What are capabilities anyway?</h2>
+
+      <p>
+        "Capabilities" are authorization tokens designed
+        so that possession of the token implies the
+        authority to perform a specific action.
+      </p>
+
+      <p>
+        Consider a file handle in POSIX like systems;
+        when you open a file, you get back an integer
+        representing the open file. You only get this
+        file handle back if you have access rights to
+        the file. When you spawn a new child process,
+        the child inherits your open file handles and it
+        too can access those files via the file handle,
+        even though the child process lives in a
+        completely different process space. Later
+        versions of *nix even allow you to move open
+        file handles between unrelated processes. So the
+        takeaway here is, it's an opaque bit of data
+        (i.e. - a token) and if you have it, it means
+        you have the authority to use it. And you can
+        pass it around if need be.
+      </p>
+
+      <p>
+        Capabilities on the web extend the concept. In
+        addition to the token implying authorization to
+        access some resource, it usually also provides
+        the address to access the resource. In other
+        words, a web capability is a URL possessed by a
+        client that the client may use to create, read,
+        update or delete a resource.
+      </p>
+
+      <p>
+        Web Capabilities in VWRAP are in the form of a
+        "well known" portion of a URL (something like
+        "http://service.example.org/s/") and a large,
+        unguessable, randomly generated string (like
+        "CE7A3EA0-2948-405D-A699-AA9F6293BDFE".) Putting
+        them together, you get a valid URL a client can
+        use to access a resource via HTTP. In this
+        example, that URL would be
+        "http://service.example.org/s/CE7A3EA0-2948-405D-A699-AA9F6293BDFE".
+      </p>
+    </section>
+
+    <section>
+      <h2>Why the Heck Would I Ever Want To Do That?</h2>
+
+      <p>
+        No doubt about it, this is not a "standard
+        pattern" for web services. Normally, if you have
+        a resource, you publish a well known resource
+        for it and if it's sensitive you require the
+        client to log in prior to being granted access.
+      </p>
+
+      <p>
+        For example, you might have a RESTful resource
+        at
+        "http://service.example.org/s/group/AWGroupies"
+        representing the group "AWGroupies". You define
+        an API that says if you want to post a message
+        to the group, you use HTTP POST with data (XML,
+        JSON or whatever) implying the semantic "post
+        this message to this group". for the sake of
+        discussion, let's say the message looks like:
+      </p>
+
+      <pre class="code">
+
+   {
+     from: "Meadhbh Oh",
+     message: "I'm giving 50 L$ to anyone who IMs me in the next 5 minutes!"
+   }
+</pre>
+
+      <p>
+        Authentication is in order here, but this is a
+        well known problem, I simply use HTTP digest
+        auth over HTTPS (or something similar) and we're
+        done. This is a perfectly acceptable solution.
+      </p>
+
+      <p>
+        But there are a couple of issues with this
+        solution.
+      </p>
+
+      <p>
+        Most notabrly, every service that presents an
+        interface to a sensitive resource MUST
+        understand authentication. so not only does
+        "http://service.example.org/s/group/AWGroupies"
+        need to understand authentication, so does
+        "http://service.example.org/s/user/Oh/Meadhbh"
+        and
+        "http://service.example.org/s/parcel/Levenhall/Infinity%20is%20full%20of%stars"
+        and so on.
+      </p>
+
+      <p>
+        It's not a problem really, until you start
+        adding new authentication techniques. One day
+        your boss comes to you and tells you. "Hey!
+        We're using Secure/IDs for everything now!"
+        Ugh. but it's still not that painful. You've
+        probably abstracted out authentication, so you
+        have a map of service URLs to authentication
+        techniques and common libraries that actually
+        authenticate requests throughout your system.
+      </p>
+
+      <p>
+        This works until the day that your boss comes in
+        and says... "Hey! We just bought our competitor
+        cthulhos.com! We're going to integrate their
+        FooWidget service into our service offering!
+        isn't it great!" and then you get that sinking
+        feeling cause you know that this means you've
+        got to figure a way to get their service to talk
+        to your identity provider so their service can
+        authenticate your customers. People who have
+        gone through this know that this can turn out to
+        be a bag full of pain.
+      </p>
+
+      <p>
+        The standard way of doing this is something
+        like:
+      </p>
+
+      <ol>
+        <li>service request come into http://service.example.org/s/foo/Meadhbh</li>
+        <li>http://service.example.org/s/foo/ redirects with a 302 to http://foo.cthulhos.com/Meadhbh</li>
+        <li>http://foo.cthulhos.com/Meadhbh responds with a 401 getting the client to resubmit the request with a WWW-Authenticate: header.</li>
+        <li>the client resubmits to http://foo.cthulhos.com/Meadhbh with the proper WWW-Authenticate: header, but remember, these are example.org's customers, so</li>
+        <li>http://foo.cthulhos.com/Meadhbh sends a message to a private interface on example.org, asking it to authenticate the user credentials.</li>
+        <li>assuming the client is using valid credentials, example.org responds to cthulhos.com with the digital equivalent of a thumbs up, and finally...</li>
+        <li>http://foo.cthulhos.com/Meadhbh responds to the request.</li>
+      </ol>
+
+      <p>
+        And this works pretty well up until the point
+        that the new CIO comes in and says, "Infocard!
+        we're moving everything to Infocard!" There's
+        nothing wrong with Infocard, of course, but in
+        this situation you've got to implement it at
+        both example.org and cthulhos.com. And when we
+        start adding to the mix the fact that the biz
+        dev people keep trying to buy new companies and
+        you get a new CIO every 18 months who wants a
+        new user authentication technology, things can
+        get out of hand.
+      </p>
+
+      <p>
+        And i didn't even talk about the fact that each
+        time you change the authentication scheme, thick
+        client developers have to go through the code,
+        looking for every place a request is made.
+      </p>
+
+      <p>
+        Web capabilities are not a magic panacea, but
+        they can help out in this situation. Rather than
+        having each request authenticated, the user's
+        identity is authenticated once at a central
+        location (like example.org) it coordinates with
+        it's services (cthulhos.com) to provide a
+        unique, unguessable URL (the capability) known
+        only to that specific client and trusted systems
+        (example.org and cthulhos.com)
+      </p>
+
+      <p>
+        So the flow would be something like...
+      </p>
+
+      <ol>
+        <li>a client logs in at http://service.example.org/s/authme and asks for a capability to use a particular service</li>
+        <li>http://service.example.org/s/authme verifies the user's credentials and verifies the user can access that service</li>
+        <li>http://service.example.org/s/authme sends a request to a private interface on cthulhos.com asking for the capability.</li>
+        <li>cthulhos.com generates the unguessable capability http://foo.cthulhos.com/EE409B12-6E9B-4F5B-90BF-161AE5DE410C and returns it to http://service.example.org/s/authme</li>
+        <li>http://service.example.org/s/authme returns the capability http://foo.cthulhos.com/EE409B12-6E9B-4F5B-90BF-161AE5DE410C to the client</li>
+        <li>the client uses the capability http://foo.cthulhos.com/EE409B12-6E9B-4F5B-90BF-161AE5DE410C to access the sensitive resource.</li>
+      </ol>
+
+      <p>
+        Both approaches require establishing a trusted
+        interface between example.org and cthulhos.com,
+        but in the case of the capability example, only
+        service.example.org has to know about the
+        specific details of user authentication. Thick
+        client developers may also notice that they
+        access the capability as if it were a public
+        resource; that is, they don't need to
+        authenticate each request.
+      </p>
+
+      <p>
+        Another benefit to capabilities is that they are
+        pre-authorized. If you have a resource that is
+        accessed frequently (like maybe "get the next 10
+        inventory items" or "check to see if there are
+        any messages on the event queue for me") you
+        don't have to do the username -> permissions
+        look up each time the server receives a
+        request. For environments where the server makes
+        a network request for each permissions check,
+        this can lead to reduced request latency.
+      </p>
+
+      <p>
+        Capabilities are not magic panaceas. There's
+        still some work involved in implementing them
+        and they start making a lot more sense when you
+        have a cluster of machines offering service to a
+        client, but deployers want identity and identity
+        to permissions mapping functions to live
+        elsewhere in the network than the machine
+        offering a service. (i.e. - "the cloud" or "the
+        grid".)
+      </p>
+    </section>
+
+    <section>
+      <h2>But How Do I Provision a Capability ?</h2>
+
+      <p>
+        There are several ways to provision
+        capabilities, but the approach we take in VWRAP
+        is to use the "seed capability."
+      </p>
+
+      <p>
+        Like many other distributed protocols involving
+        sensitive resources, VWRAP interactions begin
+        with user authentication. This is not strictly
+        true; i'm ignoring the case where two machines
+        want to communicate outside the context of a
+        user request, but let me hand wave that use case
+        away for the moment while we talk about using
+        seed caps.
+      </p>
+
+      <p>
+        The process begins with user authentication. The
+        VWRAP authentication specification describes
+        this process; the client sends an avatar name
+        and a password to an authentication
+        server. assuming the authentication request can
+        be validated, the server returns a "seed cap."
+        The client then sends a list of capability names
+        to the seed cap and awaits the response.
+      </p>
+
+      <p>
+        What the host behind the seed cap is doing while
+        the client waits for a reply is verifying the
+        requested capability exists and the user is
+        permitted to perform the operation implied by
+        the capability (and it does this for each
+        capability requested.)
+      </p>
+
+      <p>
+        So, for example, let's say you are a client that
+        only wants to update a user profile and
+        send/receive group messages. the protocol
+        interaction might look something like this...
+      </p>
+
+      <p>
+        a. authentication : client -> server at
+        https://example.org/login
+      </p>
+
+      <pre class="code">
+
+   {
+     agent_name: "Meadhbh Oh",
+     authenticator: {
+       type: "hash",
+       algorithm: "md5",
+       secret: "i1J8B0rOmekRn8ydeup6Dg=="
+     }
+   }</pre>
+
+      <p>
+        b. auth response : server ->; client
+      </p>
+
+      <pre class="code">
+
+   {
+     condition: "success",
+     agent_seed_capability: "https://example.org/s/CF577955-3E0D-4299-8D13-F28345D843F3"
+   }</pre>
+
+      <p>
+        c. asking the seed for the other caps : client
+        -> server at
+        https://s.example.org/s/CF577955-3E0D-4299-8D13-F28345D843F3
+      </p>
+
+      <pre class="code">
+
+   {
+     capabilities : [
+       "profile/update",
+       "groups/search"
+     ]
+   }</pre>
+
+      <p>
+        d. the response with the URIs for the caps :
+        server -> client
+      </p>
+
+      <pre class="code">
+
+   {
+     capabilities : {
+       profile/update : "http://service.example.org/user/35A59C5D-315C-4D50-B78D-A38D41D2C90A",
+       groups/search : "http://cthulhos.com/8579CE1F-9C05-43E8-8677-A645859DCD64"
+     }
+   }</pre>
+      
+    </section>
+
+    <section>
+      <h2>Expiring Capabilities</h2>
+
+      <p>
+        Readers may notice that there is a potential
+        "TOCTOU vulnerability." TOCTOU stands for "time
+        of check, time of use," and refers to a common
+        security problem. What happens if the
+        permissions on an object change between the time
+        the code managing the resource checks the
+        permission and the time it performs an operation
+        on the resource.
+      </p>
+
+      <p>
+        This is a common problem with many systems,
+        including POSIX file
+        descriptors. (seriously.. if you change the
+        permissions on a file to disallow writing AFTER
+        the file has been opened, subsequent writes on
+        the file descriptor will not fail in many POSIX
+        systems.)
+      </p>
+
+      <p>
+        VWRAP addresses this problem by expiring
+        capabilities when they get old. So if you
+        request a capability, then wait a LONG time
+        before you access it, you may find you get a 404
+        response. The VWRAP specifications do not
+        require all caps to expire, but the do require
+        servers to signal their expiration by removing
+        them (thus the 404 response) and require clients
+        to understand what to do when a capability has
+        been expired. In most cases, the appropriate
+        response is to re-request the capability from
+        the seed cap. If the seed cap is expired,
+        clients should re-authenticate.
+      </p>
+
+      <p>
+        Capabilities may also "expire after first use."
+        Also called "single shot capabilities," they are
+        used to communicate sensitive or highly volatile
+        information to the client.
+      </p>
+
+      <p>
+        Current practice is to include an Expires:
+        header in the response from the server so the
+        client will know when the resource expires.
+      </p>
+    </section>
+
+    <section>
+      <h2>Introspection on Capabilities</h2>
+
+      <p>
+        Finally, RESTful resources represented by a
+        capability are described by an abstract
+        interface (like LLIDL), the interface
+        description language described in the VWRAP
+        Abstract Type System draft. Several people have
+        requested introspection so clients may request
+        the LLIDL description of a capability and more
+        accurately reason about the semantics of its
+        use.
+      </p>
+
+      <p>
+        The proposed solution to this problem for VWRAP
+        messages carried over HTTP is to use the OPTIONS
+        method when accessing the capability (instead of
+        GET, POST, PUT or DELETE.) upon receipt of the
+        OPTIONS request, the server should respond with
+        the LLIDL describing the resource.
+      </p>
+    </section>
+
+    <section>
+      <h2>Conclusion</h2>
+
+      <p>
+        Capabilities are cool, especially in clouds or
+        grids.
+      </p>
+    </section>
+
+    <section>
+      <h2>References</h2>
+
+      <p>
+        A pair of Google Tech Talks at:
+        <a href="https://youtu.be/EGX2I31OhBE">Object
+          Capabilities for Security</a> and
+        <a href="https://youtu.be/vrbmMPlCp3U">From
+          Desktops to Donuts: Object-Caps Across
+          Scales</a> provide a pretty good technical
+        introduction to the concept of capabilities.
+      </p>
+
+      <p>
+        VWRAP's description of capabilities is at:
+        <a href="http://tools.ietf.org/html/draft-ietf-vwrap-foundation-00#section-2.3">VWRAP : Foundation, Section 2.3 : Capabilities</a>
+      </p>
+
+      <p>
+        VWRAP uses capabilities to access RESTful
+        resources. Roy Fielding's paper on REST is at:
+        <a href="http://www.ics.uci.edu/~fielding/pubs/dissertation/top.htm">Architectural Styles and the Design of Network-based Software Architectures</a>.
+      </p>
+
+    </section>
+        
+    <section id="footer"><p>
+      This page was last updated on July 21, 2020. This
+      page is a part of the <a href="../index.html">Technical
+      Section</a>, which is part of
+      <a href="../../../index.html">Meadhbh Hamrick's Web
+        Site</a>.      
+    </p></section>
+  </body>
+</html>
