@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" type="text/css" href="../../css/index.css"/>
+    <title>Is NODE_ENV an Anti-Pattern?</title>
+    <meta charset="utf-8"/>
+    <meta name="description" content="Using NODE_ENV to select from different sets of configuration parameters is an anti-pattern."/>
+  </head>
+  <body class="content">
+    <title>Is NODE_ENV an Anti-Pattern?</title>
+
+    <a name="00_Intro"></a>
+    <section id="00_Intro">
+      
+      <p>
+        <em>(In which I make the argument that using a configuration file (or two) is a better idea than setting the NODE_ENV environment variable and propose the use of the SN Props package to make this process easier.)</em>
+      </p>
+
+      <p>
+        Like everyone else in the node community, I
+        started out using the NODE_ENV environment
+        variable to set various details in my apps. I
+        would do something like this to start an app:
+      </p>
+
+      <pre class="code">
+
+   $ NODE_ENV=dev /usr/bin/node foo.js</pre>
+
+      <p>
+        The shell would set the environment variable
+        NODE_ENV to the string "dev" and launch the
+        foo.js node application. Inside foo.js, we would
+        do something like this:
+      </p>
+
+      <pre class="code">
+
+   var port, host;
+
+   if( "prod" === process.env.NODE_ENV ) {
+     port = 80; host = "0.0.0.0";
+   } else if( "dev" === process.env.NODE_ENV ) {
+     port = 8080; host = "127.0.0.1";
+   } else {
+     console.log( "ERROR: unsupported NODE_ENV value: " +
+       process.env.NODE_ENV );
+     process.exit(1);
+   }
+
+   // insert other code here
+
+   server.listen( port, host );</pre>
+
+      <p>
+        And honestly, there's nothing seriously wrong
+        with this. It lets you express different
+        application behavior based on whether you're
+        running in development-mode or if you've
+        deployed to production. But then I saw this:
+      </p>
+
+      <pre class="code">
+
+   var port, host, db_pass;
+
+   if( "prod" === process.env.NODE_ENV ) {
+     port = 80; host = "0.0.0.0"; db_pass = "tq6TJwFR";
+   } else if( "dev" === process.env.NODE_ENV ) {
+     port = 8080; host = "127.0.0.1"; db_pass = "2qpwRfKB";
+   } else {
+     console.log( "ERROR: unsupported NODE_ENV value: " +
+       process.env.NODE_ENV );
+     process.exit(1);
+   }
+
+   // insert code to connect to the database here
+
+   server.listen( port, host );</pre>
+
+      <p>
+        And where did I see this? In the source
+        repository, of course.
+      </p>
+
+      <p>
+        Now I don't want to be too snobbish, I've
+        written apps that check the password into the
+        source repo before. At the time I thought it was
+        a simple, throw-away app that no one would use
+        after a couple months. By the time the
+        black-hats found this in the source repo, the
+        app would be long-retired. Except that's never
+        the way the world works. The code got used by a
+        different group in the organization and then
+        sold to a third party. By the time I heard what
+        had happened, one of the third parties had lined
+        up a SAS-70 audit they may have failed because
+        of a fixed password in the system.
+      </p>
+
+      <p>
+        Moral of the story? Don't hard-code database
+        passwords into your app.
+      </p>
+
+      <p>
+        "But what does this have to do with NODE_ENV
+        being an anti-pattern?" you ask.
+      </p>
+
+      <p>
+        Simple, using NODE_ENV to set application
+        behavior makes it easy for a developer to do bad
+        things (like hard-coding dev &amp; production
+        environment passwords into the app.) In my apps,
+        I've replaced the use of NODE_ENV with what I
+        call the "Concatenated Config" pattern.
+      </p>
+
+    </section>
+    <section>
+      <h2>Avoiding Application Brittleness with the
+        Concatenated Config Pattern</h2>
+
+      <p>
+        Instead of setting my config parameters from an
+        environment variable inside the code, I use
+        multiple JSON files to hold config settings and
+        import them as a javascript object. The
+        <a href="https://www.npmjs.com/package/sn-props">SN
+          Props</a> package does all the heavy lifting
+        for you. So now, I launch an app like this:
+      </p>
+
+      <pre class="code">
+
+   $ node ./bar.js \
+     --config file:///opt/bar/dev.json \
+     --config file:///opt/bar/db_dev.json</pre>
+
+      <p>
+        SN Props reads the command line looking for URLs
+        pointing to JSON files. In this example, it
+        grabs the files /opt/bar/dev.json and
+        /opt/bar/db_dev.json, smooshes them together and
+        passes them to your app via a callback. Here's
+        what the code in bar.js looks like:
+      </p>
+
+      <pre class="code">
+
+   require( 'sn-props' ).read( function( props ) {
+     // db connection setup code goes here
+     // http server code goes here
+    } );</pre>
+
+      <p>
+        And the contents of the two config files look
+        something like this:
+      </p>
+
+      <p>
+        <strong>/opt/bar/production.json:</strong>
+      </p>
+
+      <pre class="code">
+
+   {
+     "listen": {
+       "port": 8080,
+       "host": "127.0.0.1"
+     }
+   }</pre>
+      
+      <p>
+        <strong>/opt/bar/db_db002.json:</strong>
+      </p>
+
+      <pre class="code">
+
+   {
+     "mysql": {
+       "host": "127.0.0.1",
+       "port": 3306,
+       "user": "dev",
+       "pass": "goats!"
+     }
+   }</pre>
+
+      <p>
+        and, of course, you probably want to define
+        other configs to use in production:
+      </p>
+
+      <p>
+        <strong>/opt/bar/production.json:</strong>
+      </p>
+
+      <pre class="code">
+
+   {
+     "listen": {
+       "port": 80,
+       "host": "0.0.0.0"
+     }
+   }</pre>
+
+      <p>
+        <strong>/opt/bar/db_db002.json:</strong>
+      </p>
+
+      <pre class="code">
+
+   {
+     "mysql": {
+       "host": "db002.internal.example.com",
+       "port": 3306,
+       "user": "bar",
+       "pass": "JC7VwyguUqHm8D3J"
+     }
+   }</pre>
+
+      <p>
+        And if you trust your internal infrastructure,
+        you can replace references to file: URLs with
+        references to http: URLs. You can probably
+        figure out what this does:
+      </p>
+
+      <pre class="code">
+
+   $ node ./bar.js \
+     --config https://config.example.com/dev.json \
+     --config file:///opt/bar/db_dev.json</pre>
+
+      <p>
+        Let's Recap:
+      </p>
+
+      <p>
+        The benefits of this pattern are:
+      </p>
+
+      <ul>
+        <li>It discourages hard-coding passwords and other config information into the applications source. (i.e. - it discourages something that would make your app brittle and possibly insecure.)</li>
+        <li>It lets your DevOps team change configuration details like DB particulars &amp; which port and IP address your app listens on without having to touch the app code.</li>
+        <li>If you trust your internal infrastructure, you can put all of your app configuration information on a single http(s) instance.</li>
+      </ul>
+
+      <p>
+        There are a few draw-backs, but they're
+        relatively mild:
+      </p>
+      
+      <ul>
+        <li>Command line invocations are a little longer</li>
+        <li>There are (potentially) multiple places to look when there's a configuration error</li>
+        <li>A malformed JSON config file will cause your app to not launch.</li>
+      </ul>
+
+      <p>
+        In my experience, the benefits outweigh the
+        drawbacks. I no longer embed application policy
+        in the code itself; instead, i put it in a
+        configuration file that's has slightly different
+        access control and logging settings.
+      </p>
+
+    </section>
+        
+    <section id="footer"><p>
+      This page was last updated on July 21, 2020. This
+      page is a part of the <a href="index.html">Technical
+      Section</a>, which is part of
+      <a href="../../index.html">Meadhbh Hamrick's Web
+        Site</a>.      
+    </p></section>
+  </body>
+</html>
