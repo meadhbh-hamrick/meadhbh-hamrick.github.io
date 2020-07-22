@@ -95,6 +95,6 @@ img.bio {
 pre.code {
   width: calc( 50% - 5em );
   background-color: #F4F4F4;
-  overflow-y: scroll;
+  overflow-x: auto;
 }
 
