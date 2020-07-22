@@ -52,6 +52,12 @@ li:not(:last-child) {
   margin-bottom: .25em;
 }
 
+li > ul {
+  margin-left: 0px;
+  width: auto;
+  list-style-type: disc;
+}
+
 section#footer > p:first-child {
   border-top: solid 1px black;
   margin-top: 1em;
