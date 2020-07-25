@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" type="text/css" href="../../css/index.css"/>
+    <title>How to Generate a Key Pair for PGP</title>
+    <meta charset="utf-8"/>
+    <meta name="description" content="Instructions for generating a PGP Key Pair."/>
+  </head>
+  <body class="content">
+    <title>How to Generate a Key Pair for PGP</title>
+
+    <section>
+      
+      <p>
+        <em>[This article originally appeared on
+          Cryptonomicon.Net in 1999. -Ed.]</em>
+      </p>
+
+      <h2>Introduction</h2>
+
+      <p>
+        This document is intended to help the reader
+        install PGP, generate a PGP key pair, and edit
+        trust settings to reflect real-world trust
+        relationships. After doing this, it will be
+        possible to engage in confidential, trusted
+        communications via email. If you're familiar
+        with PGP and don't need any hand-holding, please
+        jump to the bottom of this document for
+        recommendations for PGP key generation
+        parameters. Also, I'm assuming you've got a
+        Windows PC. PGP on a Mac is pretty straight
+        forward, insert the disk, double-click the
+        installer, don't generate a key during the
+        installation process, and jump to step 1 in the
+        "Generating a Key" section below.
+      </p>
+
+    </section>
+
+    <section>
+      <h2>Installing PGP</h2>
+
+      <ul>
+        <li>If you happen to be in possession of a PGP
+        7.0.3 disk, simply load it into your CD-ROM
+        drive. In theory, Windows should pop up a
+        McAfee/PGP install screen. One of the options is
+        "Install PGP." Click on this option. If you
+        don't get this splash screen, simply
+        double-click on the setup.exe program in the PGP
+        directory.</li>
+
+        <li>The PGP installer will give you the
+        opportunity to install with several options. At
+        this time, the only option I don't recommend is
+        PGPnet. PGPdisk is used to encrypt complete
+        folders on your hard drive. PGPtools is used to
+        encrypt individual files. PGPkeys is a key
+        management utility. There are also plugins for
+        various email programs such as Eudora, Outlook,
+        and OutlookExpress. You'll need PGPkeys (in
+        fact, I don't think it's possible to not install
+        it.) I certainly recommend PGPtools and the
+        plugin for the mail program you use (if it's
+        available.) I don't really use PGPdisk, so if
+        you want to check it out, then great, but just
+        remember that I can't support it. PGPtray for
+        Windows users is a handy way to get to the
+        various PGP applications.</li>
+        
+        <li>During the install process, the installer
+        will want to generate some keys for you. Don't
+        do this now. If you do it now, it will generate
+        the wrong kind of key.</li>
+      </ul>
+
+    </section>
+
+    <section>
+      <h2>Generating A Key</h2>
+
+      <ul>
+        <li>After installation, you need to generate a key pair. But before we do this, we need to change the default encryption algorithm for generated keys. To do this, start the PGPkeys application. It should so a list of "stock keys." Select the 'Edit -> Options' menu item to get to the Options dialog.</li>
+        <li>In the options dialog box, click on the 'Advanced' tab. You should see a drop down list titled "Preferred Algorithm." Select 'AES.' Ensure that all algorithms are checked in the "Allowed Algorithms" check-boxes. Click 'Ok' to accept the changes.</li>
+        <li>Back in the main PGPkeys window, select the 'Keys -> New Key...' menu item. This will bring up the Key Generation Wizard. Click the 'Expert' Button.</li>
+        <li>Fill in the name and email addresses. The official name is your first name, your middle initial, and your last name. However, if you feel that this is too restrictive, by all means do your own thing. You should use an email address you feel fairly confident you'll keep for at least a year or so. However, you'll have the ability to add additional email addresses in the future, so you shouldn't fret about which email address to use.</li>
+        <li>For the Key Type select "RSA." Do not select "RSA Legacy." For Key Length, select 2048 bits. For Key Expiration, select 'Never.'</li>
+        <li>Click the 'Next' button. You will then be prompted for your master pass phrase. Make this a good password that is easy to remember, but hard for someone else to guess. Don't worry, you can always change this later.</li>
+        <li>Once you've entered the pass-phrase twice, click the 'Next' button and watch the lights blink. Most modern PC's don't take too long to generate keys. If it takes more than a minute, there may be something wrong, give it another minute or two, reboot, cuss at Microsoft, and try it again.</li>
+        <li>Assuming the lights stop blinking, you should get a dialog box saying that you've successfully generated a key. Click the 'Finish' button and you should see your new key amongst the "stock keys" in the main window of the PGPkeys application.</li>
+        <li>So, you thought you were finished, didn't you? Well... Not yet. We still have to generate a "subkey." If you're curious why we want to generate a subkey, there's a brief description on page 76 of the manual. To generate a subkey, start by selecting your key (it should be bolded in the display.) Then select the 'Keys -> Properties' menu item. This should bring up the (surprise) Key Properties dialog box. There are two tabbed panes in this dialog box, the second one is labeled 'Subkeys.' Select this tabbed pane.</li>
+        <li>This will show the list of subkeys. Since you haven't generated any, you'll probably see a single, gold master key. At the bottom of the pane there is a 'New' button. Click on this button to generate a new subkey. This brings up the New Subkey dialog box. You want to create a subkey that is 1536 bits long, and is valid from to July 23, 2003. Click the okay button you'll be queried for your pass-phrase again. Enter it in and watch the lights blink as your subkey is generated. 1536 bit subkeys shouldn't take too long to generate, so don't go too far away. Congradulations, you've generated a key.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Backing Up Your Key</h2>
+
+      <ul>
+        <li>Get a blank floppy disk. Format it, label it, and otherwise make it ready for use.</li>
+        <li>From the PGPkeys application, select your key (it should be bolded,) and select the 'Keys -> Export...' menu item. This will bring up the Export Key dialog. Click the 'Include Private Key' box. The 'Version 6 compatibility' check box should already be selected. If not, select it. Save the key on the floppy. I like to use my email address as my key file name.</li>
+        <li>Put the floppy in a "safe place."</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Distributing your Public Key</h2>
+
+      <ul>
+        <li>From the PGPkeys application, select your key (it should be bolded,) and select the 'Keys -> Export...' menu item. This will bring up the Export Key dialog. Insure that the 'Include Private Key' box is not checked. The 'Version 6 compatibility' check box should already be selected. If not, select it. Save the key on your hard disk. I like to use my email address appended with "_public6" for my public key file name.</li>
+        <li>Send your public key via email to people with whom you want to communicate securely.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Importing Other People's Keys</h2>
+
+      <ul>
+        <li>When you get a PGP (".asc") key file from someone else, you've got to import it before using it. Importing a PGP key is a two phase process. First, we import the key into PGPkeys. Second, we verify the validity of the key and update the "trust" level.</li>
+        <li>To import a key, make sure that you have a ".asc" file. You might have receieved an email message that begins with something like '-----BEGIN PGP PUBLIC KEY-----'. If so, you can copy and paste this into a file using your favorite text editor or notepad.exe. From the PGPkeys application, import the key using the 'Keys -> Import...' menu item.</li>
+        <li>To establish the trust of the key you just imported, select the key in the PGPkeys main window. It should not be bolded. Look at the key properties by using the 'Keys -> Properties' menu item. Select the 'Hexadecimal' check box. Phone the person whose key this supposedly is. Have them read off their fingerprint. If they fingerprint that they read off is the same as the fingerprint in the Keys Property dialog box, then the key has not been modified in transit. If you trust the person from whom the key came, indicate that the key is "valid."</li>
+        <li>Begin by Signing that person's key. Do this by selecting the key in the PGPkeys main window. Use the 'Keys -> Sign...' dialog box to bring up the Key Sigining dialog box. Click on the 'More Choices' button. Select 'Trusted Introducer Exportable', Depth of 1, Domain Restriction should be set to 'cryptodot' and the expiration date should be 5 years in the future.</li>
+        <li>Once you've signed the key, you'll be able to slide the validity slider from invalid to valid.</li>
+        <li>After signing other people's keys, export their key (that now has your signature) to a file and send it to the back to the key's owner.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Pass it Along</h2>
+
+      <ul>
+        <li>PGP is free for non-commercial use, and fairly reasonable for commercial use. Check out pgp.com for the latest product info.</li>
+        <li>Please feel free to pass along the URL to this site. If there's a big-long URL at the top of the page, you might want to pass along the following alias: <br/><a href="http://meadhbh.hamrick.rocks/v2/technical/how_to_generate_a_key_pair_for_pgp.html">http://meadhbh.hamrick.rocks/v2/technical/how_to_generate_a_key_pair_for_pgp.html</a></li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>PGP Parameter Review</h2> 
+
+      <ul>
+        <li>Key Properties Settings in the 'Edit->Options' Advanced Tab<ul>
+          <li>Preferred Algorithm: AES</li>
+          <li>Master Key Properties (when generating a new key pair)</li>
+          <li>Key Type: RSA (Not RSA Legacy!!!)</li>
+          <li>Key Length: 2048</li>
+          <li>Key Expiration: Never</li></ul>
+        </li>
+        
+        <li>Subkey Properties<ul>
+          <li>Key Type: RSA</li>
+          <li>Key Length: 1536</li>
+          <li>Key Expiration: 7/23/2003</li>
+          <li>Key Signing Parameters: 'Trusted Introducer Exportable'</li>
+          <li>Depth: 1</li>
+          <li>Domain Restriction: cryptodot</li>
+          <li>Expiration: today + 5 years.</li></ul>
+        </li>
+        </ul>
+        
+    </section>
+        
+    <section id="footer"><p>
+      This page was last updated on July 25, 2020. This
+      page is a part of the <a href="index.html">Technical
+      Section</a>, which is part of
+      <a href="../../index.html">Meadhbh Hamrick's Web
+        Site</a>.      
+    </p></section>
+  </body>
+</html>
