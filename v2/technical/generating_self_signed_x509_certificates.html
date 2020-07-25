@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" type="text/css" href="../../css/index.css"/>
+    <title>Generating Self-Signed X.509 Certificates</title>
+    <meta charset="utf-8"/>
+    <meta name="description" content="How to generate a self-signed X.509 Certificate with OpenSSL."/>
+  </head>
+  <body class="content">
+    <title>Generating Self-Signed X.509 Certificates</title>
+
+    <a name="00_Intro"></a>
+    <section id="00_Intro">
+      
+      <p>
+        People who know me know that I love to dis on
+        X.509 based security solutions. Whether it's
+        implementations that just plain ignore basic
+        constraints, or popular certification
+        authorities that add an extra zero byte to the
+        end of their certs... it's all just so much fun.
+      </p>
+
+      <p>
+        But it's hard to argue with the utility of a
+        properly configured TLS layer. And until we add
+        a TLS extension for using OpenPGP to cart around
+        public keys in TLS handshake sequences, we're
+        sort of stuck with X.509.
+      </p>
+
+      <p>
+        I spend a surprising amount of time generating
+        self-signed certificates for testing, so a few
+        decades ago I came up with a bash script to
+        eliminate the drudgery of this process. If
+        you're interested, just grab a copy from GitHub
+        at: <a href="https://gist.github.com/OhMeadhbh/6201808">https://gist.github.com/OhMeadhbh/6201808</a>.
+      </p>
+
+      <p>
+        To use it, just copy and paste it from the gist
+        page into a file you've chmod +x'd. To use it,
+        just run the script passing the name of the host
+        you're generating a certificate for as the first
+        parameter. It defaults to making 2048 bit keys
+        with no passwords, so don't use this to generate
+        production certs (not that you should be using
+        self-signed certificates in a production
+        environment anyway.)
+      </p>
+
+      <p>
+        So if I wanted to create a certificate for
+        www.example.com, and I named the script gssc, i
+        would invoke it like so:
+      </p>
+
+      <pre class="code">
+
+   gssc www.example.com</pre>
+
+      <p>
+        and it would generate two files:
+        www.example.com.key and www.example.com.crt. The
+        former contains the private key and the latter
+        is the X.509 certificate for www.example.com.
+      </p>
+
+      <p>
+        The -b, -p and -s options allow you to change
+        the length of the private key, the password to
+        encrypt the private key and the certificate's
+        subject name. So if I wanted to create a 1024
+        bit private key, encrypted with the password
+        "blargh" and with the subject name "C=IO,
+        ST=Chacos, L=Diego Garcia, CN=www.example.mil,"
+        I would use this command:
+      </p>
+
+      <pre class="code">
+
+   gssc www.example.mil -b 1024 -p blargh \
+     -s "/C=IO/ST=Chacos/L=Diego Garcia/CN=www.example.mil"</pre>
+
+      <p>
+        And for completeness sake, here is a copy of the
+        script if you don't want to (or can't) grab it
+        from the GIST referenced above:
+      </p>
+
+      <pre class="code">
+
+   #!/bin/bash
+   # Copyright (c) 2003-2013, Meadhbh S. Hamrick. All Rights Reserved.
+   # Released under a BSD License. See http://opensource.org/licenses/BSD-2-Clause
+   #
+   # This script uses openssl to generate a self-signed certificate. Usage is
+   # like this:
+   #   gssc <host name> [-p password] [-s subject] [-b bitlength]
+   # The host name parameter is the subject name of the certificate; i.e. - the
+   # FQDN of the host you're generating a certificate for. This is also the base
+   # name for the key, certificate signing request and certificate files. If you
+   # want the key to be protected by a password, use the -p option to specify
+   # it. The subject name of the requested cert defaults to:
+   #   "C=US, ST=California, L=Felton, CN=<host name>"
+   # You can select a differetn subject name by using the -s option and providing
+   # a complete openssl style subject name. For example:
+   #   "/C=IO/ST=Chagos/L=Diego Garcia/CN=foo.bar.mil"
+   # will specify the expected subject name. Remember to put the slashes
+   # in front of each clause and to put the Common Name (CN) entry (we don't
+   # do it for you.) By default, we generate 2048 bit RSA keys. If you want some
+   # other bit length, use the -b flag.
+   #
+   # For example, the following command generates a self signed cert for the
+   # machine "secure.example.com" with a 1536 bit RSA key and a common name of
+   # "C=US, ST=Montana, L=Bozeman, CN=secure.example.com":
+   #   gssc secure.example.com -b 1536 -password "badpassword" \
+   #       -s "/C=US/ST=Montana/L=Bozeman/CN=secure.example.com"
+   #
+   # This example creates a self signed cert for www.example.org with no password
+   # on the private key and a subject name of "C=US, ST=California, L=Felton,
+   # CN=www.example.org":
+   #   fssc www.example.com
+   #
+   # Cheers!
+   
+   # Check to see if we provided a host name
+   if [ $# -lt 1 ]; then
+     echo "Usage: $0 <host name> [-b bits] [-p password] [-s subject name]"
+     exit 1
+   fi
+   
+   # Set up defaults
+   CN=$1
+   BITS=2048
+   PASSWORD=""
+   SN="/C=US/ST=California/L=Felton/CN=$1"
+   
+   # Now apply the parameters
+   shift
+   while getopts "b:p:s:" flag
+   do
+     case $flag in
+       b) BITS=$OPTARG;;
+       p) PASSWORD=$OPTARG;;
+       s) SN=$OPTARG;;
+     esac
+   done
+   
+   # First off, generate a RSA key
+   if [ 0 = ${#PASSWORD} ]; then
+     openssl genrsa -out $CN.key $BITS
+   else
+     if [ 4 -gt ${#PASSWORD} ]; then
+       echo "Your pass phrase must be four or more characters."
+       exit 2
+     else
+       openssl genrsa -out $CN.key -des3 -passout "pass:$PASSWORD" $BITS
+     fi
+   fi
+   
+   # Now create the certificate
+   if [ 0 = ${#PASSWORD} ]; then
+     openssl req -new -batch -x509 -key $CN.key -subj "$SN" -days 365 -out $CN.crt
+   else
+     openssl req -new -batch -x509 -key $CN.key -subj "$SN" -days 365 -out $CN.crt \
+       -passin "pass:$PASSWORD"
+   fi</pre>
+        
+    </section>
+        
+    <section id="footer"><p>
+      This page was last updated on July 25, 2020. This
+      page is a part of the <a href="index.html">Technical
+      Section</a>, which is part of
+      <a href="../../index.html">Meadhbh Hamrick's Web
+        Site</a>.      
+    </p></section>
+  </body>
+</html>
