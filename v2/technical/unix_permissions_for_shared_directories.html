@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" type="text/css" href="../../css/index.css"/>
+    <title>Unix Permissions for Shared Directories</title>
+    <meta charset="utf-8"/>
+    <meta name="description" content="How to set up file permissions for shared directories so you don't have to keep monkeying with file and directory ownership."/>
+  </head>
+  <body class="content">
+    <title>Unix Permissions for Shared Directories</title>
+
+    <section>
+      <p>
+        Do you work on a shared system where you are one
+        of several people who needs to edit content in a
+        shared directory? Or maybe you work on a Linux
+        system where the static web content is in a
+        shared directory owned by a system users (who's
+        not you.) This latter case is the default for
+        Apache or Lighttpd on Ubuntu. You may have
+        encountered permissions problems when trying to
+        edit files in these directories. This page
+        describes a simple technique for changing
+        permissions of a shared directories so a list of
+        authorized users can edit its contents. As
+        security boffins will tell you, this is
+        preferred to making the directory "world
+        writable" -- the last thing you need is a random
+        internet troll defacing your web site.
+      </p>
+    </section>
+
+    <section>
+      <h2>What Are You Trying To Tell Me?</h2>
+
+      <p>
+        Simply put, there's an easy, safer way to make a
+        directory (and its sub-directories) writable by
+        a subset of system users.
+      </p>
+    </section>
+
+    <section>
+      <h2>Why Is This Useful?</h2>
+
+      <p>
+        While you should have a system in place to store
+        your content in a version control system and
+        then deploy that content to a real server
+        somewhere on the internet, sometimes the world
+        doesn't work that way. For instance, I sometimes
+        want to test the behaviour of a browser locally
+        on my Linux laptop or in a Linux virtual
+        machine. I don't want to check a file into
+        version control after every minor change and
+        wait for it to be deployed. In this case I want
+        to edit files directly in the web server's
+        static content directory hierarchy.
+      </p>
+
+      <p>
+        But the default configuration for Ubuntu and
+        Debian is to not allow this.
+      </p>
+
+      <p>
+        The steps below describe how to fix this.
+      </p>
+
+      <p>
+        If you follow these steps, you won't have to
+        <code>sudo</code> to root to edit a file. Any
+        tool you happen to use to create web-pages,
+        whether it's a WYSIWYG tool like FirstPage or a
+        text editor like Emacs, it should just work.
+      </p>
+    </section>
+
+    <section>
+      <h2>Details, Please.</h2>
+
+      <p>
+        Unix, Linux, Darwin, BSD -- all modern Unixes --
+        only allow you to write a new file to a
+        directory if:
+      </p>
+
+      <ul>
+        <li>You are the owner of the directory and the
+        directory has the "user write" bit set</li>
+        <li>You are a member of a group that owns that
+        directory and the directory has the "group
+        write" bit set</li>
+        <li>If all else fails, if the directory has the
+        "write other" bit set, anyone can create a file
+        in the directory.</li>
+      </ul>
+
+      <p>
+        It's generally considered a bad idea to let
+        anyone write content to a particular directory,
+        so we should probably forget about that last
+        item.
+      </p>
+
+      <p>
+        And we're not really interested in the first
+        case because we're explicitly talking about
+        <em><strong>shared</strong></em> directories;
+        directories where multiple people can read and
+        write files.
+      </p>
+
+      <p>
+        That leaves us with item number two: group
+        ownership of files.
+      </p>
+
+      <p>
+        Debian (and it's commercial derivative Ubuntu)
+        come pre-configured with a group called
+        <code>www-data</code>. By default, new users
+        aren't added to this group. When you install a
+        web server like Apache or Lighttpd, you can
+        change the group owner of it's static content
+        directory to allow group writes. Then you just
+        add yourself to www-data group, and change the
+        group permissions on the shared directory and
+        viola! you can write to the shared directory!
+      </p>
+
+      <p>
+        This example assumes your static web content is
+        in the directory <code>/var/www/html</code>,
+        which is where you find it on recent Ubuntu
+        systems.
+      </p>
+
+      <pre class="code">
+
+   $ <strong>sudo addgroup `whoami` www-data</strong>
+   $ <strong>sudo chgrp -R www-data /var/www/html</strong>
+   $ <strong>sudo find /var/www/html -type d -exec chmod 2775 {} \;</strong>
+   $ <strong>sudo find /var/www/html -type f -exec chmod 0775 {} \;</strong></pre>
+
+      <p>
+        Except it's not exactly that easy. Because of
+        the way group permissions work in Linux, you
+        have to log out and log back in. You could type
+        the command <code>su - `whoami`</code> to test
+        that it works, but that will give you a
+        sub-shell that doesn't have the DISPLAY
+        environment variable set, which could be a
+        problem if you're using an X/Windows based
+        editor.
+      </p>
+
+      <p>
+        After relogging-in, you can test that it works
+        with the following commands:
+      </p>
+
+      <pre class="code">
+
+  $ <strong>touch /var/www/html/foo</strong>
+  $ <strong>ls -ld /var/www/html</strong>
+  drwxrwsr-x 2 root www-data 4096 Mar 26 13:06 /var/www/html/
+  $ <strong>ls -l /var/www/html/foo</strong>
+  -rw-rw-r-- 1 you www-data 0 Mar 26 13:06 /var/www/html/foo</pre>
+
+        <p>
+          If you don't see <code>-rw-rw-r--</code> in
+          the last line of output above (specifically,
+          if you see <code>-rw-r--r--</code> ) make sure
+          you're not issuing the touch command as the
+          root user. Debian is supposed to default to a
+          0002 umask for normal users and 0022 for
+          root. But you may need to manually change the
+          file mode creation mask (umask) to 0002, like
+          this:
+        </p>
+
+        <pre class="code">
+
+   $ <strong>umask 022</strong></pre>
+
+        <p>
+          The default umask used to be set in
+          <code>~/.profile</code> or
+          <code>/etc/profile</code> and was easy to
+          change. Unfortunately, there are a number of
+          different places where the default umask is
+          now set in Ubuntu, so your mileage may vary,
+          but the command above will always work when
+          issued from the command line.
+        </p>
+
+        <p>
+          Once you set this up, anyone in the
+          <code>www-data</code> group will have
+          permission to read, write and delete files in
+          the shared directory, even if that directory
+          is owned by the root user.
+        </p>
+    </section>
+
+    <section>
+      <h2>So What's Going On Here?</h2>
+      
+      <p>
+        The real magic here is when we recursively set
+        the SetGID bit on the shared directory and it's
+        sub-directories. This is what the <code>sudo find
+        /var/www/html -type d -exec chmod 2775 {} \;</code>
+        command did. The SetGID bit tells the system to
+        inherit the group owner of new files from the
+        group owner of the directory it's created in. By
+        setting the Write and SetGID bits, authorized
+        users can edit files in this directory and
+        permission to edit these files are automagically
+        given to other members of the www-data group.
+      </p>
+
+      <p>
+        But remember, it's probably bad practice to log
+        into web servers and edit files on the
+        fly. Sure, sometimes you may have to do this in
+        an emergency, but your process should involve
+        storing changes in a version control system,
+        having team-mates review the changes, and then
+        have the changes deployed to your production
+        systems with a continuous deployment system. The
+        process described here should work fine on a
+        development machine, however.
+      </p>
+
+    </section>
+        
+    <section id="footer"><p>
+      This page was last updated on July 25, 2020. This
+      page is a part of the <a href="index.html">Technical
+      Section</a>, which is part of
+      <a href="../../index.html">Meadhbh Hamrick's Web
+        Site</a>.      
+    </p></section>
+  </body>
+</html>
