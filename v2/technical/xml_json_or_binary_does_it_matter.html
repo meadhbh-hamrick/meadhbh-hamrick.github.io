@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" type="text/css" href="../../css/index.css"/>
+    <title>XML, JSON or Binary : Does It Matter?</title>
+    <meta charset="utf-8"/>
+    <meta name="description" content="It doesn't matter whether your API uses XML, JSON or a custom binary format if they can easily convert from one to another."/>
+  </head>
+  <body class="content">
+    <title>XML, JSON or Binary : Does It Matter?</title>
+
+    <a name="00_Intro"></a>
+    <section id="00_Intro">
+      
+      <p>
+        Of course it matters. But with a tiny amount of
+        effort, it doesn't have to matter much.
+      </p>
+
+      <p>
+        This document describes a way of thinking about
+        structured data and it's use in distributed
+        applications. When implementing web-based APIs,
+        developers traditionally use a well-supported
+        message format such as JSON or XML. In
+        applications where there is a perceived need for
+        processing speed, custom binary formats are
+        sometimes utilized. Each format has it's own
+        benefits and drawbacks and this document will
+        not argue their relative merits. It will,
+        however, recommend an approach which abstracts
+        away details of the specific message format
+        (XML, JSON, binary) and focuses the application
+        developer on more important aspects of
+        application design.
+      </p>
+
+      <p>
+        We start by examining the benefits and
+        limitations of each message format, then
+        describe an XML DTD and sample tagged binary
+        format which can be mechanically converted into
+        other described formats. We then describe how
+        these formats can be used with HTTP(S) and
+        conclude with a simple software architecture
+        that allows HTTP(S) clients to specify their
+        message format preference.
+      </p>
+
+      <p>
+        Ultimately, we conclude that if you use the XML
+        DTD described in this document, it is easy to
+        mechanically convert between formats. Because
+        HTTP(S) allows clients to specify their
+        preferred message format for responses with the
+        Accept: header, it truly doesn't matter which is
+        used: XML, JSON or binary.
+      </p>
+    </section>
+
+    <section>
+      <h2>Why Use XML?</h2>
+
+      <p>
+        XML is a well-respected and well-understood
+        specification for communicating structured
+        data. It's parsing rules are unambiguous and a
+        large ecosystem of tools has emerged to support
+        applications that use it.
+      </p>
+
+      <p>
+        XML does come with drawbacks, however. The most
+        notable "problem" with XML is that it is not
+        self-describing at the semantic level. The 'X'
+        in XML stands for 'eXtensible' and this
+        flexibility comes with a cost: you must use a
+        schema (or DTD) to describe the relationship of
+        elements within an XML document so applications
+        consuming it can validate the document.
+      </p>
+
+      <p>
+        XML Schemas (XSD, etc.) and Document Type
+        Definitions (DTDs) work reasonably well in
+        tightly-coupled applications where the document
+        producer and consumer can easily agree on the
+        document's schema. But in loosely coupled
+        application environments, it is difficult (or
+        impossible) for a document producer to know what
+        specific schema a consumer is expecting.
+      </p>
+
+      <p>
+        This is not a difficult problem for most
+        applications targeting browsers. Web
+        applications are typically delivered as
+        JavaScript programs, downloaded each time the
+        end user visit's the application's URL. Because
+        the client-side JavaScript application is
+        downloaded from the server, the server's
+        operator can ensure the server-side application
+        components use the same schema for messages
+        between the client and server.
+      </p>
+
+      <p>
+        But for non-browser targeted APIs exposed
+        through HTTP(S), version skew between server and
+        client remains an issue.
+      </p>
+
+      <p>
+        Users of XML can choose to use a less-strict
+        standard for XML documents; application
+        developers can specify that documents be "well
+        formed" instead of "valid." This relieves
+        developers of the responsibility of ensuring
+        client and server agree on a specific schema,
+        but also obviates many of XML's benefits.
+      </p>
+    </section>
+
+    <section>
+      <h2>Why Not Use JSON?</h2>
+
+      <p>
+        JSON (originally JavaScript Object Notation) was
+        intended as a light-weight format for
+        communicating structured data. Parsing JSON is
+        notably easier than XML and includes "built-in"
+        type semantics. Even though JSON specifically
+        uses JavaScript's type semantics, users of other
+        languages (PHP, C#, Java, etc.) have found it
+        easy enough to use. It turns out that a 31 bit
+        integer is a 31 bit integer regardless of what
+        programming language you use.
+      </p>
+
+      <p>
+        Proponents of JSON point to its "schema-less"
+        notation as a benefit over XML in loosely
+        coupled systems. XML adherents note that JSON's
+        relative paucity of types obviates rich
+        representation of semantic intent. But for
+        application developers building loosely coupled
+        systems, you're probably only requiring
+        documents to be "well formed" instead of
+        "valid," so you've probably already lost much of
+        XML's expressive capability.
+      </p>
+
+      <p>
+        JSON is also "self-describing" -- you don't need
+        additional information to convert a JSON
+        document into a JavaScript object (or a C data
+        structure or a Java map or ...)
+      </p>
+    </section>
+
+    <section>
+      <h2>And Here's An Important Point</h2>
+
+      <p>
+        In loosely coupled systems, the consumer of a
+        message may need to accept a later version of a
+        message and attempt to reason about it. JSON's
+        schema-less / self-describing nature allows the
+        "message parsing layer" to defer reasoning about
+        semantic intent to the application layer. You
+        can do the same thing with XML, but only if you
+        use a DTD that won't change between message
+        versions.
+      </p>
+
+      <p>
+        This "N+1 Ability" is crucial to deploying
+        systems that do not break when version skew is
+        introduced.
+      </p>
+
+      <p>
+        Specifically, if a validating XML parser
+        encounters a "version N+1 message" that uses a
+        element unknown to it's own "version N" schema,
+        it will stop parsing and raise an
+        exception. This is probably the correct
+        behaviour in a tightly-coupled system where
+        message producers and consumers are in close
+        agreement. But it is almost never the correct
+        behaviour for loosely coupled systems where
+        participants may not coordinate which version of
+        a schema is being used.
+      </p>
+    </section>
+
+    <section>
+      <h2>Making XML "Self-Describing"</h2>
+
+      <p>
+        As mentioned above, it is difficult to use XML's
+        full capabilities in a loosely-coupled
+        system. But you can certainly use a subset of
+        XML features and retain several of it's
+        benefits. To make XML suitable for
+        loosely-coupled systems, you should either:
+      </p>
+
+      <ul>
+        
+        <li>
+          Relax the requirements for XML documents to be
+          "valid" and instead require them to be
+          "well-formed."
+        </li>
+
+        <li>
+          Or, use a DTD such as Apple's P-List or VWRAP
+          LLSD/XML whose DTDs describe the type of
+          elements and not it's semantic intent.
+        </li>
+        
+      </ul>
+
+      <p>
+        An example message using VWRAP XML serialization
+        follows:
+      </p>
+
+      <pre class="code">
+
+   &lt;?xml version="1.0" encoding="UTF-8"?&gt;
+   &lt;llsd&gt;
+    &lt;array&gt;
+     &lt;integer&gt;42&lt;/integer&gt;
+     &lt;uuid&gt;6bad258e-06f0-4a87-a659-493117c9c162&lt;/uuid&gt;
+     &lt;map&gt;
+      &lt;key&gt;hot&lt;/key&gt;
+      &lt;string&gt;cold&lt;/string&gt;
+      &lt;key&gt;higgs_boson_rest_mass&lt;/key&gt;
+      &lt;undef/&gt;
+      &lt;key&gt;info_page&lt;/key&gt;
+      &lt;uri&gt;https://example.org/6bad258e-06f0&lt;/uri&gt;
+      &lt;key&gt;status_report_due_by&lt;/key&gt;
+      &lt;date&gt;2008-10-13T19:00.00Z&lt;/date&gt;
+     &lt;/map&gt;
+    &lt;/array&gt;
+   &lt;/llsd&gt;</pre>
+
+      <p>
+        Key take-aways from this example include:
+      </p>
+
+      <ul>
+        
+        <li>
+          XML tags describe the type of the data they
+          enclose.
+        </li>
+        
+        <li>
+          The structure of the document is preserved.
+        </li>
+        
+        <li>
+          XML tags do not describe semantic
+          intent. Instead, semantic intent is assumed
+          based on position in an array or by the
+          key-value preceeding the data tag.
+        </li>
+      </ul>
+
+      <p>
+        Another useful characteristic of P-Lists or
+        VWRAP LLSD documents is they can be
+        automatically converted into JSON. Here is the
+        same example document serialized as a JSON
+        message:
+      </p>
+
+      <pre class="code">
+
+[
+  42,
+  "6bad258e-06f0-4a87-a659-493117c9c162",
+  {
+    "hot": "cold",
+    "higgs_boson_rest_mass": null,
+    "info_page": "https://example.org/6bad258e-06f0",
+    "status_report_due_by": "2008-10-13T19:00.00Z"
+  }
+]</pre>
+
+      <p>
+        Careful examination will reveal that it is easy
+        to convert the first format into the
+        second. Converting the second into the first is
+        slightly more difficult. In the VWRAP
+        environment, this problem was solved using an
+        abstract type system and interface description
+        language which is outside the scope of this
+        document. A simple solution would be to mirror
+        JSON types in an XML DTD like this:
+      </p>
+
+      <pre class="code">
+
+  &lt;!ELEMENT dsd (undef|boolean|number|string|array|map)*&gt;
+  &lt;!ELEMENT undef EMPTY&gt;
+  &lt;!ELEMENT boolean (#PCDATA)&gt;
+  &lt;!ELEMENT number (#PCDATA)&gt;
+  &lt;!ELEMENT string (#PCDATA)&gt;
+  &lt;!ELEMENT array (undef|boolean|number|string|array|map)*&gt;
+  &lt;!ELEMENT map (key,(undef|boolean|number|string|array|map))*&gt;
+  &lt;!ELEMENT key (#PCDATA)&gt;
+  &lt;!ATTLIST string xml:space (default|preserve) 'preserve'&gt;</pre>
+
+      <p>
+        This DTD has the advantage that it specifies XML
+        documents which can be mechanically converted
+        into JSON and back again with no loss of
+        expressibility. The disadvantage is that it uses
+        none of XML's capacity to carry semantic intent.
+      </p>
+    </section>
+
+    <section>
+      <h2>Should a Message Parser Care About Semantic Intent?</h2>
+      
+      <p>
+        And this is the crux of the matter. Should a
+        message parser care about the richness of
+        semantic intent (like XML seems to do?) or
+        should it defer to the application layer logic
+        to worry about the meaning of elements in a
+        protocol message?
+      </p>
+
+      <p>
+        The authors of this paper believe that message
+        parsers in loosely coupled systems, the part of
+        an application which deserializes protocol
+        messages into internal formats used directly by
+        application software, should not attempt to
+        interpret the semantic intent of protocol
+        messages.
+      </p>
+
+      <p>
+        Tightly coupled systems, on the other hand, may
+        find it easier to use messaging systems which
+        throw exceptions when they receive semantically
+        nonsensical messages. In environments where one
+        organization controls the producer and consumer
+        of a message, it is much easier to dictate which
+        protocol versions are used. The situation is
+        akin to the assert() function in
+        C-programming. Using it will cause a program to
+        exit; but if you really don't know what to do
+        with malformed input from a user, this may be
+        the best alternative.
+      </p>
+
+      <p>
+        If your messaging middleware sends an exception
+        when it receives a message whose semantics it
+        can't understand, that eliminates the
+        application layer from reasoning about the
+        intent of the message. Depending on your
+        application, that may be the best course of
+        action.
+      </p>
+    </section>
+
+    <section>
+      <h2>What About Binary Message Formats?</h2>
+
+      <p>
+        We mentioned binary formats in the sections
+        above. When should they be used? The authors of
+        this document believe the answer is "more or
+        less never." However, we concede there are
+        situations where binary protocol data units are
+        justified. But in modern systems, the time
+        required to parse a message from a
+        human-readable text format into a
+        machine-readable binary format is
+        inconsequential for all but the most extreme
+        cases.
+      </p>
+
+      <p>
+        Human readable text formats offer significant
+        benefits for debugging.
+      </p>
+
+      <p>
+        If you feel you must use a binary format, please
+        consider using a self-describing binary format
+        so debugging probes can deconstruct protocol
+        messages without resorting to an external
+        dictionary. An example of such a system can be
+        found in the Binary Serialization section of the
+        VWRAP Abstract Type System draft referenced at
+        the end of this document.
+      </p>
+
+      <p>
+        If you do use a binary format, it is important
+        to think about why. Two primary reasons are:
+      </p>
+
+      <ul>
+        
+        <li>
+          Eliminate serialization and de-serialization
+          overhead when processing messages
+        </li>
+
+        <li>
+          Reduce the size of protocol messages
+        </li>
+        
+      </ul>
+
+      <p>
+        Both are laudable goals, but with modern systems
+        and networks, may be pre-mature
+        optimizations. Serializing and deserializing
+        JSON is less compute-intensive than ASN.1/BER or
+        XML parsing. In loosely coupled systems, you
+        can't assume you know details of the computer
+        architecture of the system receiving a
+        message. Senders cannot simply copy an in-memory
+        data structure into a message and assume the
+        receiver will be able to efficiently consume
+        it. Endianness, word size and memory alignment
+        restrictions may make it difficult for a
+        receiving system to simply copy a data structure
+        from a protocol message into working memory and
+        use it directly. There are also significant
+        security issues with this approach. Fortunately,
+        there are few developers who would approve of
+        such a system.
+      </p>
+
+      <p>
+        Common binary formats such as MessagePack,
+        ProtoBufs, Avro and Thrift TBinaryProtocol avoid
+        serious security and interoperability issues,
+        but at the cost of processing time. All binary
+        formats have the disadvantage that they are
+        often harder to reason about when debugging;
+        which is easier for a human to comprehend, a
+        JSON or XML message or a compressed binary?
+      </p>
+
+      <p>
+        But there will always be situations where binary
+        message serialization should be considered, so
+        the advice given in this paper is: in loosely
+        coupled systems, use binary serialization
+        formats that are self-describing (i.e. - that do
+        not require an external resource to decode the
+        sender's semantic intent.)
+      </p>
+
+      <p>
+        The authors of this paper also suggest you use a
+        binary format that can be mechanically
+        translated into JSON or XML.
+      </p>
+    </section>
+
+    <section>
+      <h2>On the Advantages of HTTP(S)</h2>
+
+      <p>
+        HTTP has been an overwhelming success over the
+        previous twenty-five years. Other protocols
+        (such as BEEP, IIOP, AMQP or XMPP) certainly
+        have advantages over HTTP for specific use
+        cases, but HTTP's simplicity and the ubiquity of
+        tools which relieve the application developer
+        from "boring" housekeeping tasks make it "first
+        among equals" for network applications. In
+        short, if you are building a distributed
+        application, consider using HTTP first and then
+        revert to some other mechanism when you find
+        HTTP does not meet your needs.
+      </p>
+
+      <p>
+        A few of HTTP's advantages:
+      </p>
+
+      <ul>
+        
+        <li>
+          <strong>Ubiquity</strong>: It is hard to find
+          a piece of network equipment that does not
+          understand HTTP.
+        </li>
+        
+        <li>
+          <strong>Text Based</strong>: It is *much*
+          easier to decode the header of a HTTP message
+          than an IIOP message.
+        </li>
+        
+        <li>
+          <strong>Caching</strong>: For applications
+          that would benefit from content caching, HTTP
+          has well-defined semantics for caching
+          information.
+        </li>
+        
+        <li>
+          <strong>Proxying</strong>: HTTP has
+          well-defined semantics for proxying requests
+          through proxies and application firewalls.
+        </li>
+        
+        <li>
+          <strong>Flexibility</strong>: With
+          <code>Accept:</code> and
+          <code>Content-Type:</code> headers, you can
+          tunnel just about anything over HTTP.
+        </li>
+        
+      </ul>
+
+      <p>
+        HTTP messages are most commonly carried over
+        TCP/IP, but it is also possible to use HTTP with
+        any reasonable transport, including: UNIX domain
+        sockets, FIFO / Pipes, and serial links. Any
+        transport that supports error free,
+        bi-directional communication can (in theory) be
+        used.
+      </p>
+    </section>
+
+    <section>
+      <h2>Using HTTP Content Negotiation (i.e. - Accept: Headers)</h2>
+
+      <p>
+        The HTTP specification describes several headers
+        which enable "Content Negotiation." For our
+        purpose, we only consider the
+        <code>Accept:</code> and
+        <code>Content-Type:</code> headers. If we limit
+        responses to API requests to formats which can
+        be mechanically converted between each other, it
+        doesn't matter which format is used since the
+        client can consume the message directly or
+        convert it into a format it can consume. If the
+        client does have a preference, it can
+        communicate this preference by adding an
+        <code>Accept:</code> header to the request.
+      </p>
+
+      <p>
+        <code>Accept:</code> headers include a list of
+        acceptable media types a client is willing to
+        consume. According to the HTTP specifications,
+        the server picks a specific media type for the
+        response and communicates its choice to the
+        client using the <code>Content-Type:</code>
+        header.
+      </p>
+
+      <p>
+        For our purposes, if the client did not have a
+        preference (JSON, XML or Binary) it could omit
+        the <code>Accept:</code> header. If it did, it
+        would include a header listing the acceptable
+        format. For example:
+      </p>
+
+      <pre class="code">
+
+   Accept: application/dsd+json</pre>
+
+      <p>
+        In response, the server should always specify
+        the serialization format used with the
+        <code>Content-Type:</code> header, like so:
+      </p>
+
+      <pre class="code">
+
+   Content-Type: application/dsd+json</pre>
+
+      <p>
+        The authors have used the following media types
+        to describe the specific transfer syntax used in
+        HTTP messages:
+      </p>
+
+      <pre class="code">
+
+  application/dsd+text    - "Dynamic Structured Data (DSD)" text format
+  application/dsd+json    - JSON
+  application/dsd+xml     - XML using the DSD DTD (described above)
+  application/dsd+binary  - A binary format related to the DSD text format</pre>
+
+    </section>
+
+    <section>
+      
+      <h2>Conclusion</h2>
+
+      <p>
+        This document has tried to demonstrate it is
+        possible to:
+      </p>
+
+      <ul>
+        
+        <li>
+          Mechanically convert structured data between
+          JSON, XML and Binary formats
+        </li>
+        
+        <li>
+          Communicate with HTTP(S) clients using a
+          message serialization of the client's choice
+        </li>
+      </ul>
+
+      <p>
+        The benefits for loosely coupled systems
+        include:
+      </p>
+
+      <ul>
+        <li>
+          No code change required when a new client
+          wants to use a new serialization format
+        </li>
+        
+        <li>
+          Moves reasoning of semantic intent of message
+          elements into the application layer
+        </li>
+        
+        <li>
+          Provides (some) defense against the "version
+          N+1 message producer" problem
+        </li>
+        
+      </ul>
+
+      <p>
+        It does come with some costs, including:
+      </p>
+
+      <ul>
+
+        <li>
+          The richness of XML expressability is largely
+          lost
+        </li>
+        
+        <li>
+          Self describing message formats are often
+          larger than comparable non-self-describing
+          formats.
+        </li>
+        
+      </ul>
+
+      <p>
+        It is the experience of the authors, however,
+        that for loosely coupled systems, the benefits
+        of the "transfer syntax neutral" approach
+        described here outweigh the costs and encourage
+        system developers to consider using it.
+      </p>
+
+    </section>
+    
+    <section id="98_References">
+      
+      <h2>References</h2>
+
+      <ol>
+        <a name="ref_1"></a>
+        <li><a href="https://www.apple.com/DTDs/PropertyList-1.0.dtd">Apple P-List DTD</a></li>
+
+        <a name="ref_2"></a>
+        <li><a href="https://tools.ietf.org/html/draft-ietf-vwrap-type-system-00">VWRAP : Abstract Type System for the Transmission of Dynamic Structured Data</a></li>
+
+        <a name="ref_3"></a>
+        <li><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Content_negotiation">HTTP Content Negotiation</a></li>
+
+        <a name="ref_4"></a>
+        <li><a href="https://github.com/OhMeadhbh/dsd">Dynamic Structured Data </a></li>
+      </ol>
+      
+    </section>
+    
+    <section id="footer"><p>
+      This page was last updated on July 26, 2020. This
+      page is a part of the <a href="index.html">Technical
+      Section</a>, which is part of
+      <a href="../../index.html">Meadhbh Hamrick's Web
+        Site</a>.      
+    </p></section>
+  </body>
+</html>
