@@ -104,3 +104,16 @@ pre.code {
   overflow-x: auto;
 }
 
+img.right, img.left {
+  width: 192px;
+}
+
+img.right {
+  float: right;
+  margin: 8px 0px 8px 16px;
+}
+
+img.left {
+  float: left;
+  margin: 8px 16px 8px 0px;
+}
