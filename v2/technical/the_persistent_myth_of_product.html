@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" type="text/css" href="../../css/index.css"/>
+    <title>The Persistent Myth of Product</title>
+    <meta charset="utf-8"/>
+    <meta name="description" content="What makes a good product? Sometimes it's hard to tell."/>
+  </head>
+  <body class="content">
+    <title>The Persistent Myth of Product</title>
+
+    <section>
+      
+      <p>
+        This morning i had to take it a little easy. I
+        burned myself out last night debugging and
+        needed a small break. So i spent a little extra
+        time sipping my coffee, enjoying my garden and
+        reading a random book from my young
+        adulthood. The book i picked up from my
+        bookshelf was Michael Tomcsyk's "The Home
+        Computer Wars." It's a first-hand account of
+        Commodore's rise as a home computing juggernaut
+        in the early 1980's. Written in an informal,
+        first-person style, it's a surprisingly fun
+        read; sort of like a romance novel for tech
+        geeks.
+      </p>
+
+      <p>
+        One of the things I noticed about the book was
+        how few rules there were to making "hit computer
+        products" in the early 80's. The market was
+        still developing and everyone seemed to have
+        their pet theories for how to build the next,
+        great thing. The locations involved, Sunnyvale
+        and Santa Clara, made me think of the companies
+        I worked for in the valley; how their approach
+        to structuring a business was straight out of
+        the 80's and how that's probably why they're no
+        longer around.
+      </p>
+
+      <p>
+        I'm thinking mostly of PalmSource, the software
+        spin-off of Palm, Inc. PalmSource was structured
+        in a pretty standard way: executive management
+        at the top, different divisions for sales,
+        marketing, operations and engineering. We worked
+        in matrix style teams with product definition
+        the responsibility of the team's product
+        manager. I don't want to dispiarage anyone on
+        the PalmSource team; with very few exceptions
+        everyone involved were highly competent
+        professionals. But in retrospect, I believe
+        PalmSource's organization and rigid
+        responsibilities set it up for failure.
+      </p>
+
+      <p>
+        My team was working on the software to secure
+        apps on the device from other, potentially rogue
+        apps. I was happy with the work I was doing, but
+        the software security work I was doing quickly
+        laid bare a sad truth: our product manager had
+        no idea why we were including security features.
+      </p>
+
+      <p>
+        People who have implemented security features on
+        products will probably understand how
+        frustrating this can be. Security features
+        frequently do things like pop up dialogue boxes
+        or cause certain types of data accesses to
+        fail. As feature developers, we can dial up the
+        access protection and annoying interactions or
+        we can dial them down. It's not exactly true
+        that good user interface and good security are
+        mutually exclusive, but it's frequently the case
+        (especially in the first rev of a product.)
+      </p>
+
+      <p>
+        So as developers, we cheat. We have our software
+        refer to configuration files to say how
+        frequently we should annoy the user and what
+        resources we don't let other programs
+        access. It's great for the software developer,
+        but it's really just kicking the can down the
+        road. Someone, somewhere needs to make a
+        decision about how often you annoy the user. And
+        it's a horrible choice. If you err on the side
+        of caution, people hate your user interface. If
+        you err on the side of convenience, you open
+        yourself up to vulnerabilities.
+      </p>
+
+      <p>
+        At PalmSource, we convinced ourselves that our
+        product manager would make these decisions or
+        would be the conduit for customer
+        requirements. But we made a bit of a
+        mistake. Our product manager, while very
+        competent in the general handheld space, had
+        about zero experience with security features and
+        not a whole lot of experience evaluating user
+        experience. And this was the guy who was going
+        to make the decision in the usable vs. secure
+        issue.
+      </p>
+
+      <p>
+        I don't blame our product manager. He was a good
+        guy put in a situation outside his area of
+        expertise. It did take him a little longer to
+        recognize this than it should have, but he had a
+        lot on his plate. As engineers, we had no way to
+        report this issue to upper management because
+        our management was actively hostile toward
+        security features. (Seriously, my manager once
+        fell asleep during a meeting when we were trying
+        to explain the problem to him.) We had no
+        authority to make a decision on our own, because
+        PalmSource's corporate culture was "product
+        tells engineering what to build, not the other
+        way around."
+      </p>
+
+      <p>
+        In several old-school companies, the product
+        management group is responsible for surveying
+        the market, making educated guesses about
+        economic trends and customer behaviour and
+        developing a target for price and
+        performance. Usually (hopefully) guided by the
+        executive team's directives on ROI and general
+        location in the price / quality matrix, they
+        help engineering prioritize features for the
+        products under development.
+      </p>
+
+      <p>
+        But it's increasingly important for product
+        managers to have a deep knowledge of the product
+        features. In the old days when the division
+        between product marketing and engineering was
+        established, products were effectively widgets
+        with five or ten bullet-point features. The
+        "quality" of your product was defined by the
+        presence of a bullet-pointed feature or it's
+        relative feature. Product managers didn't need
+        to know what the features did, only that we had
+        one.
+      </p>
+
+      <p>
+        Fast forward to the modern era... The iPhone
+        finally got the term "user experience" on the
+        lips of executives. Just-In-Time manufacturing
+        is the default rather than the exception and
+        various SaaS successes have people talking about
+        how to provide value through an API. Selling
+        software in Sili Valley is less about putting
+        bullet points on boxes and more about adapting
+        your API to fit into someone else's value chain.
+      </p>
+
+      <p>
+        So why do we still have product managers that
+        aren't also sales engineers? Why did I, as an
+        engineer, have to explain the business
+        ramifications of poor design choices to our
+        product manager? Why did I have to use
+        back-channels to find engineers in our
+        customer's organizations and ask *them* about
+        their business objectives?
+      </p>
+
+      <p>
+        And I think the answer is "the Persistent Myth
+        of Product."
+      </p>
+
+      <p>
+        There's a truism in marketing that to make money
+        you can do two things: figure out what people
+        want and make that, or figure out what you're
+        good at making and make people want to buy
+        it. In the early 80's, the vast majority of the
+        populous wasn't familiar with what computers
+        could do. It's safe to say people didn't know
+        what they wanted. Sure, we all thought we wanted
+        a device with more flashy graphics, a better
+        keyboard and more memory. But that's just the
+        "computer fetishist" view of computing
+        products. What we needed to know in the early
+        80's was how these devices were going to fit
+        into our lives.
+      </p>
+
+      <p>
+        And while I like to grouse about Apple's
+        developer support from time to time, it's hard
+        to argue they didn't do an EXCELLENT job
+        communicating how Apple products fit into
+        people's lives. When the Macintosh came out, IBM
+        offered a series of ham-fisted windowing
+        programs to counter the Mac's "ease of use"
+        argument; ditto for Digital Research; ditto for
+        Microsoft. I believe IBM and Microsoft survived
+        because they understood the lucrative enterprise
+        market.
+      </p>
+
+      <p>
+        In the early 2000's, Apple struck again with the
+        iPod. It wasn't the first personal audio player,
+        but it was the first to not treat the user
+        interface as a bolt-on afterthought. And Apple
+        did another EXCELLENT job communicating how the
+        iPod fit in a user's life: buy an iPod, take
+        your music with you. By comparison, Diamond and
+        Creative were selling Rios and NOMADs like you
+        would sell a PC component: by listing bullet
+        points on the side of a box.
+      </p>
+
+      <p>
+        Traditional product managers are taught to
+        identify key features of a product segment and
+        then communicate those features to an
+        engineering team. They are taught that all you
+        have to do is make a widget slightly cheaper or
+        slightly better and the world will beat a path
+        to your door. And in many segments this is true.
+      </p>
+
+      <p>
+        But it's not true in software. Or at least it's
+        not true for organizations that don't want to
+        rely on dumb luck.
+      </p>
+
+      <p>
+        "Product" is not defined by a market, but by
+        observing people, figuring out how technology
+        can affect their lives, building it and
+        communicating that change to the end user. Don't
+        depend on an existing market to tell you what to
+        build. Depend on your customer's need
+        first. Or... figure out what you're good at
+        building and figure out how it fits into your
+        customer's life.
+      </p>
+
+    </section>
+    
+    <section id="footer"><p>
+      This page was last updated on July 26, 2020. This
+      page is a part of the <a href="index.html">Technical
+      Section</a>, which is part of
+      <a href="../../index.html">Meadhbh Hamrick's Web
+        Site</a>.      
+    </p></section>
+  </body>
+</html>
