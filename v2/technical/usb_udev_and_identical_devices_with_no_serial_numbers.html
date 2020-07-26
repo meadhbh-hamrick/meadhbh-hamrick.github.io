@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" type="text/css" href="../../css/index.css"/>
+    <title>USB, UDEV and Identical Devices with No Serial Numbers</title>
+    <meta charset="utf-8"/>
+    <meta name="description" content="How to tell USB Devices Apart when they have identical serial numbers with UDEV on Linux."/>
+  </head>
+  <body class="content">
+    <title>USB, UDEV and Identical Devices with No Serial Numbers</title>
+
+    <section id="00_Intro">
+      
+      <p>
+        I admit it. I have a bit of a HiFive habit. For
+        those not in the know, "HiFive" is the name of a
+        family of single board computers featuring
+        RISC-V processors. The HiFive1 looks somewhat
+        like an Arduino and features a 32-bit "embedded"
+        SoC. The HiFive Unleashed is it's beefier
+        cousin. It features a 64-bit penta-core system
+        with a bunch of DRAM and runs Linux.
+      </p>
+
+      <p>
+        But they both have a couple things in
+        common. Firstly, they both use the same FTDI USB
+        to UART chip. Secondly, it's my job to support
+        both of them, so I frequently have two (or more)
+        of these devices plugged in to my Linux system
+        at the same time. 
+      </p>
+
+      <p>
+        This is a problem because they don't report
+        serial numbers during enumeration, making it
+        hard to assign each board to its own unique,
+        human-memorable device file name. In other
+        words, I want the HiFive1 to show up as
+        <strong>/dev/hifive1</strong> when I plug it in
+        and the HiFive Unleashed to show up as
+        <strong>/dev/hifiveu</strong>. But if you do a
+        bit of googling on udev (Linux's userland device
+        subsystem) you can find plenty of examples for
+        how to do this...
+        <strong><em>if the devices report unique serial
+          numbers</em></strong>.
+      </p>
+
+      <p>
+        After a bit of experimentation and reading, I
+        discovered it was possible to assign human
+        memorable device names based on
+        <strong><em>which port you plugged it
+          into</em></strong>. This isn't an ideal
+        situation, but it's good enough. Here's what I
+        did:
+      </p>
+
+      <p>
+        First, install the
+        <strong>99-openocd.rules</strong> file as
+        described in the HiFive1 or HiFive Unleashed
+        getting started guide (links below.) This
+        essentially involves copying this udev "rules
+        file" into
+        <strong>/etc/udev/rules.d/99-openocd.rules</strong>:
+      </p>
+
+      <p>
+        <strong>SUBSYSTEM=="usb",ATTR{idVendor}=="0403",ATTR{idProduct}=="6010",MODE="664",GROUP="plugdev"</strong>
+      </p>
+
+      <p>
+        <strong>SUBSYSTEM=="tty",ATTRS{idVendor}=="0403",ATTRS{idProduct}=="6010",MODE="664",GROUP="plugdev"</strong>
+      </p>
+
+      <p>
+        And copy the following lines into the file
+        <strong>/dev/udev/rules.d/60-import.rules</strong>
+        if it's not there already:
+      </p>
+
+      <p>
+        <strong>SUBSYSTEMS=="pci|usb|platform|acpi", IMPORT{builtin}="path_id_tag"</strong>
+      </p>
+
+      <p>
+        Now plug in your first device. You should see
+        two devices appear: /dev/ttyUSB0 and
+        /dev/ttyUSB1. The first is the device used by
+        OpenOCD to communicate with the JTAG interface
+        on the board while the second is the interface
+        to the device's UART. That's the one I want to
+        hide behind a unique device name.
+      </p>
+
+      <p>
+        Type in the command:
+      </p>
+
+      <p>
+        <strong>udevadm info -q all /dev/ttyUSB1 | grep ID_PATH_TAG</strong>
+      </p>
+
+      <p>
+        You should get a response something like this:
+      </p>
+
+      <p>
+        <strong>E: ID_PATH_TAG=pci-usb-0_1_1_2_1_1</strong>
+      </p>
+
+      <p>
+        It may not be exactly the same, but as long as
+        it's unique for each USB port on your device,
+        it's fine. Now go back to the
+        <strong>99-openocd.rules</strong> file and add
+        this to the end of the line that starts with
+        <strong>SUBSYSTEM="tty"</strong>:
+      </p>
+
+      <p>
+        <strong>,SYMLINK+="sifive_$env{ID_PATH_TAG}"</strong>
+      </p>
+
+      <p>
+        Now plug your device back in and look at newly
+        formed devices in <strong>/dev</strong>:
+      </p>
+
+      <p>
+        <strong>ls -l /dev/sifive_*</strong>
+      </p>
+
+      <p>
+        You should see a device that looks like this:
+      </p>
+
+      <p>
+        <strong>lrwxrwxrwx 1 root root 7 Aug 16 18:26 /dev/sifive_pci-usb-0_1_1_2_1_1 -> ttyUSB1</strong>
+      </p>
+
+      <p>
+        It's okay if you see multiple "sifive" devices,
+        all we care about is that they're unique and map
+        to a particular hardware USB port. Now that
+        we've told the udev subsystem to create a unique
+        link for tty devices that plug into a particular
+        port, we can use that name as a target for a
+        more human memorable name by manually creating a
+        symlink.
+      </p>
+
+      <p>
+        In this example, I connected my HiFive1 to this
+        port, so I created a "hifive1" symbolic link to
+        this first device:
+      </p>
+
+      <p>
+        <strong>ln -s sifive_pci-0000_39_00_0-usb-0_1_1_2_1_1 hifive1</strong>
+      </p>
+
+      <p>
+        Now as long as I plug my HiFive1 into the same
+        port, it's serial interface will show up as
+        <strong>/dev/hifive1</strong>.
+      </p>
+
+      <p>
+        You can repeat this process with other HiFive1
+        devices, perhaps naming them
+        <strong>/dev/hifive1-1</strong> or
+        <strong>/dev/hifive1-2</strong> and so on or add
+        other symbolic links for the HiFive Unleashed
+        board (which also uses the same FTDI chipset.)
+      </p>
+      
+    </section>
+    
+    <section id="98_References">
+      
+      <h2>References</h2>
+
+      <ol>
+        <a name="ref_1"></a>
+        <li><a href="https://static.dev.sifive.com/dev-kits/hifive1/hifive1-getting-started-v1.0.2.pdf">HiFive1 Getting Started Guide</a></li>
+
+        <a name="ref_2"></a>
+        <li><a href="https://www.sifive.com/boards/hifive1">HiFive1 Product Information Page</a></li>
+
+        <a name="ref_3"></a>
+        <li><a href="https://www.sifive.com/boards/hifive-unleashed">HiFive Unleashed Product Information Page</a></li>
+
+        <a name="ref_4"></a>
+        <li><a href="https://en.wikipedia.org/wiki/Udev">Wikipedia's page on Linux udev</a></li>       
+      </ol>
+      
+    </section>
+    
+    <section id="footer"><p>
+      This page was last updated on July 26, 2020. This
+      page is a part of the <a href="index.html">Technical
+      Section</a>, which is part of
+      <a href="../../index.html">Meadhbh Hamrick's Web
+        Site</a>.      
+    </p></section>
+  </body>
+</html>
