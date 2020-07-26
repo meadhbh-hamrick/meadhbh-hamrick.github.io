@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" type="text/css" href="../../css/index.css"/>
+    <title>Dynamic Structured Data</title>
+    <meta charset="utf-8"/>
+    <meta name="description" content="An introduction to Dynamic Structured Data."/>
+  </head>
+  <body class="content">
+    <title>Dynamic Structured Data</title>
+
+    <a name="00_Intro"></a>
+    <section id="00_Intro">
+      
+      <p>
+        Dynamic Structured Data (DSD) is a system for
+        describing, serializing and deserializing
+        messages in loosely coupled systems. Its
+        (de)serialization facilities may be used in the
+        same way as JSON, XML or even Protocol
+        Buffers. Its message definition facilities may
+        be used with its own text and binary
+        serialization schemes, or they may be used with
+        JSON or XML. DSD has been used successfully with
+        "large" systems including modern 64-bit servers
+        as well as "tiny" systems like 8-bit "Internet
+        of Things" sensors and "mid-range" 32-bit
+        embedded or mobile devices.
+      </p>
+
+      <p>
+        Features which differentiate DSD from JSON, XML
+        or ProtoBufs include:
+      </p>
+
+      <ul>
+        <li><strong>DSD separates type semantics from transfer syntax / serialization</strong></li>
+        <li>Messages using the text or binary transfer syntaxes defined by DSD do not imply type behaviour by default. This is in contrast to systems like ProtoBufs and JSON which inherit type behaviours from popular programming languages. DSD transfer syntaxes allow the message sender to optionally annotate a message with type expectations. Type system annotation can be considered a "contract proposal" for the consuming application. The application may use the annotation to decide how to proceed. It may ignore the type annotation (at its peril), signal an in-band error or create an exceptional condition (like closing the TCP connection, sending a BREAK over a serial line or returning a 4XX HTTP response.)</li>
+        <li><strong>DSD separates message definition from transfer syntax / serialization</strong></li>
+        <li>DSD defines a language for creating messages and responses. Systems using a DSD transfer syntax are not required to use the message definition facility. The message definition facility is included in the specification because previous application developers frequently found it useful. The DSD message definition facility serves a purpose similar to DTDs or XSchema in XML: it defines the format of a valid message. The DSD message specification goes further by allowing application developers to select an interaction style such as REQUEST / RESPONSE or EVENT. Request-Response messages may include CREATE, READ, UPDATE or DELETE semantics in message definitions to facilitate mapping DSD messages to the HTTP(S) verbs POST, GET, PUT and DELETE.</li>
+        <li><strong>DSD includes both human and machine readable transfer syntaxes / serialization schemes</strong></li>
+        <li>The DSD specification avoids specifying a preferred encoding. DSD transfer syntaxes may carry UTF-8 data equally well as ISO-8859 or ShiftJIS. A binary transfer syntax is defined to improve the speed of message parsing. A text-based transfer syntax may be used when humans are likely to read messages and can be used with 7-bit systems, assuming the data being transmitted is 7-bit clean. Binary *and* text transfer syntaxes give application developers flexibility when they are transmitting protocol messages across SMTP, HTTP(S) or TCP transports.</li>
+        <li><strong>In addition to defining it's own text and binary transfer syntax, DSD specifies rules for using JSON and XML as transfer syntaxes / serialization schemes</strong></li>
+        <li>As nice as DSD-defined transfer syntaxes are, it's clear many users will have a significant investment in legacy systems that use JSON and/or XML. While the benefits of type system annotation are not available to JSON users and XML message parsers may impose reasonably heavy processing loads for tiny (Internet of Things) systems, users of both transfer syntaxes may find the DSD message definition facility useful. DSD therefore includes rules for constructing and parsing XML or JSON messages from DSD message definitions.</li>
+      </ul>
+
+      <p>
+        Though not differentiating features, the
+        designers of DSD found these features important:
+      </p>
+
+      <ul>
+        <li><strong>DSD serialization is "self describing" -- message parsers do not need to understand application semantics to identify message boundaries</strong></li>
+        <li>Fundamental to the DSD specification is the requirement that the transfer syntax (rules for parsing messages and identifying their components) be distinct from application semantics. MANY transfer syntaxes require a message parser to "peek" inside the message to determine it's length. This has the side effect of complicating the parser and linking the parser's behaviour to application semantics; both lead to "brittle" software. Both the binary and text transfer syntaxes defined by DSD allow application developers to change message formats without requiring message parsers to change.</li>
+        <li>The text transfer syntax defines an unambiguous grammar which identifies the beginning and end of message components. While the type of a message component may be inferred by it's form (numbers are sequences of digits, strings are bounded by double quotes, etc.) semantics such as how many bits are in an integer, whether a floating point number should be stored as base-2 or base-10 or whether strings are UTF-8 encoded are opaque to DSD.</li>
+        <li>The binary transfer syntax encodes the length and abstract type of message components so parsers may easily identify message components and construct application specific data structures. This "ease of parsing" feature was the primary requirement for the binary transfer syntax; it was not designed to reduce message size.</li>
+        <li><strong>DSD defines rules for encoding single or multiple messages across multiple transports (including TCP, HTTP(S) and HTTP(S) chunked encoding.)</strong></li>
+        <li>DSD messages are presumed to be a sequence of distinct elements, each representing scalar data or a collection of scalar data elements. Any of the transfer syntaxes used with DSD can easily be transmitted across a clean 8-bit transport like TCP. The specification defines a mime-type to identify messages using DSD/text, DSD/binary, JSON or XML encoding. It also provides guidance for using DSD/text and DSD/binary with HTTP(S) chunked encoding.</li>
+        <li><strong>DSD encourages, but does not require an application architecture where message "fitness" is evaluated by the application layer and not lower layers.</strong></li>
+        <li>Several message transfer syntax or (de)serialization schemes require the message parser to enforce type and composition semantics. ASN.1, JSON and ProtoBufs all have this feature. DSD is designed for "loosely coupled" systems that must content with version skew. It is not uncommon in such systems for message components to change type or even disappear between application protocol versions. While a (de)serialization system cannot completely ameliorate issues associated with version skew, it can be constructed so application developers can easily extend or change messages without causing the message parser to raise errors.</li>
+        <li>DSD separates the transfer syntax from the message definition component explicitly to avoid constructing messages that MUST be considered invalid when the type or composition of a protocol message is changed.</li>
+        <li>The DSD message definition specification defines defaults for each type in its abstract type system and instructs developers they *SHOULD* consider the absence of a message component to be the equivalent of the component being present with the default value. As a specification, DSD does not dictate how message parsers or applications are coded, but it does provide suggestions based on the specification developers' experience deploying applications in large, distributed systems.</li>
+        <li><strong>The DSD transfer syntaxes support comments</strong></li>
+        <li>Non-binary formats have the benefit of being inherently human readable (or at least humans can manipulate them with text processing utilities.) The developers of the DSD text transfer syntax felt it was important to allow protocol messages to be annotated with comments. If a DSD text message was used as a configuration file, this would allow system administrators to leave contextual clues to why various application-specific values were selected. Comments also allow DSD messages to be annotated with automated tools in a way that does not require the syntax to be extended. JavaDoc's use of specific message identifers in comments is an example.</li>
+        <li>Interestingly, the DSD binary transfer syntax also supports a "comment" tag to allow binary messages to be annotated.</li>
+      </ul>
+      
+    </section>
+
+    <section>
+      <h2>What's in DSD?</h2>
+
+      <p>
+        The Dynamic Structured Data specification
+        includes:
+      </p>
+
+      <ul>
+        <li><strong>Message Definition Facility</strong>. DSD/MDF is the language used to specify messages. It describes messages using an <strong>Abstract Type System</strong>. Using MDF developers define the format of protocol messages (what individual components a message contans and the abstract types of each component.) It is similar to XML DTD or XSchema, but models concepts for protocol messages. Using MDF, a developer can create message definitions that represent EVENT type messages (like alerts, exceptions or unexpected events that arrive independent of a REQUEST / RESPONSE pattern). But MDF also allows developers to describe REQUEST / RESPONSE behaviour patterns; messages that are sent with the expectation of a reply.</li>
+        <li><strong>Message Transport Specification(s)</strong>. DSD/MDF defines techniques for describing how messages are carried across four different types of transports. A Message Transport Specification (MTS) exists for Octet-Streams (like raw TCP connections or Serial connections), HTTP(S) and WebSockets. Each specification describes how serialized messages are represented in the underlying transport and how message type and request-response semantics are modeled. For instance, the HTTP(S) message transport specification defines MIME Types for each of the four transport syntaxes and maps CREATE, READ, UPDATE and DELETE message types to POST, GET, PUT and DELETE HTTP methods.</li>
+        <li><strong>Transfer Syntaxes (aka Serialization Formats)</strong>. DSD defines four serialization formats (described briefly above): DSD/Text, DSD/Binary, DSD/JSON and DSD/XML. Each transfer syntax describes how messages (defined by the Message Definition Facility) are serialized into a byte stream. The role of a transfer syntax is to unambiguously identify the components and types of protocol messages.</li>
+        <li><strong>Application Semantic Description Facility</strong>. Types in DSD messages do not carry "application level" semantic intent. For instance, an integer may represent a counter, a UNIX date-time or a coordinate on a playing field. DSD doesn't normally care how an application interprets data in messages; it only wants to create a mechanism for accurately moving them between cooperating processes. DSD/ASDF is an extension to the Message Definition Facility (MDF) allowing developers to specifiy application level semantics for various message elements. Strings may be further specified as UUIDs, ISO 8601 date/time or URLs. Integers may be specified to be UNIX "seconds since epoch" date-times. Message elements may be annotated with user-defined type or class information to more easily identify how a message should be interpreted.</li>
+        <li>During development, ASDF greatly increased the complexity of the Message Definition Facility (which is why it was removed from the base MDF specification.) Users who do not need the enhanced expressability of ASDF are encouraged to use MDF to reduce the overall complexity of their application message protocol.</li>
+        <li><strong>Application Guidelines and Processing Expectations</strong>. Though not an official specification, DSD enables a particular development pattern. A document describing the best common practices for using DSD are captured in this document.</li>
+      </ul>
+
+    </section>
+
+    <section>
+      <h2>Putting it All Together</h2>
+
+      <p>
+        The "DSD Workflow" is expected to be something
+        like this:
+      </p>
+
+      <ol>
+        <li>An application developer uses the Message Definition Facility (MDF) or Application Semantic Description Facility (ASDF) to describe the composition and message exchange pattern of application messages.</li>
+        <li>MDF/ASDF message descriptions are (optionally) used by a software tool to create a parser to parse application messages. Even if automated tools are not used to create custom parser instances, MDF and ASDF are useful mechanisms for succinctly communicating message exchange patterns and the composition of protocol messages between humans.</li>
+        <li>A transport for the message protocol is selected. Once the transport is selected, it should be straight-forward to create or integrate a DSD message parser into your application based on the Message Transport Specification (MTS).</li>
+        <li>Depending on your platform and preferences, you may wish to select a restrictive policy for messages your application receives that do not conform to message definitions. A restrictive policy would be to reject non-conforming messages. This will reduce the load on the application layer; your app will simply never see non-conforming messages. A non-restrictive policy may be better for loosely coupled systems where version skew may introduce non-conformant messages. The choice is entirely up to the application developer; DSD models sufficient information to allow restrictive policies to be enforced, but these policies can be relaxed based on developer preference.</li>
+        <li>Once the transport is selected and the non-conformant message policy is selected, an application should be able to start receiving messages. We assume the receiver knows what serializtion format is used either by looking at the mime type of a HTTP(S) request or by developer fiat. When a message is received and the application knows which serialization scheme to use, it can begin to parse the message, converting it into a suitable internal format from the line format defined by the transfer syntax.</li>
+        <li>Once the message is parsed and converted into an internal format, it is passed to the application which will then take appropriate action, possibly sending a response.</li>
+      </ol>
+
+    </section>
+
+    <section>
+      <h2>Example DSD Messages</h2>
+
+      <p>
+        Examples often illustrate concepts succinctly in
+        a way descriptive text cannot. The author(s) of
+        this document felt it important to include a few
+        simple examples of DSD messages. A more
+        extensive example DSD/Text message may be found
+        at example.dsd.
+      </p>
+
+      <p><strong>Example 1 : A DSD/Text serialized message</strong></p>
+
+      <pre class="code">
+
+   # Simple message directing a robot to go to a particular location and
+   # submit a report the URL given after it gets there.
+   @m
+   {
+     "fast" = True
+     "command" = "move"
+     "destination" = [ -12.8 101.4 ]
+     "report" = "https://example.com/c/c422a2ba-46f6-9a0a-2531e95e345b"
+     "timeout" = 60 # normally this is 90 seconds
+   }</pre>
+
+      <p>
+        In this example, we see a few things:
+      </p>
+
+      <ul>
+        <li>It's looks somewhat like JSON.</li>
+        <li>Comments begin with a hashmark ('#') and run from the hashmark to the end of the line.</li>
+        <li>The '@m' annotation - this tells the message receiver the sender may send 32 bit integers and other values easily parsed by a "medium" sized 32-bit CPU.</li>
+        <li>Dictionaries (maps) and Arrays are similar to JSON objects and arrays.</li>
+        <li>You don't need commas between components of a map or array. This is because the grammar for DSD/Text messages unambiguiously defines the beginning and end of lexemes; the parser knows it's in an array or dictionary by context.</li>
+        <li>There's no explicit type information in the message itself. If the parser needs abstract type information, it can intuit it from the content of the lexeme.</li>
+        <li>It may be hard to notice, but ordering of elements in the dictionary is unimportant. (Note that the "fast" message element preceeds the "command" element; it's unlikely the message was defined this way.)</li>
+      </ul>
+      
+      <p><strong>Example 2 : A DSD/Text message from a tiny microcontroller</strong></p>
+
+      <pre class="code">
+
+   @t
+   [ 1 32 17 ]
+   [ 1 32 19 ]
+   [ 1 31 19 ]
+   [ 4096 "fault : restarting" ]
+   [ 1 31 19 ]</pre>
+
+      <p>
+        This is a very simple message you might expect
+        to come from a temperature / humidity sensor. It
+        might be a sequence of temp / humidity
+        measurements 60 seconds apart interspersed with
+        alert messages. There are two important features
+        to observe from this example:
+      </p>
+
+      <ul>
+        <li>DSD imposes no semantic restrictions on the context of messages. Application developers are free to model data any way they wish.</li>
+        <li>DSD messages are considered a sequence of data; they are conceptually surrounded by array markers ('[' and ']').</li>
+      </ul>
+
+      <p><strong>Example 3 : A DSD/Binary message with the same data as Example 2</strong></p>
+
+      <pre class="code">
+   0x10 0x00
+   0x07 0x09
+        0x03 0x01 0x01
+        0x03 0x01 0x20
+        0x03 0x01 0x11
+   0x07 0x09
+        0x03 0x01 0x01
+        0x03 0x01 0x20
+        0x03 0x01 0x13
+   0x07 0x09
+        0x03 0x01 0x01
+        0x03 0x01 0x1F
+        0x03 0x01 0x13
+   0x07 0x15
+        0x03 0x02 0x00 0x10
+        0x05 0x0F 0x66 0x61
+        0x75 0x6C 0x74 0x20 
+        0x3A 0x20 0x72 0x65
+        0x73 0x74 0x69 0x6E
+        0x67
+   0x07 0x09
+        0x03 0x01 0x01
+        0x03 0x01 0x20
+        0x03 0x01 0x13</pre>
+
+      <p>
+        From this we can see:
+      </p>
+
+      <ul>
+        <li>Messages are in a &lt;tag&gt; &lt;length&gt; &lt;data&gt; format.</li>
+        <li>The tag for the "tiny" type annotation is 0x10, arrays are tagged with a 0x07, integers with 0x03 and strings with 0x05.</li>
+        <li>All of the tag and length fields in this message are 1 octet long. This is not always the case; length octets can expand in length as the number of bits they must encode expands (similar to the way UTF-8 code points are encoded.)</li>
+        <li>This is a sequence of DSD/Binary messages. The parser doesn't care that there's no enclosing array, it simply identifies the beginning and end of fields and passes it up to the application.</li>
+      </ul>
+
+      <p><strong>Example 4 : A DSD message serialized as JSON replicating the contents of Example 1</strong></p>
+
+      <pre class="code">
+
+   {
+     "_type": "m",
+     "fast": true,
+     "command": "move",
+     "destination": [ -12.8, 101.4 ],
+     "report": "https://example.com/c/c422a2ba-fec1-9a0a-2531e95e345b",
+     "timeout": 60
+   }</pre>
+
+      <p>
+        From this example, we can see:
+      </p>
+
+      <ul>
+        <li>JSON itself doesn't support type system annotation, so we had to include it as member in the object.</li>
+        <li>You can't see it here, but integers and floating point values in JSON by type semantics of whichever version of JSON you're using.</li>
+      </ul>
+
+      <p><strong>Example 5 : A DSD message serialized as a well-formed XML message</strong></p>
+
+      <pre class="code">
+
+   &lt;!-- Simple message directing a robot to go to a particular          --&gt;
+   &lt;!-- location and submit a report the URL given after it gets there. --&gt;
+   &lt;dsd&gt;
+     &lt;type&gt;m&lt;/type&gt;
+     &lt;dictionary&gt;
+       &lt;key&gt;fast&lt;/key&gt;
+       &lt;boolean&gt;true&lt;/boolean&gt;
+       &lt;key&gt;command&lt;/key&gt;
+       &lt;string&gt;move&lt;/string&gt;
+       &lt;key&gt;destination&lt;/key&gt;
+       &lt;array&gt;
+         &lt;real&gt;-12.8&lt;/real&gt;
+         &lt;real&gt;101.4&lt;/real&gt;
+       &lt;/array&gt;
+       &lt;key&gt;report&lt;/key&gt;
+       &lt;string&gt;https://example.com/c422a2ba-fec1-9a0a-2531e95e345b&lt;/string&gt;
+       &lt;key&gt;timeout&lt;/key&gt;
+       &lt;integer&gt;60&lt;/integer&gt; &lt;!-- normally this is 90 seconds --&gt;
+     &lt;/dictionary&gt;
+   &lt;/dsd&gt;</pre>
+
+      <p>
+        Some important points to note:
+      </p>
+
+      <ul>
+        <li>Abstract types are explicitly identified by element names, but the transfer syntax itself does not model a concrete type system. Absent the concrete type element (the &lt;type&gt;m&lt/type&gt; line), the XML parser parsing a DSD/XML message *MUST* not assume type semantics like maximum string size or how many bits are in an integer or floating point value.</li>
+        <li>DSD/XML and DSD/Text have equivalent representational power.</li>
+        <li>This DSD/XML message does not reference a DTD, though it should be trivial to construct one similar to the XML DTD used for the VWRAP LLSD/XML Serialization Scheme. <a href="#ref_1">[1]</a> DSD/XML does not require messages to be valid, but it does require them to be well-formed.</li>
+      </ul>
+
+      <p><strong>Example 6 : A DSD Message Definition Specification for the message in Example 1</strong></p>
+
+      <pre class="code">
+
+   # This is an example message definition
+   MESSAGE example_message_name
+     DICTIONARY {
+       BOOLEAN fast
+       STRING command
+       ARRAY destination [ INTEGER ... ]
+       STRING report
+       INTEGER timeout
+     }</pre> 
+
+    </section>
+    
+    <section id="98_References">
+      
+      <h2>References</h2>
+
+      <ol>
+        <a name="ref_1"></a>
+        <li><a href="https://tools.ietf.org/html/draft-ietf-vwrap-type-system-00#appendix-B">VWRAP Abstract Type System XML Serialization DTD</a></li>
+      </ol>
+      
+    </section>
+    
+    <section id="footer"><p>
+      This page was last updated on July 26, 2020. This
+      page is a part of the <a href="index.html">Technical
+      Section</a>, which is part of
+      <a href="../../index.html">Meadhbh Hamrick's Web
+        Site</a>.      
+    </p></section>
+  </body>
+</html>
