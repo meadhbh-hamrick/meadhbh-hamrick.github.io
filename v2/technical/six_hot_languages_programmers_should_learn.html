@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" type="text/css" href="../../css/index.css"/>
+    <title>Six Hot Languages Programmers Should Learn</title>
+    <meta charset="utf-8"/>
+    <meta name="description" content="There's more to a programming language than syntax. Here are six languages with radically different semantics. Worth learning to broaden programmers' understanding."/>
+  </head>
+  <body class="content">
+    <title>Six Hot Languages Programmers Should Learn</title>
+
+    <a name="00_Intro"></a>
+    <section id="00_Intro">
+      
+      <p>
+        I just saw the crappiest bit of developer
+        click-bait come through my feed. It purported to
+        be a list of six best languages for programmers
+        to learn including C++, JavaScript, PHP and
+        hell… I can't complete the list, it's so
+        inane. I figured I would write a few words about
+        why programming languages matter and why Java
+        and C++ probably shouldn't be on anyone's "best"
+        list.
+      </p>
+      
+      <p>
+        First, let's talk about why programming
+        languages matter. At the simplest level
+        programming languages allow humans to tell
+        computing machines what to do. But if you work
+        with other programmers for a while, you realize
+        that programming languages have a social
+        function as well. Programming languages tell
+        other programmers what you thought you wanted to
+        say to a machine. It sounds subtle, but it's an
+        important difference. If I'm only writing
+        programs to communicate to a machine, why do I
+        need comments? Donald Knuth went off on this
+        back in the 80s and 90s; just google "Donald
+        Knuth Literate Programming."
+        <a href="#ref_1">[1]</a> And if you want to
+        argue with the godfather of modern programming,
+        that's fine. That's not the path I'm going to
+        take.
+      </p>
+
+      <p>
+        But as interesting as Knuth's work on "Software
+        as Literature" is, it's not entirely obvious in
+        a lot of Knuth's writings that software is also
+        used to communicate models of the world. If you
+        want to read something about this, consider
+        reading Papert's "Mindstorms: Children,
+        Computers and Powerful Ideas."
+        <a href="#ref_2">[2]</a> Papert was mostly
+        talking about kids, but much of what he says
+        about how kids learn is directly applicable to
+        communicating complex models between members of
+        a software development team.
+      </p>
+
+      <p>
+        If you don't want to wait for Amazon to deliver
+        a copy of Mindstorms to your front door, you can
+        read Papert's paper: "Teaching Children
+        Thinking." <a href="#ref_3">[3]</a> CSAIL has
+        very kindly uploaded a PDF of the paper and it's
+        available as a free download. It's not a long
+        paper. It talks about how they taught
+        programming to children in the late 60s, but
+        trust me, it has direct applicability to modern
+        software teams (and their users.) Rather than
+        keep you in suspense, let me pick out the bit I
+        think is most important. On page 4-1, Papert
+        says:
+      </p>
+
+      <p class="quote">
+        "…I propose creating an environment in which the
+        child will become highly involved in the
+        experiences of a kind to provide rich soil for
+        the growth of intuitions and concepts for
+        dealing with thinking, learning, playing and so
+        on."
+      </p>
+
+      <p>
+        In other words, Papert doesn't want to teach
+        kids to code, he wants to provide an environment
+        kids use to explore new methods of problem
+        solving. The paper doesn't go into great detail
+        about how the LOGO team did that. You might
+        think he's advocating ignoring teaching an API
+        or details of the LOGO language, but you would
+        be wrong. I think what he's saying here is
+        teaching APIs and details of programming
+        language syntax are not nearly as important as
+        providing a vehicle for kids to build models
+        about the world and the problem they're trying
+        to solve.
+      </p>
+
+      <p>
+        And that's the important part of programming
+        languages: they allow programmers to construct
+        models of the real world; to abstract out the
+        important bits of reality and PLAY with them. If
+        you don't like the word "play," then substitute
+        "experiment." If you don't think there's
+        experimentation going on every day by
+        programmers, then you've probably never tried to
+        use libboost. (Also, get a copy of Homo Ludens
+        <a href="#ref_4">[4]</a> and read it. Play is
+        very important.)
+      </p>
+
+      <p>
+        So the core message I'm trying to communicate
+        here is: Programming languages carry
+        representational models of the problem domain
+        between programmers. If a programming language
+        provides a mechanism to communicate a concept
+        succinctly, it is more likely to be understood
+        clearly by the programmer you're trying to
+        communicate with.
+      </p>
+
+      <p>
+        Larry Wall is credited with saying something
+        like "Programming languages differ not in what
+        they make possible, but in what they make easy."
+        The bit I would add on to the end of this is
+        that clearly and succinctly communicating the
+        intent of the programmer and the structure of
+        the problem domain are things that programming
+        languages should try to make easy.
+      </p>
+
+      <p>
+        Programmers should certainly learn a number of
+        languages, and if you want to learn a language
+        for purely vocational reasons, there's
+        absolutely nothing wrong with that. My message
+        here is simply: do not let vocational concerns
+        solely dictate which programming languages you
+        investigate; you absolutely need to investigate
+        different techniques to model problems. Many
+        programming languages that introduce new
+        conceptual models are not commercially popular;
+        ignore them at your peril.
+      </p>
+    </section>
+
+    <section>
+      <h2>The Six Hot Languages Programmers Should Learn</h2>
+
+      <p>
+        So I mentioned I was going to provide my own
+        list of languages programmers should learn. And
+        since I've bored you with a bunch of theory, let
+        me leave you with some examples. Here goes:
+      </p>
+
+      <ol>
+        <li><strong>Regular Expressions & BNF</strong><ul>
+          
+          <li>
+            "Regular Expressions" aren't a language, you
+            say? Okay, sure, regular expressions and
+            Backus-Naur Form aren't turing-complete, but
+            they subsume a powerful concept of
+            specifying a pattern. If you use regular
+            expressions in any modern language, what's
+            happening under the hood is the system is
+            compiling a little program executed in a
+            finite state automaton whose purpose is to
+            tell you if (and where) it finds a match
+            between the expression and some input data.
+          </li>
+
+          <li>
+            When I worked at Amazon, one of my favourite
+            things was to point out to people how the
+            regular expressions they were using led to
+            pathological results. Google "Pathological
+            Regular Expressions" <a href="#ref_5">[5]</a>
+            for more info.
+          </li>
+
+          <li>
+            The concept of pattern matching is
+            fundamental to many software engineering
+            tasks. If you're going to be a gigging
+            coder, you REALLY need to master Regular
+            Expressions as well as tools like Lexx and
+            Yacc <a href="#ref_6">[6]</a> (or Flex and
+            Bison if you're a GNU person.)
+          </li></ul>
+        </li>
+
+        <li><strong>SNOBOL / SPITBOL</strong><ul>
+          
+          <li>
+            What the hell is SNOBOL? The Wikipedia
+            article on SNOBOL is as good an intro
+            <a href="#ref_7">[7]</a>.
+          </li>
+
+          <li>
+            Long story short: SNOBOL is an old-school
+            programming language focused on matching and
+            manipulating strings. I'm including it on
+            this list because I *always* talk about
+            SNOBOL after discussing Regular
+            Expressions. SNOBOL allows the programmer to
+            easily construct Finite State Machines to
+            perform a type of matching that's not
+            limited to "Regular Languages."
+          </li>
+
+          <li>
+            I'm not going to get into the details of the
+            different types of grammars; there's enough
+            material there to fill an entire
+            upper-division computer science course. But
+            you might have heard people mention you're
+            not supposed to use regular expressions to
+            parse HTML files. The reason lies in how the
+            parsers for HTML and Regular Expressions
+            differ. Learning SNOBOL and how it differs
+            from Regular Expressions is a great start
+            down the road of understanding programming
+            language grammar and the structure of common
+            data formats.
+          </li></ul>
+          
+        </li>
+        
+        <li><strong>Self ( or the bits of JavaScript that deal with prototypal inheritance )</strong><ul>
+
+          <li>
+            Never heard of Self ? <a href="#ref_8">[8]</a>
+            No biggie. No one else has, either.
+          </li>
+
+          <li>
+            But both Java and JavaScript count Self as a
+            first class influence. On one hand, a lot of
+            what we know about Just-In-Time compilers in
+            virtual machines comes directly from the
+            research project at Sun Labs that also led
+            to Self. Much of this hard-won knowledge was
+            later poured into Java in the early days to
+            make it a decently performant runtime
+            environment. On the other hand, Self
+            pioneered the concept of Prototypal
+            Inheritance. <a href="#ref_9">[9]</a>
+          </li>
+
+          <li>
+            You can actually download a modern version
+            of Self from www.selflanguage.org
+            <a href="#ref_10">[10]</a>. I recommend
+            looking at it. It's crazy. It will bend your
+            mind. But at the end of the experience,
+            you'll understand why JavaScript was
+            perfectly fine without classes.
+          </li></ul>
+          
+        </li>
+        
+        <li><strong>Prolog</strong><ul>
+
+          <li>
+            Prolog <a href="#ref_11">[11]</a> is one of
+            those languages that a lot of people have
+            heard about, but no one's actually used.
+          </li>
+
+          <li>
+            This is sad because Prolog is so different
+            from modern, imperative or object-oriented
+            languages.
+          </li>
+
+          <li>
+            In Prolog, you type out a series of facts
+            and a series of logical relationships
+            between facts and classes of facts. You can
+            then give the system a sample statement and
+            it will use chronological backtracking
+            <a href="#ref_12">[12]</a> to try to prove
+            whether or not the statement is true.
+            Ignoring the syntax, a typical Prolog
+            program goes something like this:<ul>
+
+            <li>Tom is a cat.</li>
+            <li>All cats are animals.</li>
+            <li>Is Tom an animal?</li></ul>
+            
+            And the system responds "True" - This is a
+            simple example, but you can keep building
+            larger and larger "programs" and ask the
+            system more important and interesting
+            questions. For instance, modeling a
+            travelling salesman problem in Prolog
+            probably takes fewer than 20 lines of
+            code.
+          </li>
+
+          <li>
+            Before the (free) SWI Prolog
+            <a href="#ref_13">[13]</a> became the
+            dominant implementation on Linux, Borland
+            had a DOS based Turbo Prolog system. I still
+            have a copy of it and often run it in
+            DosBox. (But it's no longer supported, so
+            you should probably go with SWI Prolog
+            unless you're a RetroComputing freak like
+            me.)</li></ul>
+
+        </li>
+
+        <li><strong>Excel</strong><ul>
+
+          <li>
+            I'm not talking about Excel Macros, I'm
+            talking about the way every spreadsheet
+            known to man detects changes and propagates
+            those changes across the entire sheet. This
+            is an example of Dataflow
+            <a href="#ref_14">[14]</a> or Reactive
+            Programming <a href="#ref_15">[15]</a>.
+          </li>
+
+          <li>
+            Dataflow is a paradigm that's largely
+            ignored even though it has direct
+            applicability to web frameworks and all
+            kinds of GUIs. You're probably going to be
+            okay professionally if all you know about
+            change propagation is "Model - View -
+            Whatever," but there's a lot more out there
+            and when you start looking at distributed
+            systems, reading up on dataflow models will
+            give you a leg up when people start talking
+            about things like "eventual consistency."
+            And let's be honest, the people who yammer
+            on endlessly about eventual consistency are
+            the ones you really need to smack down with
+            a good reference to a change propagation
+            model from the 1950s.
+          </li></ul>
+
+        </li>
+        
+        <li><strong>Verilog</strong><ul>
+
+          <li>
+            I know. You're wondering why the heck I put
+            a Hardware Description Language on a list of
+            programming languages. That's because it's
+            not a list of hot programming languages,
+            it's a list of languages programmers should
+            know. Yes, I'm being a little bit
+            pedantic. But it's okay.
+          </li>
+
+          <li>
+            Even if you only do software, you should
+            look at Verilog. You don't need to be an
+            expert and you don't have to buy a FPGA or
+            fab your own chip. But it's very useful to
+            understand what the hardware community is
+            doing with programming languages. Verilog is
+            a language that allows users to declare the
+            operation of hardware. Sound familiar?
+          </li>
+
+          <li>
+            The main reason I'm putting Verilog on this
+            list is to remind programmers that source
+            code isn't what machines execute, it is
+            merely a representation of the program. It's
+            a little subtle, but if you start thinking
+            in terms of "the thing versus the
+            representation of the thing," it may lead
+            you to a better understanding of the thing.
+          </li>
+
+          <li>
+            And besides, programming FPGA is fun. Go
+            learn some Verilog <a href="#ref_16">[16]</a>
+            (or even VHDL <a href="#ref_17">[17]</a> if
+            you're twisted in that way.)
+          </li></ul>
+
+        </li>
+      </ol>
+    </section>
+
+    <section>
+      <h2>Why I Did Not Mention Java</h2>
+
+      <p>
+        So you notice I didn't mention Java, C#, C++,
+        PHP or Python? That's because these are
+        languages are essentially the same
+        language. Sure, the syntax for each is different
+        and namespace management in PHP is sort of
+        non-existent. But the way you model problems is
+        virtually identical: there are data structures
+        containing a representation of some data. You
+        build a model by building different data
+        structures and relating them, mostly using small
+        functions that know how to insert a reference
+        from one data structure to another. Often these
+        functions live in classes and they're declared
+        in different files so you have to go digging for
+        the exact subclass that contains the function so
+        using a text editor like VI or Emacs is sort of
+        problematic and you wind up using an Integrated
+        Development Environment that's sub-optimally
+        documented and whose interface changes every two
+        years.
+      </p>
+
+      <p>
+        Welcome to the next 30 years of your career.
+      </p>
+
+      <p>
+        Java, et al. are perfectly good vocational
+        languages. If you learn Java or Python or
+        JavaScript, you'll probably be able to find a
+        job pretty easily. But if you have an inquiring
+        mind, the job will make you want to pull your
+        hair out because you'll spend your day trying to
+        convince your co-workers that the Initialization
+        Fiasco is an anti-pattern.
+      </p>
+
+      <p>
+        Learning the languages listed above will set you
+        on the path to thinking about modeling problems
+        differently. I'm not going to encourage you to
+        build a new system out of Scheme or Prolog, but
+        you probably should understand what these
+        languages make easy (and why.) You should know
+        how Dataflow works; you may not want to use an
+        esoteric language that directly supports it, but
+        maybe there's a Python library out there already
+        that makes it much easier than rolling your
+        own. And you won't know to look for it unless
+        you know it exists.
+      </p>
+
+    </section>
+    
+    <section id="98_References">
+      
+      <h2>References</h2>
+
+      <ol>
+        <a name="ref_1"></a>
+        <li><a href="https://www.google.com/search?q=donald+knuth+literate+programming">"Donald Knuth Literate Programming" [Google]</a></li>
+
+        <a name="ref_2"></a>
+        <li><a href="https://www.amazon.com/Mindstorms-Children-Computers-Powerful-Ideas/dp/0465046746/">Mindstorms: Children, Computers and Powerful Ideas [Amazon]</a></li>
+
+        <a name="ref_3"></a>
+        <li><a href="https://dspace.mit.edu/handle/1721.1/5835">Teaching Children Thinking</a></li>
+
+        <a name="ref_4"></a>
+        <li><a href="https://www.amazon.com/Homo-Ludens-Study-Play-Element-Culture/dp/1614277060/">Homo Ludens [Amazon]</a></li>
+
+        <a name="ref_5"></a>
+        <li><a href="https://www.google.com/search?q=pathological+regular+expressions">"Pathological Regular Expressions" [Google]</a></li>
+
+        <a name="ref_6"></a>
+        <li><a href="http://dinosaur.compilertools.net/">The Lex &amp; Yacc Page</a></li>
+
+        <a name="ref_7"></a>
+        <li><a href="https://en.wikipedia.org/wiki/SNOBOL">SNOBOL (Programming Language) [Wikipedia]</a></li>
+
+        <a name="ref_8"></a>
+        <li><a href="https://en.wikipedia.org/wiki/Self_(programming_language)">Self (Programming Language) [Wikipedia]</a></li>
+
+        <a name="ref_9"></a>
+        <li><a href="https://en.wikipedia.org/wiki/Prototype-based_programming">Prototype-based programming [Wikipedia]</a></li>
+
+        <a name="ref_10"></a>
+        <li><a href="https://selflanguage.org/">Welcome to Self</a></li>
+
+        <a name="ref_11"></a>
+        <li><a href="https://en.wikipedia.org/wiki/Prolog">Prolog (Programming Language) [Wikipedia]</a></li>
+
+        <a name="ref_12"></a>
+        <li><a href="https://en.wikipedia.org/wiki/Backtracking">Backtracking [Wikipedia]</a></li>
+
+        <a name="ref_13"></a>
+        <li><a href="https://www.swi-prolog.org/">SWI Prolog</a></li>
+
+        <a name="ref_14"></a>
+        <li><a href="https://en.wikipedia.org/wiki/Dataflow">Dataflow [Wikipedia]</a></li>
+
+        <a name="ref_15"></a>
+        <li><a href="https://en.wikipedia.org/wiki/Reactive_programming">Reactive Programming [Wikipedia]</a></li>
+
+        <a name="ref_16"></a>
+        <li><a href="https://en.wikipedia.org/wiki/Verilog">Verilog [Wikipedia]</a></li>
+
+        <a name="ref_17"></a>
+        <li><a href="https://mitpress.mit.edu/books/effective-coding-vhdl">Effective Coding with VHDL [MIT Press]</a></li>
+      </ol>
+      
+    </section>
+    
+    <section id="footer"><p>
+      This page was last updated on July 26, 2020. This
+      page is a part of the <a href="index.html">Technical
+      Section</a>, which is part of
+      <a href="../../index.html">Meadhbh Hamrick's Web
+        Site</a>.      
+    </p></section>
+  </body>
+</html>
