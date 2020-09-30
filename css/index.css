@@ -4,14 +4,23 @@ body {
 
 title {
   display: block;
-  font-size: 1.5em;
+  font-size: 1.4em;
   font-weight: bold;
   border-bottom: solid 3px black;
   line-height: 133%;
+  margin-top: 1em;
+}
+
+blockquote {
+  display: block;
+  margin-block-start: 1em;
+  margin-block-end: 1em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
 }
 
 h2 {
-  font-size: 1.25em;
+  font-size: 1.2em;
 }
 
 pre {
@@ -24,8 +33,17 @@ pre {
   title, h2, p, ol, ul, hr, dl, pre, table {
     margin-left: auto;
     margin-right: auto;
-    width: 50%;
-    min-width: 9cm;
+    width: 66%;
+    min-width: 8cm;
+    max-width: 12.5cm;
+  }
+
+  ol, ul {
+    padding-inline-start: 40px;
+  }
+
+  li {
+    margin-right: 20px;
   }
 }
 
