@@ -53,7 +53,7 @@ let page_map = {
   "home/technical-sh-t/on-the-usefulness-of-vr-ar-headsets": "v2/technical/on_the_usefulness_of_vr_ar_headsets.html",
   "home/technical-sh-t/second-life-and-emotional-closeness": "v2/technical/second_life_and_emotional_closeness.html",
   "home/technical-sh-t/second-life-hits-and-misses": "v2/technical/second_life_hits_and_misses.html",
-  "home/technical-sh-t/six-hot-languages-programmers-should-learn": "v2/technical/six_hot_languages_programmers_should_learn.html"  
+  "home/technical-sh-t/six-hot-languages-programmers-should-learn": "v2/technical/six_hot_languages_programmers_should_learn.html",
   "home/technical-sh-t/strange-programmer-habits": "v2/technical/strange_programmer_habits/index.html",
   "home/technical-sh-t/strange-programmer-habits/avoiding-gotos-by-using-do-whiles": "v2/technical/strange_programmer_habits/avoiding_gotos_by_using_do_while_loops.html",
   "home/technical-sh-t/strange-programmer-habits/commas-at-the-beginning-of-lines": "v2/technical/strange_programmer_habits/commas_at_the_beginnings_of_lines.html",
