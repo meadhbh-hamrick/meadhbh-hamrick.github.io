@@ -38,6 +38,10 @@ pre {
     max-width: 12.5cm;
   }
 
+  p iframe {
+    width: 100%;
+  }
+  
   ol, ul {
     padding-inline-start: 40px;
   }
