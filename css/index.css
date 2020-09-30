@@ -130,6 +130,14 @@ pre.code {
   overflow-x: auto;
 }
 
+pre.c64 {
+  width: calc( 50% - 5em );
+  background-color: #0606F4;
+  color: #06F4F4;
+  overflow-x: auto;
+  font-weight: bold;
+}
+
 img.right, img.left {
   width: 192px;
 }

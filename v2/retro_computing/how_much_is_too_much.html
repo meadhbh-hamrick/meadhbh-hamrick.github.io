@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" type="text/css" href="../../css/index.css"/>
+    <title>Software: How Much is Too Much?</title>
+    <meta charset="utf-8"/>
+    <meta name="description" content="{{description}}"/>
+  </head>
+  <body class="content">
+    <title>Software: How Much is Too Much?</title>
+
+    <section>
+      <p>
+        Okay Sherman, set the wayback machine to July 1981.
+      </p>
+
+      <p>
+        IBM is about to release the IBM PC (perhaps you've
+        heard of it?) The Apple ][+ was the industry
+        leader, but Commodore, Tandy, Atari and Texas
+        Instruments were all viable competitors. It's an
+        exciting time to be a home computer user; entirely
+        new classes of products are being released every
+        month: voice recognition, tablets, computer mouses,
+        video disk controllers, etc. It's all new and no
+        one really knows what the market really
+        wants. Companies are throwing out all sorts of
+        whack products against the wall and seeing what
+        sticks.
+      </p>
+
+      <p>
+        It's an even MORE exciting time to be software
+        developer. If you've been a commercial software
+        developer for micro-computers for the last couple
+        of years, you're probably quite familiar with BASIC
+        and 6502 assembly (possibly also 8080/Z80, 6800 or
+        even 9900 assembly.) Unless you have a "developed"
+        market for your software on the Apple ][, you're
+        probably eyeing systems like TRS-80's, Atari 800's
+        or Commodore VIC-20. They're less capable machines,
+        but they're priced much lower than Apple's machines
+        so maybe you think the market will be larger.
+      </p>
+
+      <p>
+        And IBM has verified the rumors it's getting in the
+        home computer market (we called them "home
+        computers" or "micro computers" back then, the
+        "personal computer" moniker was not as common.) And
+        you probably heard that Commodore and Atari have
+        more/better machines in the pipeline.
+      </p>
+
+      <p>
+        If you're a micro-software developer, you're
+        probably a member of a user group or two and you
+        have a modem and a BBS account to share information
+        and to market your latest personal checking account
+        balancing program. (Yes, believe it or not, in the
+        era before online banking, we used to think it was
+        better to transcribe all your information into a
+        custom database, poorly programmed in BASIC just to
+        tell you that yes, you're bouncing checks because
+        your poorly programmed banking program isn't
+        selling very well.)
+      </p>
+
+      <p>
+        The height of software marketing for micros was a
+        full-page ad in BYTE magazine (or maybe Compute! or
+        Antic or whatever if you were focusing on a
+        specific platform.) After spending $800 on the
+        full-page ad, you probably noticed it didn't help
+        your sales numbers as much as you hoped and then
+        discovered you could get a discount 1/6 page ad for
+        $65 at the back of the next "doorstop issue."
+      </p>
+    </section>
+
+    <section>
+      <h2>And what's software development like in 1981?</h2>
+
+      <p>
+        It would be great if I could tell you we were all
+        geniuses; using early versions of git and jenkins
+        and following the latest agile methodology, but
+        that would be a very, very large lie. Assuming you
+        had even heard the term "software development
+        methodology," you probably heard it in conjunction
+        with what we now call "the waterfall method."
+      </p>
+
+      <p>
+        Yes, dear children, gather around and hear the tale
+        of when we used to think it was a good idea to do
+        ALL of your design before writing a single line of
+        code and finish ALL your code before you started
+        testing... Though to be fair, it's not that bad of
+        a methodology for the time. This was an era where
+        software was typically small bits of firmware
+        inside missiles and flight controllers and banking
+        applications. You really did kind of want to make
+        sure you had a solid design before spending too
+        much time implementing and Agile doesn't work
+        unless it's easy to change software and software
+        design.
+      </p>
+
+      <p>
+        But most people working on "micros" are one or two
+        person shops with a couple of computers on a table
+        in the garage. You hack on a feature for a few
+        hours, do some rudimentary testing and then save
+        your work into a different filename, hopefully
+        remembering to copy your code onto a DIFFERENT
+        floppy disk that won't get chewed up by your
+        partner's black lab puppy.
+      </p>
+
+      <p>
+        There are no networks. There are no
+        compilers. There are only very, very rudimentary
+        paint programs to build ICONs and other graphic
+        elements. Several people I knew working on
+        Commodore and Apple systems had to hand assemble
+        programs into 6502 op-codes. And they were happy to
+        do it because just a couple years earlier they had
+        to manually enter the boot loader into their
+        machines via front panel switches.
+      </p>
+
+      <p>
+        The closest thing we might have to a network is
+        XMODEM, a protocol and program for sharing programs
+        on BBS systems. In the office, we use "Sneaker
+        Net," which is an advanced technique involving
+        walking over to your co-worker's desk with a floppy
+        disk or two. The ultimate extension of Sneaker Net
+        is "747 Net" which gave rise to the aphorism:
+        "never underestimate the bandwidth of a 747 filled
+        with CD-ROMs. But of course, it's 1981 so you
+        probably haven't even seen a CD-ROM yet.
+      </p>
+
+      <p>
+        We also don't have hard drives. I mean, the big
+        guys working on IBM and DEC mainframes have hard
+        drives and you might have heard that Apple was
+        going to release a hard drive for the Apple ][, but
+        the prices you're hearing are out of this world, so
+        the plan is to stay with floppies for the time
+        being. And that's okay because the majority of your
+        customers will be on floppies for at least another
+        couple of years.
+      </p>
+
+      <p>
+        But here's the interesting thing about this era:
+        there really aren't any operating systems. I mean,
+        not the way we think of operating systems
+        today. The Apple ][ had this thing called ProDOS
+        and the Commodore 64 had some firmware built into
+        its 1541 floppy drives. But there's really no GUIs
+        on micros at this point. Booting into a BASIC
+        interpreter is the industry standard. The Apple
+        guys have made it easy to auto-launch software on a
+        floppy after hitting the reset key and that is
+        REALLY hot stuff. I mean seriously, you don't have
+        to type PR#6 at the BASIC prompt any more.
+      </p>
+
+      <p>
+        There are no operating systems, there are apps (and
+        boot proms and firmware to let you boot your apps.)
+        Your app takes over the whole machine. You want to
+        read the keyboard? Twiddle the I/O port that
+        controls the keyboard. You want to draw a dot on
+        the screen? Poke a byte directly into the frame
+        buffer. You own it all.
+      </p>
+
+      <p>
+        Most platforms have some utility routines in ROM to
+        make it easy to access individual floppy sectors,
+        convert a number to an ASCII string representation
+        or do floating point math. And BASIC programs have
+        the PRINT and INPUT statements that make it easy to
+        do rudimentary user interaction. But most
+        everything else is code you write yourself.
+      </p>
+
+      <p>
+        So we have this non-operating system world where
+        applications take over the whole machine. Apps
+        really don't interact. I mean sure, your word
+        processor might dump documents in a format your
+        printing program would understand, but you sure as
+        heck aren't running them both at the same time.
+      </p>
+    </section>
+
+    <section>
+      <h2>So why should I care?</h2>
+
+      <p>
+        You should care because it's possible we may have
+        TOO MUCH software in our lives. Yes, I know, I
+        know, a software developer is saying there's too
+        much software in the world. But maybe I should say
+        there's too much "brittle" software in the world.
+      </p>
+
+      <p>
+        Software is "brittle" when it's hard to
+        update. Maybe you coded it so it wasn't especially
+        modular and now you have to change or remove a
+        feature. This happens. A lot of modern software
+        methodology is an attempt to avoid this. Or maybe
+        you have some software that depends on an operating
+        system feature that's deprecated in the next
+        version of Windows. Or you wrote some software in
+        Python only to discover the Python community
+        couldn't care less about reverse compatibility.
+      </p>
+
+      <p>
+        This may not be a problem now, but in six months
+        someone's zero-day attack punches holes in the
+        control software for your fridge, causing it to
+        spew out amazon.com orders with your credit card
+        number it snooped off your local wifi. And then you
+        learn you can't upgrade the firmware in your fridge
+        because it uses a version of Windows CE that hasn't
+        been supported for twelve years. Yay, me!
+      </p>
+
+      <p>
+        Coding close to the metal isn't THAT much of an
+        improvement. Sure, you don't have the End-Of-Life
+        problem you had before, but you also don't have a
+        supported operating system with a team of people
+        dedicated to finding and fixing zero-day flaws.
+      </p>
+
+      <p>
+        It's a dilemma and there are plenty of ways to
+        lose. What I've been thinking lately is maybe in
+        our rush to "fix everything with software" we're
+        losing sight of how expensive software is to
+        maintain. Maybe we don't need software in our
+        fridges (or at least maybe we don't need network
+        connected software.) Do our microwave ovens REALLY
+        need to talk to our toasters? And why the hell
+        would I really need to add an IPv6 stack to my
+        coffee maker?
+      </p>
+
+      <p>
+        But maybe it's not that we have too much software,
+        it's that we're "too connected." If your fridge
+        uses some embedded CPU to make it 10% more
+        efficient, that's great! That doesn't mean it has
+        to also be an email client. If we don't put a
+        network interface on the fridge, we probably don't
+        have to worry about remote hacks.
+      </p>
+    </section>
+
+    <section>
+      <h2>So what does this have to do with software development?</h2>
+
+      <p>
+        I thing what I'm trying to say is, as software
+        professionals, we do a pretty crappy job delivering
+        "non brittle" solutions. There are plenty of good
+        reasons why that's true; it's not ALL our fault. We
+        generally don't have perfect visibility into the
+        market. (And neither does your product manager.) A
+        lot of times we have to cope with last minute
+        changes... "Oh! Did I say you would be running on
+        an iPhone? No. I meant to say Raspberry Pi."
+      </p>
+
+      <p>
+        Like everyone else in the world, software
+        developers are asked to do remarkable things with
+        insufficient data and hazy requirements all the
+        time.
+      </p>
+
+      <p>
+        So I guess what I'm saying is... what if we
+        reverted to a time where we had more "toolboxy"
+        systems than "operating systemy" systems. Where we
+        tightened the requirements instead of loosened
+        them. Our solutions would not be as universally
+        applicable (it would be hard to run the code from
+        Rev 1 hardware on Rev 2 hardware systems) but it
+        might be easier to reason about what that code
+        does.
+      </p>
+
+      <p>
+        What if we changed the contract to be "this code
+        runs on this hardware" instead of "this code runs
+        on Android or Leenucks." Would it help in any way?
+      </p>
+
+      <p>
+        What if we build virtual machines that looked like
+        Commodore 64's on the inside where software could
+        peek and poke at the virtual hardware to their
+        heart's content. And then we strung a whole bunch
+        of them together to do useful things?
+      </p>
+
+      <p>
+        I look around and see individual developers spend a
+        LOT of time coming up to speed on the JavaScript UI
+        framework du jour. Much of current software
+        development is not writing code or mapping product
+        requirements to technical solutions, it's managing
+        dependencies and making quick fixes to address
+        undocumented semantic changes between minor
+        revisions of someone else's libraries.
+      </p>
+
+      <p>
+        What if we went the OTHER way and put application
+        programs in a well defined container and said "go
+        nuts inside the container?"
+      </p>
+
+      <p>
+        Just a thought.
+      </p>
+
+    </section>
+    
+    <section id="footer"><p>
+      This page was last updated on September 30, 2020. This
+      page is a part of the <a href="index.html">Retrocomputing
+      Section</a>, which is part of
+      <a href="../../index.html">Meadhbh Hamrick's Web
+        Site</a>.      
+    </p></section>
+  </body>
+</html>
