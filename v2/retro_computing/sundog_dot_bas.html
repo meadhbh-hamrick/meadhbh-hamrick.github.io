@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" type="text/css" href="../../css/index.css"/>
+    <title>SUNDOG.BAS - How We Made Adventure Games in BASIC</title>
+    <meta charset="utf-8"/>
+    <meta name="description" content="A Walk-through of the anatomy of a text adventure game written in BASIC."/>
+  </head>
+  <body class="content">
+    <title>SUNDOG.BAS - How We Made Adventure Games in BASIC</title>
+
+    <section>
+      
+      <p>
+        In the old days all we had was BASIC and Assembly
+        Language. Sure, you could get the p-system and
+        write software in Pascal. And you could write
+        programs in LOGO for the Apple II, Atari 8-bits and
+        the TI 99/4. But if you wanted people to use your
+        software, you wrote it to run on systems people
+        actually owned. In the early 80's, that meant you
+        wrote in <a href="https://en.wikipedia.org/wiki/Assembly_language">Assembly
+        Language</a> or <a href="https://en.wikipedia.org/wiki/BASIC">BASIC</a>.
+      </p>
+
+      <p>
+        Now don't get me wrong, BASIC isn't the world's
+        greatest language for software development. But it
+        was easy to implement on 8-bit microcomputers, a
+        LOT easier than Assembly and there were plenty of
+        books around to teach kids how to use it. Every now
+        and again <a href="in_defense_of_basic.html">I wax
+        poetic about BASIC</a>; usually the feeling passes
+        quickly, but every now and again I get motivated to
+        revisit the past.
+      </p>
+
+      <p>
+        This text is a simple description of how Jason
+        Grigsby and I pieced together our own text
+        adventure games in 1982 and 1983. BASIC has a
+        deservedly bad reputation in serious software
+        circles, but you can actually structure programs
+        reasonably. Old-school BASIC offered very little
+        support for real data structures or advanced
+        programming technique, but that didn't mean you
+        couldn't make a reasonably well structured program.
+      </p>
+
+      <p>
+        And that's what I'm trying to do here: document how
+        we made a BASIC program that didn't suck.
+      </p>
+
+      <p>
+        The program I'm presenting here is a reconstruction
+        of a program I wrote in 1983 for the TI 99/4 and
+        the Commodore 64. In the late 70's, I noticed the
+        Byte Shop down the street was selling software in
+        plastic baggies with xeroxed manuals. I figured it
+        was easy enough to write an adventure game. Even if
+        I couldn't sell it at the Byte Shop, I could use it
+        as an example of my programming prowess.
+      </p>
+
+      <p>
+        "SUNDOG" was an idea I got from playing too much
+        <a href="https://www.drivethrurpg.com/product/80206/CTG02Snapshot">Snapshot</a>
+        as a kid and looking over Jason's shoulder
+        while he played <a href="https://en.wikipedia.org/wiki/Starcross_(video_game)">Infocom's Starcross</a>
+        game. It's completely unrelated to the game "<a href="https://en.wikipedia.org/wiki/SunDog:_Frozen_Legacy">Sundog
+        : Frozen Legacy</a>" -- I came up with the name at
+        least a year before that game was released, though
+        dang, FTL made a MUCH better game than I did. This
+        version of SUNDOG casts the player as the sole
+        survivor of an accident aboard the Scout Ship
+        Sundog. You must work out how to escape your
+        crippled ship and signal the core systems for a
+        rescue.
+      </p>
+
+      <p>
+        SUNDOG was broken down into three parts: escape the
+        dying scout ship, retrieve the air raft from the
+        alien derelict and figure out how to power the
+        ship's ansible to call for a rescue. Each of these
+        three parts was implemented as a separate basic
+        program. For simplicity's sake, I'm only
+        documenting the first part here. The second and
+        third parts are implemented with almost entirely
+        the same core code, it's just the DATA statements
+        that describe objects, etc. are changed. To the
+        right is a map of all the locations in the first
+        part of the game.The original program is lost to
+        humanity, but I remember it's structure well enough
+        to reconstruct it. The version presented here
+        targets <a href="http://www.nicholson.com/rhn/basic/">Chipmunk
+        BASIC</a> which should run on MacOS-X
+        and Linux. If you want to run this program, you'll
+        need to install BASIC before continuing.
+      </p>
+
+      <p>
+        I also assume you know what a text adventure game
+        is (also called <a href="https://en.wikipedia.org/wiki/Interactive_fiction">Interactive
+        Fiction</a>.) Click over to the Wikipedia article
+        if you're unfamiliar with this class of game
+        programs.
+      </p>
+
+      <h2>Theory of Operation, Part I - Using String Arrays for
+        Virtually Everything</h2>
+
+      <p>
+        Classic BASIC isn't well known for
+it's support for data structures. But it does support
+arrays; most BASICs from the late 70's even support string
+arrays. So you could do something like this:
+      </p>
+
+      <pre class="code">
+
+  10 DIM A$(3)
+  20 A$(0) = "HELLO"
+  30 A$(1) = "WORLD"
+  40 A$(2) = "GOOD TO SEE YOU!"
+  50 FOR I = 0 TO 2 : PRINT A$(I) : NEXT I</pre>
+
+      <p>
+        This small program should emit the following
+        output:
+      </p>
+
+      <pre class="code">
+
+  HELLO
+  WORLD
+  GOOD TO SEE YOU!</pre>
+
+      <p>
+        We use this feature of BASIC to hold all our data
+        about commands, directions, objects and locations.
+      </p>
+
+      <p>
+        Let's take a look at some code from SUNDOG.BAS; in
+        this excerpt, we're using a READ command to read
+        the directions we want to support into a string
+        array called D$. The number of directions is stored
+        in DC.
+      </p>
+
+      <pre class="code">
+
+  12000 REM READ DC And D$ Array
+  12010 RESTORE 32010
+  12020 READ DC
+  12030 DIM D$(DC)
+  12040 FOR I = 0 TO DC - 1 : READ D$(I) : NEXT I
+  32000 REM DIRECTIONS ON THE SHIP
+  32010 DATA 4
+  32020 DATA "FORE","STARBOARD","AFT","PORT"</pre>
+
+      <p>
+        This code fragment first RESTORE's the read pointer
+        to line 32010, reads the number of directions as
+        DC, uses the DIM command to dimension a 4 element
+        string array and then reads each direction into one
+        of the array elements. After running this code, the
+        following fragment would print out the four
+        directions:
+      </p>
+
+      <pre class="code">
+
+  FOR I = 0 TO DC : PRINT D$(I) : NEXT I</pre>
+
+      <p>
+        If you look at the source code for SUNDOG.BAS,
+        you'll see that we do the same thing for objects,
+        locations and commands.
+      </p>
+
+      <h2>Theory of Operation, Part II - Room Descriptions
+      and Adjacency</h2>
+
+      <p>
+        If you look at code, you'll see we're doing
+        something funky with room descriptions; we're
+        adding a bunch of numbers to each of room
+        description (I'm modifying it slightly for this
+        example):
+      </p>
+
+      <pre class="code">
+
+  32030 REM LOCATIONS IN THE SHIP
+  32040 DATA 4
+  32050 DATA "Galley"
+  32051 DATA "This is the ship's galley, where the crew
+  make their meals. The Captain's stateroom is fore, 
+  your bunk is to the starboard and the engineer's
+  quarters are aft."
+  32052 DATA 1,2,3,-1
+  32060 DATA "Captain's Stateroom"
+  32061 DATA "Barely larger than a walk-in closet, the
+  Captain's Stateroom is what passes for luxury on a
+  scout ship. A porthole to starboard reveals inky
+  blackness beyond while a door to the galley is aft."
+  32062 DATA -1,-1,0,-1
+  32070 DATA "Navigator's Bunk"
+  32071 DATA "This is your bunk, stuffed into a pantry
+  adjacent to the galley. A flimsy door to port opens to
+  the galley beyond."
+  32080 DATA "Engineer's Quarters"
+  32081 DATA "While not exactly luxurious, the
+  engineer's quarters are large enough for a desk and a
+  regular bed."
+  32082 DATA 0,-1,-1,-1</pre>
+
+      <p>
+        The numbers in lines 32052, 32062, 32072 and 32082
+        are "adjacency indices." They tell you which room
+        is in which direction from the current room. In
+        SUNDOG, we have four directions you can travel:
+        FORE, STARBOARD, AFT and PORT. The adjacency
+        indices tell you which room you'll wind up in if
+        you go in that direction. The directions are
+        ordered and so are the indices. If you go FORE from
+        the Galley, you'll wind up in room number 1, the
+        Captain's Stateroom. If you go STARBOARD, you'll
+        wind up in room 2, the Navigator's Bunk. You can't
+        go PORT from the Galley, so that entry has a -1
+        (which means "you can't go this way.")
+      </p>
+
+      <p>
+        Here's the code that reads the locations into the
+        L$ string array and the A adjacency array:
+      </p>
+
+      <pre class="code">
+
+  12060 REM READ LC, L$, LD$ and A arrays
+  12070 RESTORE 32040
+  12080 READ LC 12090 DIM L$(LC),LD$(LC),A(LC*DC)
+  12100 FOR I = 0 TO LC - 1
+  12110 READ L$(I),LD$(I)
+  12120 FOR J = 0 TO DC - 1
+  12130 READ A(I*DC+J)
+  12140 NEXT J
+  12150 NEXT I</pre>
+
+      <p>
+        Note that we're storing the adjacency indexes in a
+        one dimensional array. I did this because it's easy
+        enough to convert from a location / direction pair
+        to a single index and I was worried I would want to
+        port the program to a BASIC that didn't support two
+        dimensional arrays.
+      </p>
+
+      <p>
+        We'll look at how we move from location to location a
+        little later.
+      </p>
+    </section>
+
+    <section>
+      <h2>Theory of Operation, Part III - Objects</h2>
+
+      <p>
+        What's an adventure game without the ability to
+        pick up a lantern, swing a sword or read a secret
+        book? (Or in the case of SUNDOG, put on a Vacc
+        Suit?)
+      </p>
+
+      <p>
+        Objects in SUNDOG are initialized the same way as
+        Locations and Directions, but with a little extra
+        meta-data. Objects are implemented as the O$ string
+        array which contains their name: Keycard, Vaccsuit,
+        Wrench, etc. There's a separate array, OL which
+        lists each object's location. There's also a OF
+        array that lists each object's flags.
+      </p>
+
+      <p>
+        Given the examples above, you can probably guess
+        how we initialized the various object related
+        arrays, so I'll leave it up to you to dig into the
+        source if you're interested. Instead, let's talk
+        about locations of objects. Each object is
+        initialized with a default location, stored in the
+        OL array. Locations greater than or equal to zero
+        correspond to a location (like what's described in
+        the L$ string array.) An item whose location is
+        less than zero is *INSIDE* another object (not in a
+        location.) The absolute value of the location is
+        the object it's inside. A location of -32768 means
+        the object has disappeared. If it's -32767, then
+        the object is in your inventory.
+      </p>
+
+      <p>
+Here's a code snippet that will tell you where things are:
+      </p>
+
+      <pre class="code">
+
+  100 FOR I = 0 TO OC - 1
+  110 PRINT I;" ";O$(I);" ";
+  120 IF OL(I) >= 0 THEN 210
+  130 IF OL(I) = -32767 THEN 190
+  140 IF OL(I) = -32768 THEN 170
+  150 PRINT "IN OBJECT "; O$(ABS(OL(I)))
+  160 GOTO 220
+  170 PRINT "DISAPPEARED"
+  180 GOTO 220
+  190 PRINT "IN INVENTORY"
+  200 GOTO 220
+  210 PRINT "IN LOCATION "; L$(OL(I))
+  220 NEXT I</pre>
+
+      <p>
+        But what about the flags? What the heck are they?
+      </p>
+
+      <p>
+        This is where it gets a little bit tricky. Objects
+        aren't just things you can pick up and carry with
+        you. Objects are also things you can interact with
+        linguistically. If I typed the command "OPEN
+        DRAWER," I need the parser to understand that the
+        drawer is something you can open but at the same
+        time it's not something you can take. So each
+        object has a set of flags stored as a bit field in
+        the OF array:
+      </p>
+
+      <pre class="code">
+  0x01 - Viewable  - they'll show up in a room's
+                     description
+  0x02 - Takeable  - you can take/drop this object
+  0x04 - Openable  - you can open or close this object
+  0x08 - Opened    - is this object currently open?
+  0x10 - Container - you can PUT things inside this
+                     object if it's open.
+  0x20 - Lockable  - you can lock this object
+  0x40 - Locked    - it's currently locked</pre>
+
+      <p>
+        Continuing the drawer example, the drawer would
+        have flags of 0x14 because it starts the game
+        closed, it *IS* openable, you can't take it and it
+        isn't listed as an object in the room.
+      </p>
+    </section>
+
+    <section>
+      <h2>Doing Interesting Things, Part I - Parsing the Command Line</h2>
+
+      <p>
+        SUNDOG understands five command formats:
+      </p>
+
+      <ol>
+        <li>VERB - LOOK, INVENTORY, etc.</li>
+        <li>VERB SUBJECT - GET KEYCARD, DROP TETHER, CLOSE DRAWER, etc.</li>
+        <li>VERB MODIFIER SUBJECT - PRESS RED BUTTON</li>
+        <li>VERB SUBJECT PREPOSITION OBJECT - PUT TETHER IN DRAWER</li>
+        <li>VERB MODIFIER SUBJECT PREPOSITION OBJECT - PUT GREEN KEYCARD IN DRAWER</li>
+      </ol>
+
+      <p>
+        Since the format and interpretation of words in a
+        command are dependent on the number of words in a
+        command, it's relatively easy to parse commands.
+      </p>
+
+      <p>
+        SUNDOG uses C$ to hold the unparsed command line;
+        after it is parsed, each element of the the N$()
+        string array holds one word of the command. Here's
+        what the parser looks like:
+      </p>
+
+      <pre class="code">
+
+  100 NC = 5 : DIM N$(NC)
+  110 C$="PUT RED KEYCARD IN DRAWER"
+  120 S = 1 : K = 0
+  130 E = INSTR(C$," ",S)
+  140 IF E <> 0 THEN GOTO 180
+  150 N$(K)=MID$(C$,S,LEN(C$))
+  160 K = K + 1
+  170 GOTO 230
+  180 N$(K)=MID$(C$,S,E-S)
+  190 S=E+1
+  200 K = K + 1
+  210 IF K >= NC THEN 230
+  220 GOTO 130
+  230 FOR J = 0 TO K - 1 : PRINT J;" ";N$(J) : NEXT J</pre>
+    </section>
+
+    <section>
+      <h2>Doing Interesting Things, Part II - Where Am I?</h2>
+
+      <p>
+        Before we ask the user for a command, we print out
+        where we are. Most text oriented games of this era
+        were smart enough to not split words between
+        lines. Writing the code for that is a little more
+        work than I was interested in doing, so i
+        pre-formatted descriptions of locations. In the
+        code I'm writing here, I'm assuming you have a 60
+        by 16 character screen, mostly to ensure it fits on
+        my TRS-80 Model I. If I port this to a Commodore
+        64, VIC-20 or TI-99/4, I'll have to reformat the
+        text.
+      </p>
+
+      <p>
+        Text adventure games from the '80s would normally
+        only display a full description of a location the
+        first time you visit it. After that, you use the
+        LOOK command to see what's there. I use a bit field
+        in an array of integers to store whether or not
+        you've visited a particular location.
+      </p>
+
+      <p>
+        At the beginning of the program, we create an array
+        N integers long where N is the number of rooms
+        divided by the size of an integer (some BASICs have
+        16 bit integers, others store integers as floating
+        point numbers, which complicates things.)
+      </p>
+
+      <pre class="code">
+
+  100 REM LC - Number of Locations (i.e.- Location Count)
+  110 REM BPI - Bits Per Integer
+  120 REM VC - Size of the "visited" array
+  130 REM V() - Visited array
+  140 LC = 20 : BPI = 15 : VC = INT( LC / BPI ) + 1 : DIM V( VC )
+  150 END
+  1000 REM SUBROUTINE: SET ROOM AS VISITED
+  1010 REM INPUT: L = ROOM TO VISIT
+  1020 I = INT( L / BPI )
+  1030 J = L - ( I * BPI )
+  1040 V(I) = V(I) OR ( 2 ^ J )
+  1050 RETURN
+  1100 REM SUBROUTINE: Visited? Set's K to 1 if this location's been visited.
+  1110 I = INT( L / BPV )
+  1120 J = L - I * BPV
+  1130 IF ( V(I) AND 2^J ) = 0 THEN K=0 ELSE K=1
+  1140 RETURN</pre>
+
+      <p>
+        So each time through the main loop, we would call
+        the routine at 1100 with L being the current
+        location. If K is 1, then that means we've been
+        there before and we shouldn't print the full
+        location description. Then we call the routine in
+        1000 to set the location as being visited.
+      </p>
+
+      <p>
+        We also need to print out what items are in the
+        room. For this we simply loop through all the
+        objects we know about and see if their location is
+        the same as our current location:
+      </p>
+
+      <pre class="code">
+
+  1200 REM SUBROUTINE: PRINT ITEMS IN THIS ROOM
+  1210 PRINT "ITEMS HERE:"
+  1220 J = 0
+  1230 FOR I = 0 TO OC - 1
+  1230   IF OL(I) <> L THEN GOTO 1270
+  1240   IF OF(I) AND 1 = 0 THEN GOTO 1270
+  1250   PRINT O$(I)
+  1260   J = J + 1
+  1270 NEXT I
+  1280 IF J <> 0 THEN GOTO 1300 
+  1290 PRINT "*NO ITEMS HERE*"
+  1300 RETURN</pre>
+    </section>
+
+    <section>
+      <h2>Putting It All Together</h2>
+
+      <p>
+        You now have enough to hobble together a simple
+        interactive fiction. The SUNDOG story required a
+        few more commands dealing with putting on the
+        VaccSuit and exiting the Scout Ship Sundog, but you
+        can easily reverse engineer what I did by looking
+        at the code; the major structure is as defined
+        above.
+      </p>
+    </section>
+
+    <section>
+      <h2>Getting the Code</h2>
+
+      <p>
+        The code for Sundog has been moved to <a href="https://github.com/OhMeadhbh/sundog">https://github.com/OhMeadhbh/sundog</a>.
+      </p>
+    </section>
+        
+    <section id="footer"><p>
+      This page was last updated on September 30, 2020. This
+      page is a part of the <a href="index.html">Retrocomputing
+      Section</a>, which is part of
+      <a href="../../index.html">Meadhbh Hamrick's Web
+        Site</a>.      
+    </p></section>
+  </body>
+</html>
