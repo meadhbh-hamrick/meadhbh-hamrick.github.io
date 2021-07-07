@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" type="text/css" href="../../css/index.css"/>
+    <title>Why Do We Log?</title>
+    <meta charset="utf-8"/>
+    <meta name="description" content="Trying to get clarity on what we're trying to accomplish with application logging."/>
+  </head>
+  <body class="content">
+    <title>Why Do We Log?</title>
+
+    <a name="00_Intro"></a>
+    <section id="00_Intro">
+      
+      <p>
+        It seems like it should have an obvious answer.
+        Why do we log things in online applications?
+        <i>To know what happened</i>, obviously.
+        But I assert our intent falls in at least three different categories:
+      </p>
+
+      <ol>
+        <li>To verify the program is behaving correctly (debugging)</li>
+        <li>To verify something happened at the application layer (something happened)</li>
+        <li>To verify the performance of the program falls within acceptable limits (telemetry)</li>
+      </ol>
+
+      <p>
+        In each of these cases, there is benefit to having a system monitoring logs.
+        But the specific type of system may be different for each category.
+      </p>
+
+      <p>
+        In the debugging case, maybe it's an IDE (Integrated Development Environment) reading the logs, attempting to reconstruct what happened in the program.
+        Much has been written already about making telemetry <i>observable</i> <a href="#ref_1">[1]</a> <a href="#ref_2">[2]</a>.
+        Telemetry data is typically fed into a system which can (at least) warn human operators something is going wrong and (hopefully) take some basic actions to avert disaster.
+      </p>
+
+      <p>
+        As for the "something happened" category, these are log messages which assert a particular (often irreversable) action has occurred on behalf of the customer / client.
+        I often call these types of logging messages <i>entropic</i> because of their irreversable nature.
+        You've either processed a request or you haven't; and once a request is processed, it's hard to unprocess; it's a one-way operation.
+        Your systems shouldn't depend on log messages to determine whether a request is complete; applications should maintain that state directly.
+        But if a customer calls up and asks about a specific event from several weeks ago, you may have to query your logs to verify your application did (or didn't) do what it was supposed to.
+      </p>
+
+      <p>
+        There's some overlap between telemetry and entropic log message.
+        I like to think of <i>"telemetry"</i> being focused on the performance of the systems which implement the application while <i>"SLA / Entropic"</i> log messages are focused on the application domain.
+        Entropic messages might be useful to produce Service Level Agreement (SLA) or Operational Level Agreement (OLA) metrics.
+        But if you look at the list of Common Metrics in the Wikipedia's "Service Level Agreement" article <a href="#ref_3">[3]</a>, you'll see metrics that could break either way.
+      </p>
+
+      <p>
+        Another way to think about it is to ask if a particular log message tells you about the performance of an underlying resource (telemetry) or whether the recorded event moves a customer's business process into or towards a subsequent state.
+        If the "business side" of the organization cares about it, it's <i>probably</i> an Entropic / SLA metric.
+        If the "tech side" of the organization cares about it, it's <i>probably</i> telemetry.
+      </p>
+    </section>
+
+    <section>
+      <h2>Step 1 : Make it Easy for Programs to Read Your Logs</h2>
+
+      <p>
+        Larry Wall famously quipped <i>"computer languages differ not so much in what they make possible, but in what they make easy."</i> <a href="#ref_4">[4]</a>
+        We can borrow that quote to produce this bit of wisdom: <b><i>"logging systems differ not so much in what they log, but in how easy it is to read the logs."</i></b>
+        If you don't make a log message that can be consumed, why are you emitting that message?
+      </p>
+
+      <p>
+        Consider this log excerpt:
+      </p>
+
+      <pre class="code">
+2021-07-06T09:25:17.813Z DEBUG Entering foo() to process request d44dcf8c-df41-11eb-9186-6723ffa51662
+2021-07-06T09:25:18.501Z DEBUG Retrieved state is 14.
+2021-07-06T09:25:18.556Z DEBUG Illegal state detected</pre>
+
+      <p>
+        This tells you (the human) everything you need to know.
+        But it's somewhat hard to parse.
+        If you wanted to make a tool that searched through the logs to find requests with illegal states, you would have to know about the specific text in these messages.
+        If someone ever changed the text of the log message, you would have to update your log search tool.
+      </p>
+
+      <p>
+        But if we had logs that looked like this, we could more easily process the log with a program:
+      </p>
+
+      <pre class="code">
+2021-07-06T09:25:17.813Z DEBUG foo_bar.js:56 ENTER {"function":"foo","id":"d44dcf8c-df41-11eb-9186-6723ffa51662"}
+2021-07-06T09:25:18.501Z DEBUG foo_bar.js:68 STATE {"state":14}
+2021-07-06T09:25:18.556Z DEBUG foo_bar.js:70 ILLSTATE</pre>
+
+    </section>
+
+    <section>
+      <h2>Is the program doing what it is supposed to?</h2>
+    </section>
+    
+    <section>
+      
+      <h2>Conclusion</h2>
+
+      <p>
+        Understanding the intent of logging <i>should</i> help us make better systems.
+        Separating telemetry (performance monitoring) log messages from debugging
+      </p>
+
+    </section>
+    
+    <section id="98_References">
+      
+      <h2>References</h2>
+
+      <ol>
+        <a name="ref_1"></a>
+        <li><a href="https://lightstep.com/blog/opentelemetry-101-what-is-observability/">OpenTelemetry 101 : What is Observability?</a></li>
+        <a name="ref_2"></a>
+        <li><a href="https://www.honeycomb.io/blog/observability-101-terminology-and-concepts/">Observability 101 : Terminology and Concepts</a></li>
+        <a name="ref_3"></a>
+        <li><a href="https://en.wikipedia.org/wiki/Service-level_agreement#Common_metrics">Service Level Agreement : Common Metrics</a></li>
+        <a name="ref_4"></a>
+        <li><a href="https://www.amazon.com/Programming-Perl-2nd-Larry-Wall/dp/B00005UL4D">Wall, L., Christiansen, T., Schwartz, R. L., Potter, S. (1996). <i>Programming Perl, 2nd Ed.</i> O'Reilly.</a></li>
+        <a name="ref_"></a>
+        <li><a href=""></a></li>
+        <a name="ref_"></a>
+        <li><a href=""></a></li>
+      </ol>
+      
+    </section>
+    
+    <section id="footer"><p>
+      This page was last updated on April 1, 2021. This
+      page is a part of the <a href="index.html">Technical
+      Section</a>, which is part of
+      <a href="../../index.html">Meadhbh Hamrick's Web
+        Site</a>.      
+    </p></section>
+  </body>
+</html>
