@@ -10,8 +10,23 @@
   <body class="content">
     <title>Why Do We Log?</title>
 
-    <a name="00_Intro"></a>
-    <section id="00_Intro">
+    <a name="00_Abstract"></a>
+    <section id="00_Abstract">
+
+      <h2>Abstract</h2>
+      
+      <p>
+        There are at least three reasons why we want online applications to log messages: program correctness, performance and application event monitoring.
+        Each log message may have a different audience: software engineers care about program correctness, dev-ops engineers and administrators care about performance and customers and product managers care about application events.
+        This document discusses how to figure out what category a particular message exists in.
+        It also makes the case for making logs easy to read by programs and not just humans.
+      </p>
+    </section>
+    
+    <a name="01_Intro"></a>
+    <section id="01_Intro">
+
+      <h2>Why do we log messages in online applications?</h2>
       
       <p>
         It seems like it should have an obvious answer.
@@ -21,46 +36,53 @@
       </p>
 
       <ol>
-        <li>To verify the program is behaving correctly (debugging)</li>
-        <li>To verify something happened at the application layer (something happened)</li>
-        <li>To verify the performance of the program falls within acceptable limits (telemetry)</li>
+        <li>To verify the program is behaving correctly (tracing)</li>
+        <li>To monitor the program's performance (telemetry)</li>
+        <li>To signal something meaningful happened (app domain)</li>
       </ol>
 
       <p>
-        In each of these cases, there is benefit to having a system monitoring logs.
-        But the specific type of system may be different for each category.
+        In each of these cases, there is benefit to having an automated system monitoring logs.
+        But the specific type of system monitoring the logs may be different for each category.
       </p>
 
       <p>
-        In the debugging case, maybe it's an IDE (Integrated Development Environment) reading the logs, attempting to reconstruct what happened in the program.
+        In the tracing case, maybe it's an IDE (Integrated Development Environment) reading the logs, attempting to reconstruct what happened in the program.
+      </p>
+
+      <p>
         Much has been written already about making telemetry <i>observable</i> <a href="#ref_1">[1]</a> <a href="#ref_2">[2]</a>.
         Telemetry data is typically fed into a system which can (at least) warn human operators something is going wrong and (hopefully) take some basic actions to avert disaster.
       </p>
 
       <p>
-        As for the "something happened" category, these are log messages which assert a particular (often irreversable) action has occurred on behalf of the customer / client.
-        I often call these types of logging messages <i>entropic</i> because of their irreversable nature.
-        You've either processed a request or you haven't; and once a request is processed, it's hard to unprocess; it's a one-way operation.
-        Your systems shouldn't depend on log messages to determine whether a request is complete; applications should maintain that state directly.
-        But if a customer calls up and asks about a specific event from several weeks ago, you may have to query your logs to verify your application did (or didn't) do what it was supposed to.
+        As for the "application domain" category, these are log messages which assert something meaningful to the customer has occurred.
+        I sometimes call these types of logging messages <i>entropic</i> because of their irreversible nature.
+        You've either processed a request or you haven't; and once a request is processed, it's hard to unprocess.
+        It's a one-way operation.
+      </p>
+      
+      <p>
+        There's some overlap between telemetry and app domain log messages.
+        I like to think of <i>"telemetry"</i> being focused on the performance of the systems which implement the application while <i>"app domain"</i> log messages are focused on events that are meaningful to the customer.
+        Things like: <i>"we received your request"</i>, <i>"we updated the state of the application in response to your request"</i> or <i>"we think we're finished with this request."</i>
       </p>
 
       <p>
-        There's some overlap between telemetry and entropic log message.
-        I like to think of <i>"telemetry"</i> being focused on the performance of the systems which implement the application while <i>"SLA / Entropic"</i> log messages are focused on the application domain.
-        Entropic messages might be useful to produce Service Level Agreement (SLA) or Operational Level Agreement (OLA) metrics.
-        But if you look at the list of Common Metrics in the Wikipedia's "Service Level Agreement" article <a href="#ref_3">[3]</a>, you'll see metrics that could break either way.
+        App domain messages might be useful to produce Service Level Agreement (SLA) or Operational Level Agreement (OLA) metrics.
+        But if you look at the list of Common Metrics in the Wikipedia's "Service Level Agreement" article <a href="#ref_3">[3]</a>, you'll see metrics that could fall into either the "telemetry" or "application domain" categories.
+        When I try to decide whether a log message is a telemetry or app domain message, <b>I think about its meaningfulness to the customer</b>.
       </p>
 
       <p>
         Another way to think about it is to ask if a particular log message tells you about the performance of an underlying resource (telemetry) or whether the recorded event moves a customer's business process into or towards a subsequent state.
-        If the "business side" of the organization cares about it, it's <i>probably</i> an Entropic / SLA metric.
+        If the "business side" of the organization cares about it, it's <i>probably</i> an application domain metric.
         If the "tech side" of the organization cares about it, it's <i>probably</i> telemetry.
       </p>
     </section>
 
     <section>
-      <h2>Step 1 : Make it Easy for Programs to Read Your Logs</h2>
+      <h2>Make it Easy for Programs to Read Your Logs</h2>
 
       <p>
         Larry Wall famously quipped <i>"computer languages differ not so much in what they make possible, but in what they make easy."</i> <a href="#ref_4">[4]</a>
@@ -93,21 +115,85 @@
 2021-07-06T09:25:18.501Z DEBUG foo_bar.js:68 STATE {"state":14}
 2021-07-06T09:25:18.556Z DEBUG foo_bar.js:70 ILLSTATE</pre>
 
+    <p>
+      Human readable logs are important.
+      The example above is reasonably easy to read, I think.
+      But it's a simple example; maybe real-world logs will be harder for humans to consume.
+    </p>
+
+    <p>
+      One option might be to duplicate log messages in a human readable format:
+    </p>
+
+      <pre class="code">
+2021-07-06T09:25:17.813Z DEBUG foo_bar.js:56 ENTER {"function":"foo","id":"d44dcf8c-df41-11eb-9186-6723ffa51662"}
+2021-07-06T09:25:17.813Z DEBUG foo_bar.js:56 HUMAN Entering foo() to process request d44dcf8c-df41-11eb-9186-6723ffa51662
+2021-07-06T09:25:18.501Z DEBUG foo_bar.js:68 STATE {"state":14}
+2021-07-06T09:25:18.501Z DEBUG foo_bar.js:68 HUMAN Retrieved state is 14.
+2021-07-06T09:25:18.556Z DEBUG foo_bar.js:70 ILLSTATE
+2021-07-06T09:25:18.556Z DEBUG foo_bar.js:70 HUMAN Illegal state detected</pre>
     </section>
 
+    <p>
+      Another approach would be to build a tool which ingests machine readable logs and produces more human readable logs offline.
+      Tinlog <a href="#ref_5">[5]</a> is a Node.JS compatible package to help make that easy.
+    
     <section>
       <h2>Is the program doing what it is supposed to?</h2>
+
+      <p>
+        Personally, I much prefer gdb to a list of printf's.
+        Yes, it takes time to learn how to use a "real debugger" -- but it's worth it.
+        The flexibility you get from a "real" debugger justifies the effort in learning how to use it.
+        "Real" debuggers are available for most (if not all) common platforms, even Node.JS Lambdas on AWS.
+        (See the "AWS Toolkit for JetBrains" <a href="#ref_6">[6]</a>)
+      </p>
+
+      <p>
+        But debugging isn't the whole "program correctness" story.
+      </p>
+
+      <p>
+        "Tracing" a program is a technique used extensively in embedded programming.
+        Time-sensitive embedded software often can't wait for a programmer to single-step through a program looking for a bug.
+        Instead they record specific aspects of the embedded program's state in a buffer and analyze the information in the buffer looking for incorrect behaviour.        
+      </p>
+
+      <p>
+        GDB lets you record the state of an application and play it back later, even allowing the programmer to step backwards in time. <a href="#ref_7">[7]</a>
+        Tools like Percepio's Tracalyzer give you an interactive graphical environment to search for bugs or good or bad execution patterns. <a href="#ref_8">[8]</a>
+      </p>
+
+      <p>
+        We can do something similar with online programs written in JavaScript or Python running as AWS Lambdas.
+        Tools for tracing AWS Lambdas are primitive to non-existent.
+        AWS X-Ray <a href="#ref_9">[9]</a> and various OpenTracing tools <a href="#ref_10">[10]</a> focus on performance, not correctness.
+      </p>
+
+      <p>
+        But to make use of tracing tools in online applications, you have to instrument your code.
+        It should be straight-forward to instrument your code to emit DEBUG log messages, then use a tool to collect, display and analyze data collected.
+        How to build such a tool is outside the scope of this text; I only want to mention it is possible, and probably a decent idea.
+      </p>
+
+      <p>
+        Collecting program trace information allows you to verify <b>program correctness</b> after the fact.
+        Suppose you have a program that fails intermittently.
+        By collecting trace data, you can examine the state of the application before the error, looking for how invocations that fail differ from invocations that succeed.
+      </p>
     </section>
     
     <section>
       
       <h2>Conclusion</h2>
 
-      <p>
-        Understanding the intent of logging <i>should</i> help us make better systems.
-        Separating telemetry (performance monitoring) log messages from debugging
-      </p>
-
+      <ol type="a">
+        <li>Understanding the intent of logging makes it easier to reason about monitoring online applications.</li>
+        <li>Making it easy for programs to parse log messages is a Good Thing&trade;.</li>
+        <li>Tagging messages by intent (telemetry, tracing or app domain) makes it easier to find the information you're looking for.</li>
+        <li>Don't be afraid to write programs that consume logs, looking for anomalies, usage patterns and evidence of what your online system actually did.</li>
+      </ol>
+      
     </section>
     
     <section id="98_References">
@@ -116,13 +202,25 @@
 
       <ol>
         <a name="ref_1"></a>
-        <li><a href="https://lightstep.com/blog/opentelemetry-101-what-is-observability/">OpenTelemetry 101 : What is Observability?</a></li>
+        <li><a href="https://lightstep.com/blog/opentelemetry-101-what-is-observability/">OpenTelemetry 101 : What is Observability? [lightstep.com]</a></li>
         <a name="ref_2"></a>
-        <li><a href="https://www.honeycomb.io/blog/observability-101-terminology-and-concepts/">Observability 101 : Terminology and Concepts</a></li>
+        <li><a href="https://www.honeycomb.io/blog/observability-101-terminology-and-concepts/">Observability 101 : Terminology and Concepts [honeycomb.io]</a></li>
         <a name="ref_3"></a>
-        <li><a href="https://en.wikipedia.org/wiki/Service-level_agreement#Common_metrics">Service Level Agreement : Common Metrics</a></li>
+        <li><a href="https://en.wikipedia.org/wiki/Service-level_agreement#Common_metrics">Service Level Agreement : Common Metrics [Wikipedia]</a></li>
         <a name="ref_4"></a>
         <li><a href="https://www.amazon.com/Programming-Perl-2nd-Larry-Wall/dp/B00005UL4D">Wall, L., Christiansen, T., Schwartz, R. L., Potter, S. (1996). <i>Programming Perl, 2nd Ed.</i> O'Reilly.</a></li>
+        <a name="ref_5"></a>
+        <li><a href="https://github.com/meadhbh-hamrick/tinlog">meadhbh-hamrick/tinlog [GitHub]</a></li>
+        <a name="ref_6"></a>
+        <li><a href="https://docs.aws.amazon.com/toolkit-for-jetbrains/index.html">AWS Toolkit for JetBrains Documentation</a></li>
+        <a name="ref_7"></a>
+        <li><a href="https://sourceware.org/gdb/wiki/ReverseDebug">Reverse Debug</a></li>
+        <a name="ref_8"></a>
+        <li><a href="https://percepio.com/tracealyzer/">Percepio Tracealyzer</a></li>
+        <a name="ref_9"></a>
+        <li><a href="https://docs.aws.amazon.com/lambda/latest/dg/services-xray.html">AWS X-Ray</a></li>
+        <a name="ref_10"></a>
+        <li><a href="https://opentracing.io/">OpenTracing.IO</a></li>
         <a name="ref_"></a>
         <li><a href=""></a></li>
         <a name="ref_"></a>
