@@ -155,18 +155,18 @@
 
       <p>
         "Tracing" a program is a technique used extensively in embedded programming.
-        Time-sensitive embedded software often can't wait for a programmer to single-step through a program looking for a bug.
-        Instead they record specific aspects of the embedded program's state in a buffer and analyze the information in the buffer looking for incorrect behaviour.        
+        Time-sensitive embedded software often can't wait for a programmer to single-step through a program.
+        Specific aspects of the embedded program's state are stored in a buffer as the program executes.
+        The buffer is transferred to a development system and examined after-the-fact, looking for incorrect behaviour.
       </p>
 
       <p>
-        GDB lets you record the state of an application and play it back later, even allowing the programmer to step backwards in time. <a href="#ref_7">[7]</a>
+        GDB, for instance, allows developers to record the state of an application and play it back later, even allowing the programmer to step backwards in time from within the debugger. <a href="#ref_7">[7]</a>
         Tools like Percepio's Tracalyzer give you an interactive graphical environment to search for bugs or good or bad execution patterns. <a href="#ref_8">[8]</a>
       </p>
 
       <p>
-        We can do something similar with online programs written in JavaScript or Python running as AWS Lambdas.
-        Tools for tracing AWS Lambdas are primitive to non-existent.
+        Tools for tracing AWS Lambdas are comparitively primitive, however.
         AWS X-Ray <a href="#ref_9">[9]</a> and various OpenTracing tools <a href="#ref_10">[10]</a> focus on performance, not correctness.
       </p>
 
@@ -182,7 +182,15 @@
         By collecting trace data, you can examine the state of the application before the error, looking for how invocations that fail differ from invocations that succeed.
       </p>
     </section>
-    
+
+    <section>
+      <h2>Logging for Performance Monitoring</h2>
+
+    </section>
+
+
+    <section>
+      <h2>Logging Meaningful Messages</h2>
     <section>
       
       <h2>Conclusion</h2>
