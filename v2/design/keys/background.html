@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta charset="UTF-8">
     <title>A Quick Word About Chorded Keyboards</title>
     <link rel="icon" type="image/png" sizes="96x96" href="../../../favicon-96x96.png">
     <script src="keys.js"></script>
@@ -9,7 +10,9 @@
   <body class="content">
     <title>A Quick Word About Chorded Keyboards</title>
 
-    <sectionid="01_Contents">
+    <section id="02_Background">
+
+      <h2>Background</h2>
 
       <p>
         In the 1968 "Mother of All Demos"
@@ -54,8 +57,176 @@
         one handed typing, just to see what it's like.
       </p>
     </section>
+
+    <section id="03_Development">
+
+      <h2>Development</h2>
+
+      <p>
+        I've been using chorded keyboards on and off for
+        several decades. One of my favourites is/was The
+        Frogpad&trade; <a href="#ref_4">[4]</a>. Every
+        interaction I had with Linda Marroquin was positive.
+        But I guess my hands are smaller than what the
+        FrogPad was designed for. And though my fingers never
+        <i>hurt</i> while using it, it was mildly uncomfortable.
+      </p>
+
+      <p>
+        While thinking about how I would improve the FrogPad, I
+        started thinking about Engelbart's original Keyset <a href="#ref_5">[5]</a>.
+        It struck me that Englebart's keyset was the
+        solution to the problem "how can I press a few keys
+        with one hand while my other hand is resting on the
+        mouse." This is slightly different from other modern
+        chording devices that seek to replace the standard
+        keyboard completely.
+      </p>
+
+      <p>
+        Around this time an acquaintance from the
+        retro-computing community suggested I build
+        something that looked vaguely like the original,
+        but with a modern USB interface.
+      </p>
+
+      <p>
+        After digging around I found references implying
+        Engelbart's original keyset used a very basic
+        BCD-like mapping from key chord to character. This
+        seemed a bit sub-optimal to me, so I set out to
+        build a better experience.
+      </p>
+
+      <p>
+        The chord to key character mapping I found
+        references to was a basic mapping of the 31
+        different chords to 26 upper case letters and 10
+        digits. This seems unlikely to me since 26 + 10 is
+        greater than 31.
+      </p>
+
+      <p>
+        My first requirement was that the keyboard have
+        five keys, one for each finger. I wanted to try
+        something different from the FrogPad; plus,
+        Engelbart's original design was clearly a five-key
+        affair.
+      </p>
+      
+      <p>
+        My next requirement was that the chord to character
+        mapping be able to generate all the characters
+        found on a modern keyboard: upper and lower case
+        letters, digits, space, punctuation and random
+        symbols like tilde (~) and the backtick (`). I
+        punted on arrow, PageUp, PageDown and other cursor
+        movement keys because I felt positioning the cursor
+        could be accomplished easier with the mouse.
+      </p>
+
+      <p>
+        Being a fan of Jef Raskin's work in Computer-Human
+        Interaction, I experimented originally with what he
+        called "Quasi-Modes" <a href="#ref_6">[6]</a> to
+        select different "sub-mappings" between chords and
+        characters. The results were sub-optimal. Keeping
+        one key pressed while manipulating the state of the
+        other keys on a five-key keyset proved
+        uncomfortable and it didn't solve the original
+        problem of extending the number of characters you
+        could potentially select.
+      </p>
+
+      <p>
+        The rejection of Raskin-like Quasi-Modes means the
+        keyboard would be modal. In the first mode, pressing
+        the first and second keys would result in an 'E' character
+        being emitted while in a different mode maybe that
+        same chord would emit the '0' character. I wanted to
+        have a small number of modes, but enough to emit all
+        the characters of a standard modern keyboard.
+      </p>
+
+      <p>
+        At this point I should digress and mention I'm
+        limiting the current version of the keyset mapping
+        to English / Latin characters. I am personally
+        interested in adding ß, Ø and diacritics like tilde
+        (◌̃) , grave (◌̀), acute (◌́), umlaut / diaeresis (◌̈),
+        circumflex (◌̂), macron (◌̄), cedilla (◌̧), overring
+        (◌̊) and caron / háček (◌̌), but I'm probably going
+        to require the input of native Czech, German,
+        French, Italian, Spanish and Scandinavian typists
+        before I can do justice to those languages'
+        alphabets. Cyrillic and Greek alphabets are also
+        currently unsupported. My suspicion is it would be
+        hard to wedge such alphabets into the current
+        mapping. I'm happy to support anyone who wants to
+        adapt the ideas here to other alphabets, but have
+        to admit my own inexperience with non-European
+        languages prevents me from trying to do such work
+        myself.
+      </p>
+
+      <p>
+        Once I decided the mapping would be modal, I wanted
+        to make it easy to set the mode to a known good
+        state. Imagine you're typing a few characters and
+        you get distracted. What mode is your keyset in?
+        My solution was to have one of the 31 chords be a
+        "reset to the first mode" ([TOP]) command. And if
+        we're modal, you need a "next mode" ([NEXT])
+        command. These keys were going to get pressed a
+        lot, so it made sense to make them to single-finger
+        chords. Other very common key presses were
+        "backspace" ([BS]), "enter" ([ENTER]), and the
+        space bar ([SPACE]).
+      </p>
+
+      <p>
+        That seemed pretty good, one-finger chords assigned
+        to each of the common operations.  But during
+        testing I discovered I have a very weak pinky
+        finger. It doesn't like to be used that much. So I
+        moved the [TOP] command to a two finger chord and
+        started thinking about producing actually
+        characters.
+      </p>
+
+      <p>
+        I found a character frequency chart for English
+        somewhere and assigned vowels to various two key
+        chords, taking care to assign 'U' (the least
+        common vowel) to a two key chord that uses the
+        pinky finger.
+      </p>
+
+      <p>
+        The rest of the letter to chord mappings follow
+        the frequency of letters, assigning chords in
+        the order: two finger chords (without pinky),
+        three finger chords (without pinky), two finger
+        chords (with pinky) and then three, four and
+        five finger chords with the pinky finger.
+      </p>
+
+      <p>
+        Assigning digits followed a similar scheme. More
+        frequently used digits (like 0, 1, 2 and 3) would
+        be assigned to two and three finger chords
+        without the pinky. Other symbols were assigned
+        more or less at random.
+      </p>
+
+      <p>
+        So despite appearances, the mapping between
+        chords and keys is not completely random.
+      </p>
+
+    </section>
     
-    <section id="02_References">
+    <section id="98_References">
       <h2>References</h2>
       <ol>
         <a name="ref_1"></a>
@@ -66,6 +237,16 @@
 
         <a name="ref_3"></a>
         <li><a href="https://youtu.be/Xptc6f3Daoo?t=61">Part 2 of 10: Engelbart and the Dawn of Interactive Computing: SRI's 1968 Demo (Highlights) [YouTube]</a></li>
+
+        <a name="ref_4"></a>
+        <li><a href="https://en.wikipedia.org/wiki/FrogPad">FrogPad [Wikipedia]</a></li>
+
+        <a name="ref_5"></a>
+        <li><a href="https://www.dougengelbart.org/content/view/273/309/">Historic Firsts: The Keyset [Doug Engelbart Institute]</a></li>
+
+        <a name="ref_6"></a>
+        <li><a href="https://wiki.c2.com/?QuasiMode">Quasi Mode [wiki.c2.com]</a></li>
+
       </ol>
     </section>
     
