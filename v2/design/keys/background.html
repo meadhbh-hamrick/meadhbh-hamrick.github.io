@@ -65,7 +65,7 @@
       <p>
         I've been using chorded keyboards on and off for
         several decades. One of my favourites is/was The
-        Frogpad&trade; <a href="#ref_4">[4]</a>. Every
+        FrogPad&trade; <a href="#ref_4">[4]</a>. Every
         interaction I had with Linda Marroquin was positive.
         But I guess my hands are smaller than what the
         FrogPad was designed for. And though my fingers never
@@ -75,7 +75,7 @@
       <p>
         While thinking about how I would improve the FrogPad, I
         started thinking about Engelbart's original Keyset <a href="#ref_5">[5]</a>.
-        It struck me that Englebart's keyset was the
+        It struck me that Engelbart's Keyset was the
         solution to the problem "how can I press a few keys
         with one hand while my other hand is resting on the
         mouse." This is slightly different from other modern
@@ -92,7 +92,7 @@
 
       <p>
         After digging around I found references implying
-        Engelbart's original keyset used a very basic
+        Engelbart's original Keyset used a very basic
         BCD-like mapping from key chord to character. This
         seemed a bit sub-optimal to me, so I set out to
         build a better experience.
@@ -119,7 +119,7 @@
         mapping be able to generate all the characters
         found on a modern keyboard: upper and lower case
         letters, digits, space, punctuation and random
-        symbols like tilde (~) and the backtick (`). I
+        symbols like tilde (~) and the back-tick (`). I
         punted on arrow, PageUp, PageDown and other cursor
         movement keys because I felt positioning the cursor
         could be accomplished easier with the mouse.
@@ -132,7 +132,7 @@
         select different "sub-mappings" between chords and
         characters. The results were sub-optimal. Keeping
         one key pressed while manipulating the state of the
-        other keys on a five-key keyset proved
+        other keys on a five-key Keyset proved
         uncomfortable and it didn't solve the original
         problem of extending the number of characters you
         could potentially select.
@@ -150,7 +150,7 @@
 
       <p>
         At this point I should digress and mention I'm
-        limiting the current version of the keyset mapping
+        limiting the current version of the Keyset mapping
         to English / Latin characters. I am personally
         interested in adding ß, Ø and diacritics like tilde
         (◌̃) , grave (◌̀), acute (◌́), umlaut / diaeresis (◌̈),
@@ -173,7 +173,7 @@
         Once I decided the mapping would be modal, I wanted
         to make it easy to set the mode to a known good
         state. Imagine you're typing a few characters and
-        you get distracted. What mode is your keyset in?
+        you get distracted. What mode is your Keyset in?
         My solution was to have one of the 31 chords be a
         "reset to the first mode" ([TOP]) command. And if
         we're modal, you need a "next mode" ([NEXT])
@@ -187,7 +187,7 @@
       <p>
         That seemed pretty good, one-finger chords assigned
         to each of the common operations.  But during
-        testing I discovered I have a very weak pinky
+        testing I discovered I have a very weak pinkie
         finger. It doesn't like to be used that much. So I
         moved the [TOP] command to a two finger chord and
         started thinking about producing actually
@@ -199,23 +199,23 @@
         somewhere and assigned vowels to various two key
         chords, taking care to assign 'U' (the least
         common vowel) to a two key chord that uses the
-        pinky finger.
+        pinkie finger.
       </p>
 
       <p>
         The rest of the letter to chord mappings follow
         the frequency of letters, assigning chords in
-        the order: two finger chords (without pinky),
-        three finger chords (without pinky), two finger
-        chords (with pinky) and then three, four and
-        five finger chords with the pinky finger.
+        the order: two finger chords (without pinkie),
+        three finger chords (without pinkie), two finger
+        chords (with pinkie) and then three, four and
+        five finger chords with the pinkie finger.
       </p>
 
       <p>
         Assigning digits followed a similar scheme. More
         frequently used digits (like 0, 1, 2 and 3) would
         be assigned to two and three finger chords
-        without the pinky. Other symbols were assigned
+        without the pinkie. Other symbols were assigned
         more or less at random.
       </p>
 
