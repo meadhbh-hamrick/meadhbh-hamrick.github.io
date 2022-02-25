@@ -95,8 +95,8 @@
       </p>
 
       <pre class="code">
-2021-07-06T09:25:17.813Z DEBUG Entering foo() to process request d44dcf8c-df41-11eb-9186-6723ffa51662
-2021-07-06T09:25:18.501Z DEBUG Retrieved state is 14.
+2021-07-06T09:25:17.813Z DEBUG Entering foo() to process request d44dcf8c-df41-11eb-9186-6723ffa51662 with new state 16
+2021-07-06T09:25:18.501Z DEBUG Current state is 14.
 2021-07-06T09:25:18.556Z DEBUG Illegal state detected</pre>
 
       <p>
@@ -111,32 +111,24 @@
       </p>
 
       <pre class="code">
-2021-07-06T09:25:17.813Z DEBUG foo_bar.js:56 ENTER {"function":"foo","id":"d44dcf8c-df41-11eb-9186-6723ffa51662"}
-2021-07-06T09:25:18.501Z DEBUG foo_bar.js:68 STATE {"state":14}
+2021-07-06T09:25:17.813Z DEBUG foo_bar.js:56 ENTER {"function":"foo","id":"d44dcf8c-df41-11eb-9186-6723ffa51662","new_state":16}
+2021-07-06T09:25:18.501Z DEBUG foo_bar.js:68 CURSTATE {"current":14}
 2021-07-06T09:25:18.556Z DEBUG foo_bar.js:70 ILLSTATE</pre>
 
     <p>
       Human readable logs are important.
-      The example above is reasonably easy to read, I think.
-      But it's a simple example; maybe real-world logs will be harder for humans to consume.
-    </p>
-
-    <p>
-      One option might be to duplicate log messages in a human readable format:
+      The example above is reasonably easy to read, but maybe this is slightly better:.
     </p>
 
       <pre class="code">
-2021-07-06T09:25:17.813Z DEBUG foo_bar.js:56 ENTER {"function":"foo","id":"d44dcf8c-df41-11eb-9186-6723ffa51662"}
-2021-07-06T09:25:17.813Z DEBUG foo_bar.js:56 HUMAN Entering foo() to process request d44dcf8c-df41-11eb-9186-6723ffa51662
-2021-07-06T09:25:18.501Z DEBUG foo_bar.js:68 STATE {"state":14}
-2021-07-06T09:25:18.501Z DEBUG foo_bar.js:68 HUMAN Retrieved state is 14.
-2021-07-06T09:25:18.556Z DEBUG foo_bar.js:70 ILLSTATE
-2021-07-06T09:25:18.556Z DEBUG foo_bar.js:70 HUMAN Illegal state detected</pre>
-    </section>
+2021-07-06T09:25:17.813Z DEBUG foo_bar.js:56 [ ENTER, "Entering function to process request", {"function":"foo","request_id":"d44dcf8c-df41-11eb-9186-6723ffa51662","new_state":16} ]
+2021-07-06T09:25:18.501Z DEBUG foo_bar.js:68 [ CURSTATE, "Current state", {"state":14} ]
+2021-07-06T09:25:18.556Z DEBUG foo_bar.js:70 [ ILLSTATE, "Illegal state transition detected" ]</pre>
 
     <p>
-      Another approach would be to build a tool which ingests machine readable logs and produces more human readable logs offline.
-      Tinlog <a href="#ref_5">[5]</a> is a Node.JS compatible package to help make that easy.
+      The precise format is not as important as choosing a format which can be parsed easily by both humans and machines.
+      For inspiration, consider Tinlog <a href="#ref_5">[5]</a>, a Node.JS compatible package that (among other things) makes it easier to produce easily parsable log messages.
+    </p>
     
     <section>
       <h2>Is the program doing what it is supposed to?</h2>
@@ -157,7 +149,7 @@
         "Tracing" a program is a technique used extensively in embedded programming.
         Time-sensitive embedded software often can't wait for a programmer to single-step through a program.
         Specific aspects of the embedded program's state are stored in a buffer as the program executes.
-        The buffer is transferred to a development system and examined after-the-fact, looking for incorrect behaviour.
+        The buffer is then transferred to a development system and examined after-the-fact, looking for incorrect behaviour.
       </p>
 
       <p>
@@ -173,14 +165,15 @@
       <p>
         But to make use of tracing tools in online applications, you have to instrument your code.
         It should be straight-forward to instrument your code to emit DEBUG log messages, then use a tool to collect, display and analyze data collected.
-        How to build such a tool is outside the scope of this text; I only want to mention it is possible, and probably a decent idea.
       </p>
 
       <p>
-        Collecting program trace information allows you to verify <b>program correctness</b> after the fact.
-        Suppose you have a program that fails intermittently.
-        By collecting trace data, you can examine the state of the application before the error, looking for how invocations that fail differ from invocations that succeed.
+        Building a general-purpose tool to ensure program correctness exclusively from DEBUG logs is not simple.
+        How would the program checker know if the program was behaving correctly unless you wrote a description of the correct behaviour?
+        Languages like TLA+ <a href="#ref_11">[11]</a> or Kami <a href="#ref_12">[12]</a> are used to describe the state of software and hardware and to verify programs and circuits move from known states to other, correct known states.
+        But to use them properly requires a fair amount of study.
       </p>
+      
     </section>
 
     <section>
@@ -229,6 +222,14 @@
         <li><a href="https://docs.aws.amazon.com/lambda/latest/dg/services-xray.html">AWS X-Ray</a></li>
         <a name="ref_10"></a>
         <li><a href="https://opentracing.io/">OpenTracing.IO</a></li>
+        <a name="ref_11"></a>
+        <li><a href="https://en.wikipedia.org/wiki/TLA%2B">TLA+ [Wikipedia]</a></li>
+        <a name="ref_12"></a>
+        <li><a href="https://www.csail.mit.edu/research/kami-modular-deductive-hardware-verification-platform">Kami: A Modular Deductive Hardware Verification Platform</a></li>
+        <a name="ref_13"></a>
+        <li><a href="https://jestjs.io/">Jest: Delightful JavaScript Testing</a></li>
+        <a name="ref_"></a>
+        <li><a href=""></a></li>
         <a name="ref_"></a>
         <li><a href=""></a></li>
         <a name="ref_"></a>
