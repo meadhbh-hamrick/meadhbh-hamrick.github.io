@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" type="text/css" href="../../css/index.css"/>
+    <title>Taking Notes</title>
+    <meta charset="utf-8"/>
+    <meta name="description" content="How I take notes in meetings and write in journals and notebooks"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Shadows+Into+Light&display=swap" rel="stylesheet">
+    
+    <style>
+    div.page {
+      margin: 1cm auto 1cm auto;
+      width: 50%;
+      min-width: 9cm;
+      max-width: 11.5cm;
+      min-height: 12.5cm;
+      border: solid 2px black;
+      box-shadow: 10px 5px 5px grey;
+      font-family: 'Shadows Into Light', cursive;
+    }
+
+    div.page > div.content {
+      margin: 4px;
+      clear: both;
+      font-size: 20px;
+    }
+
+    div.content > p {
+      margin: 0cm .75cm 0cm .75cm;
+      display: inline-block;
+    }
+
+    div.content > p.callout {
+      margin-left: 0cm;
+      text-indent: -.75cm;
+      padding-left: .75cm;
+    }
+
+    div.content > p.todo, div.content > p.question {
+       color: blue;
+    }
+
+    div.content > p.change {
+       color: red;
+    }
+
+    div.content > p.agree {
+       color: green;
+    }
+     
+    div.page > div.content > hr {
+      width: 100%;
+      margin-bottom: 4px;
+      margin-top: 4px;
+      height: 2px;
+      background-color: black;
+      border: none;
+    }
+
+    div.page > div.content > div.left {
+      margin: 0px 2px 0px 0px;
+      float: left;
+    }
+     
+    div.page > div.content >  div.right {
+      margin: 0px 0px 0px 2px;
+      float: right;
+      height: 2cm;
+      width: 2cm;
+      font-size: 12px;
+      text-align: center;
+      border: dotted 1px black;
+    }
+     
+    </style>
+  </head>
+  <body class="content">
+    <title>Taking Notes</title>
+
+    <a name="00_Intro"></a>
+    <section id="00_Intro"> <p>
+      After noting Rat Factor's Note system
+      <a href="#ref_1">[1]</a> on Hacker News
+      <a href="#ref_2">[2]</a> I realized that I also
+      have a note taking system. Inspired by Mr. Factor's
+      lead, I decided to document it.
+    </p>
+
+    <p>
+      Let me start by saying I'm not encouraging you to
+      adopt my system. It works for me, but you're a
+      different person with different requirements. I
+      encourage you to read this page and see if there's
+      anything you can use.
+    </p>
+
+    <p>
+      I <i>do</i> encourage you to think about how you
+      take notes. As a sophomore in college I adopted the
+      Cornell System for Note-Taking
+      <a href="#ref_3">[3]</a> and it helped greatly.
+      Simple changes in the way you think about
+      note-taking can notably improve the utility of your
+      notes and meeting minutes.
+    </p>
+
+    <p>
+      While I keep telling myself I will adapt this
+      system to a note-taking app, it it mostly useful
+      for taking notes on pen and paper. You can use it
+      with virtually any word processor or text editor
+      that supports unicode.
+    </p>
+
+    <p>
+      I use either a 4-colour ballpoint pen (like this one
+      from BiC <a href="#ref_4">[4]</a>), a PILOT 0.38mm
+      Juice Gel Ink Ballpoint Pen 12 Color set
+      <a href="#ref_5">[5]</a>, or a PILOT Disposable
+      Fountain Pen 3 Color Set <a href="#ref_6">[6]</a>.
+      My system does not require the use of coloured ink
+      and you are under no obligation to use coloured ink
+      in your note-taking system. Props to Mr. Factor
+      (aka Dave Gauer) for recommending the PILOT 0.38mm
+      Juice Gel Ink pen.
+    </p>
+    </section>
+
+    <a name="01_Journal_Entries"></a>
+    <section id="01_Journal_Entries">
+    <h2>Journal Entries</h2>
+      
+    <p>
+      Let me start with Journal Entries since Meeting
+      Minutes are simple extensions of the journal entry
+      system.
+    </p>
+
+    <p>
+      The purpose of the journal entry system is to
+      "get ideas out of my head" or "declutter my mind"
+      as David Allen says <a href="#ref_7">[7]</a>. The
+      reason I developed this system was to improve my
+      ability to find details in notes I had written to
+      myself. I use a Zettelkasten type system
+      <a href="#ref_8">[8]</a> for writing notes about
+      specific subjects, but my journals are a
+      chronological record of random thoughts, important
+      details and random things I need to get out of my
+      head so I can get back to useful work.
+    </p>
+    
+    <p>
+      <b><i>Writing notes is easy. Finding notes you've
+      written is hard.</i></b> My note taking system is
+      intended to help find things you've written down.
+      Each of the "callouts" in this document represents
+      something I've needed to find in my notes, but
+      couldn't. I have callouts for to-do items, open
+      questions, important changes, agreements and random
+      important things. You may want to add your own.
+    </p>
+
+    <p>
+      So what does a journal entry look like? I write
+      them down as a header with a line across the page,
+      a date, some hash-tags and a blank space for a QR
+      Code. I haven't started putting QR Codes in my
+      journal, but have a fantasy I'll eventually do it.
+      If I didn't carve out a small space for the QR Code
+      I would go nuts thinking about how I'll obscure the
+      notes when I do eventually put QR Code stickers in
+      my journals.
+    </p>
+
+    <p>
+      This is reasonable approximation of what my journal
+      looks like:
+    </p>
+
+    <div class="page">
+      <div class="content">
+        <hr/>
+        <div class="left">
+          2022-02-26 <span style="line-height: 2pt; font-size: 24pt; position: relative; top: 3px;">&#9792;</span><br>
+          #Notes, #Think about it
+        </div>
+        <div class="right">
+          <br/>
+          QR Code Goes Here (Someday)
+        </div>
+      </div>
+      <div class="content">
+        <p>
+          And here's where the text starts.
+        </p>
+
+        <p>
+          Just imagine this was filled with "real" text,
+          talking about "real" things.
+        </p>
+      </div>
+
+      <div class="content">
+        <hr/>
+        <div class="left">
+          2022-02-27 &#9795;<br>
+          #Notes, #Moar Thinks
+        </div>
+        <div class="right">
+          <br/>
+          QR Code Goes Here (Someday)
+        </div>
+      </div>
+      <div class="content">
+        <p>
+          Sometimes a page has multiple entries. Who
+          knew?
+        </p>
+
+        <p>
+          Hell is other peoples' journals.
+        </p>
+      </div>
+
+    </div>
+        
+    <p>
+      A few obvious things: First, it's in black ink. I
+      like black ink. When I was in the marines, the only
+      type of pens we had were black pens. Blue pens were
+      for civilians. If you want to see a Marine admin
+      clerk freak out, use a blue pen on an official
+      form. But old habits die hard and I like black ink
+      for notes so I can use blue, red, green (and
+      sometimes purple) to make callouts easier to find.
+    </p>
+
+    <p>
+      Secondly, I use planetary symbols after the dates
+      to denote the day of the week. You should probably
+      just put the first couple of letters of the day. If
+      you want to use planetary symbols, these are the
+      ones I use:      
+    </p>
+
+    <table style="padding-left: 1cm;">
+      <tr>
+        <td width="2cm">&#9737;</td>
+        <td>Sunday</td>
+      </tr>
+      <tr>
+        <td width="2cm">&#9789;</td>
+        <td>Monday</td>
+      </tr>
+      <tr>
+        <td width="2cm">&#9794;</td>
+        <td>Tuesday</td>
+      </tr>
+      <tr>
+        <td width="2cm">&#9791;</td>
+        <td>Wednesday</td>
+      </tr>
+      <tr>
+        <td width="2cm">&#9795;</td>
+        <td>Thursday</td>
+      </tr>
+      <tr>
+        <td width="2cm">&#9792;</td>
+        <td>Friday</td>
+      </tr>
+      <tr>
+        <td width="2cm">&#9796;</td>
+        <td>Saturday</td>
+      </tr>
+    </table>
+
+    <p>
+      Lastly, it's clear I like to indent lines /
+      paragraphs in my journals. When I give an example
+      of callouts below, it will be more obvious why I
+      indent everything: I don't indent callouts, so
+      they're much easier to see.
+    </p>
+
+    <p>
+      <b>About To-Do Items</b>
+    </p>
+    
+    <p>
+      One day I had to find a pair of to-do items in my
+      journal. It turns out they were kind of hard to
+      find. I realized they would be easier to find if I
+      included an "icon" next to them. I originally used
+      a triangle, but later changed to a box. When I
+      completed a task, I went back and put a check-mark
+      in the box. If the task was "overtaken by events"
+      and would not be completed, I put an "X" through
+      it. When I left the marines and could use blue pens
+      again, I sometimes wrote to-do items in blue. My
+      colour vision is good enough that blue stands out
+      against the black of the normal text. That's not
+      true for everyone; feel free to pick a different
+      colour. Or no colour. It's up to you.
+    </p>
+
+    <p>
+      After more trial and error, I figured out that
+      padding around to-do items and no indentation makes
+      them easier to spot. Here's an example of a
+      journal page with to-do items:
+    </p>
+
+    <div class="page">
+      <div class="content">
+        <hr/>
+        <div class="left">
+          1990-08-02 <span style="line-height: 2pt; font-size: 24pt; position: relative; top: 3px;">&#9792;</span><br>
+          #marines
+        </div>
+        <div class="right">
+          <br/>
+          QR Code Goes Here (Someday)
+        </div>
+      </div>
+      <div class="content">
+        <p>
+          Wondering if I'm going to get called up out
+          of the IRR.
+        </p>
+        
+        <p class="callout todo">
+          &#9745; Call Kansas City and ask if my DD-214 was mailed
+          out.
+        </p>
+
+        <p>
+          Maybe I should try to find my gear in case they
+          call me back or I have to prove I still have
+          it.
+        </p>
+        
+        <p class="callout todo">
+          &#9745; Get gear out of storage.
+        </p>
+
+        <p class="callout todo">
+          &#9746; Inventory gear. Is it all there?
+        </p>
+        
+      </div>
+      
+      <div class="content">
+        <hr/>
+        <div class="left">
+          1990-08-06 <span style="line-height: 2pt; font-size: 24pt; position: relative; top: 3px;">&#9789;</span><br>
+          #marines
+        </div>
+        <div class="right">
+          <br/>
+          QR Code Goes Here (Someday)
+        </div>
+      </div>
+      <div class="content">
+        <p>
+          Called Kansas City, they said the DD-214 was
+          mailed out last Thursday.
+        </p>
+      </div>
+    </div>
+
+    <p>
+      From this example, I can see that I listed several
+      to-do items. The first two I completed, but the
+      last one was abandoned, likely because I felt it
+      was unlikely I would be called out of the
+      Individual Ready Reserve after talking with the
+      DoD Finance Office in Kansas City.
+    </p>
+
+    <p>
+      <b>When Things Change</b>
+    </p>
+
+    <p>
+      Sometimes things change. Important changes get a
+      red exclamation point. Consider this example:
+    </p>
+
+    <div class="page">
+      <div class="content">
+        <hr/>
+        <div class="left">
+          1987-06-01 <span style="line-height: 2pt; font-size: 24pt; position: relative; top: 3px;">&#9789;</span><br>
+          #marines #reserve
+        </div>
+        <div class="right">
+          <br/>
+          QR Code Goes Here (Someday)
+        </div>
+      </div>
+      <div class="content">
+        <p>
+          SgtMaj Havens says there's no way I'm going to
+          A-School this summer; it's okay to register for
+          summer classes.
+        </p>
+
+      </div>
+      <div class="content">
+        <hr/>
+        <div class="left">
+          1987-06-12 <span style="line-height: 2pt; font-size: 24pt; position: relative; top: 3px;">&#9792;</span><br>
+          #marines
+        </div>
+        <div class="right">
+          <br/>
+          QR Code Goes Here (Someday)
+        </div>
+      </div>
+      <div class="content">
+        <p class="callout change">
+          <b>!</b>&nbsp;&nbsp;SgtMaj Havens called to say
+          he has orders for me to go to my A-School at
+          LeJeune.
+        </p>
+
+        <p>
+          Called registrar, I can drop Psych class as
+          incomplete-passing and finish it next fall.
+        </p>
+
+        <p class="callout todo">
+          &#9745; <b>(1987-06-14)</b> Get a note from MAG-41 to housing
+          office so I can get out of my dorm lease
+          without penalty.
+        </p>
+      </div>
+    </div>
+
+    <p>
+      In this example we can see that Sergeant Major
+      Havens had "incomplete information" about my second
+      increment of Initial Active Duty for Training
+      Purposes. That I had to drop my Psych class in the
+      summer of '87 and report to Camp LeJeune for
+      training was an important change, so it got a
+      red exclamation point. We can also see that I had
+      to get a note from my reserve unit to give to the
+      university housing office saying I was being
+      activated.
+    </p>
+
+    <p>
+      Another thing to note: when to-do items have a due
+      date, I insert the date between the box and the
+      description.
+    </p>
+
+    <p>
+      <b>Random Important Things</b>
+    </p>
+
+    <p>
+      Sometimes I realize something is important after
+      writing it down. In this case I put a purple dot
+      in the margin. If I don't have a purple pen on me,
+      I'll put a blue dot in the margin. Here's an
+      example:
+    </p>
+
+    <div class="page">
+      <div class="content">
+        <hr/>
+        <div class="left">
+          2022-01-07 <span style="line-height: 2pt; font-size: 24pt; position: relative; top: 3px;">&#9792;</span><br>
+          #car #maintenance
+        </div>
+        <div class="right">
+          <br/>
+          QR Code Goes Here (Someday)
+        </div>
+      </div>
+      <div class="content">
+        <p>
+          I'm pretty sure I don't need to pull
+          maintenance on the Fiat before my trip to the
+          bay area.
+        </p>
+        <p class="callout">
+          <span style="color:purple;">&#11044;</span>&#8201;More likely I'll just call the
+          mechanic at (831) 555-1212 and schedule an oil
+          change while I'm down there.
+        </p>
+
+        <p>
+          Seems like I'm about 1000 miles shy of when I
+          need an oil change and I bet they can figure
+          out what air filters I need.
+        </p>
+      </div>
+    </div>
+
+    <p>
+      What happened here is I wrote down the phone number
+      for a mechanic a friend recommended and later
+      realized it might be a good idea to be able to find
+      that number later. This isn't a major change or a
+      to-do item, so I just put a purple dot next to it.
+    </p>
+      
+    </section>
+    
+    <a name="02_Meeting_Minutes"></a>
+    <section id="02_Meeting_Minutes">
+    <h2>Meeting Minutes</h2>
+
+    <p>
+      I used to use the Cornell Note-Taking System
+      <a href="#ref_3">[3]</a> for meeting notes, but
+      eventually determined it wasn't the right tool for
+      the job. After a while, my meeting minutes started
+      looking like my journal entries. I don't care about
+      QR Codes for meeting notes. I'm not entirely sure
+      why.
+    </p>
+
+    <p>
+      Meeting minutes still have a date and hash-tags in
+      the header, but also a list of attendees.
+    </p>
+
+    <p>
+      Callouts for meeting minutes include "open
+      questions" and "agreements". And I still use
+      to-dos, major changes and purple dots.
+    </p>
+
+    <p>
+      "Open Question" callouts are just what you would
+      expect: a question that hasn't been answered. I
+      write them in blue ink and preface them with a big
+      question mark. Like to-do callouts, if there's a
+      due date, I insert it between the question mark and
+      the text of the question.
+    </p>
+
+    <p>
+      "General Agreement" callouts are notes that the
+      meeting attendees agreed to something. It is often
+      important to be able to find records of such
+      agreements quickly. I use a green star for
+      agreements. I wanted to use a thumbs up sign, but
+      was told that might be an offensive gesture in some
+      cultures. I originally used shaking hands as the
+      "agreement" icon, but most people who saw it said
+      it looked like a raccoon.
+    </p>
+
+    <p>
+      Here's an example of what my meeting minutes might
+      look like:
+    </p>
+      
+    <div class="page">
+      <div class="content">
+        <hr/>
+        <div class="left">
+          2022-02-23 <span style="line-height: 2pt; font-size: 24pt; position: relative; top: 3px;">&#9791;</span><br>
+          Alice, Bob, Sriram, Meadhbh<br/>
+          #aws #switchover #login service<br/>
+          <br/>
+        </div>
+      </div>
+      <div class="content">
+        <p>
+          Bob says we're good for service switch-over
+        </p>
+        
+        <p class="callout agree">
+          &#9733;Agree to cut-over old to new on
+          Thursday, March 3rd.
+        </p>
+
+        <p class="callout question">
+          <b>?</b>&nbsp;&nbsp;Do we have to get approval from IT?
+        </p>
+
+        <p class="callout todo">
+          &#9744; Find out what ticket category to JIRA items go
+          in? Will IT get upset if we use the wrong
+          category?
+        </p>
+        
+        <p>
+          Alice described the DNS cut-over technique
+          we'll use
+        </p>
+
+        <p>
+          Sriram verified we won't need any code changes.
+        </p>
+      </div>
+    </div>
+
+    <p>
+      In the meeting we minuted here, there was general
+      agreement when the login-service cut-over would
+      take place. But there's still an outstanding
+      question as to whether we need to get this plan
+      approved by IT and a to-do item to find out what
+      ticket category IT wants us to use.
+    </p>
+    
+    </section>
+    
+    <a name="03_Field_Notes"></a>
+    <section id="03_Field_Notes">
+    <h2>Field Notes</h2>
+
+    <p>
+      In my system, "Field Notes" are anything that gets
+      written in a small 3.7" x 5.6" (small) notebook.
+      For me, that's mostly passwords and shopping lists.
+      I should probably mention "Field Notes" is a
+      trademarked term; I usually use it in a generic
+      sense, but the people who make the Field Notes
+      &reg; note books would probably prefer I use the
+      registered trademark symbol when talking about
+      their brand.
+    </p>
+
+    <p>
+      Dave Gauer (aka Rat Factor) recommends thin Field
+      Notes &reg; books <a href="#ref_1">[1]</a>. I
+      prefer PAPERAGE small notebooks
+      <a href="#ref_9">[9]</a>. They're <i>almost</i> as
+      easy to lay-flat as the Field Notes &reg; brand
+      and have a harder cover and include an elastic band
+      to secure them while they're in your pocket or
+      backpack. Field Notes &reg; notepads are even
+      easier to lay flat and come in a variety of colours
+      and designs. There is no shame in preferring Field
+      Notes &reg; to PAPERAGE.
+    </p>
+
+    <p>
+      A typical entry for me would look like:
+    </p>
+
+    <div class="page">
+      <div class="content">
+        <div class="left">
+          2022-02-25 <span style="line-height: 2pt; font-size: 24pt; position: relative; top: 3px;">&#9792;</span><br>
+        </div>
+      </div>
+      <div class="content">
+        <p>
+          <b>-</b> Drop off taxes at the post office
+        </p>
+
+        <p>
+          <b>-</b> Meals: Veggie Chili, Tofu Thai Curry
+        </p>
+
+        <p>
+          <b>-</b> List:<br/>
+          &nbsp;<b>-</b> Paper Towels<br/>
+          &nbsp;<b>-</b> Fresh Thai Basil<br/>
+          &nbsp;<b>-</b> Green Pepper<br/>
+          &nbsp;<b>-</b> Zucchini or Japanese Eggplant<br/>
+          &nbsp;<b>-</b> Firm Tofu<br/>
+          &nbsp;<b>-</b> Lime Leaves<br/>
+          &nbsp;<b>-</b> Small Mushrooms<br/>
+          &nbsp;<b>-</b> TVP<br/>
+          &nbsp;<b>-</b> Eggs<br/>
+          &nbsp;<b>-</b> Bread<br/>
+        </p>
+      </div>
+    </div>
+
+    <p>
+      From this you can probably guess I don't bother
+      with callouts on field notes and I eat mostly
+      veggies. With small notebooks, my notes usually
+      take up the whole page so I often ignore lines and
+      almost never include hash-marks.
+    </p>
+
+    <p>
+      The purpose of these small notebooks for me is to
+      record thoughts when I'm out of the house / office
+      and to write things down I know I'll need when I'm
+      out. I have a habit of looking at my small
+      notebooks twice a week and when I'm about to walk
+      out the door. (In the example above, I wrote a note
+      to remind myself to grab my taxes if I'm driving
+      anywhere near a post office.)
+    </p>
+
+    <p>
+      <img
+        alt="A small notepad with passwords in it"
+        src="../../img/2022-02-26-600x695_passnote.png"/>
+    </p>
+
+    <p>
+      I have a different small notebook which contains
+      passwords. This one usually never leaves the house.
+      I scribble usernames and passwords on POST-IT &reg;
+      page markers <a href="#ref_10">[10]</a> and then
+      place them in the small notebook. When I change
+      the password, I take the old page marker out and
+      put in a new one. You may also notice I put a line
+      above capital letters and a line below lower case
+      letters.
+    </p>
+          
+    </section>
+
+    <a name="04_A_Pen_of_a_Different_Colour"></a>
+    <section id="04_A_Pen_of_a_Different_Colour">
+      <h2>A Pen of a Different Colour</h2>
+
+      <p>
+        Some people will tell you not to make colour
+        semantically important because many people are
+        colour blind. And that's very good advice. But my
+        colour vision is pretty good, and this is a
+        description of my personal note-taking system.
+      </p>
+
+      <p>
+        That being said, I've noticed my eye-sight
+        deteriorate over the years and can envision a
+        time in the future where I lose colour
+        perception. So I made sure that everywhere colour
+        is used, there's also a unique "icon". It will
+        be harder to find things if I lose my colour
+        vision, but not impossible.
+      </p>
+
+      <p>
+        I use a number of different writing implements.
+        I use felt-tip pens and coloured pencils when
+        designing things. I use fountain pens when
+        writing notes to people. In my journal,
+        I currently use several PILOT Juice Gel Ink pens
+        <a href="#ref_5">[5]</a>. But for scribbling in
+        small notebooks, I use a BiC 4 Color pen
+        <a href="#ref_4">[4]</a>.
+      </p>
+    </section>
+    
+    <section id="99_References">
+      <h2>References</h2>
+
+      <ol>
+        <li>
+          <a name="ref_1"></a>
+          <a href="http://ratfactor.com/notes">My Notebook System [ratfactor.com]</a>
+        </li>
+        <li>
+          <a name="ref_2"></a>
+          <a href="https://news.ycombinator.com/item?id=30395238">My Notebook System [news.ycombinator.com]</a>
+        </li>
+        <li>
+          <a name="ref_3"></a>
+          <a href="https://en.wikipedia.org/wiki/Cornell_Notes">Cornell Notes [wikipedia.org]</a>
+        </li>
+        <li>
+          <a name="ref_4"></a>
+          <a href="https://www.amazon.com/gp/product/B07FCSVFR2">BiC 4-Color Pen [amazon.com]</a>
+        </li>
+        <li>
+          <a name="ref_5"></a>
+          <a href="https://www.amazon.com/dp/B00AKHLUPC">PILOT 0.38mm Juice Gel Ink Pen 12-Color Set [amazon.com]</a>
+        </li>
+        <li>
+          <a name="ref_6"></a>
+          <a href="https://www.amazon.com/dp/B00OPQZX7K">PILOT V Pen Disposable Fountain Pen Set [amazon.com]</a>
+        </li>
+        <li>
+          <a name="ref_7"></a>
+          <a href="https://youtu.be/N1qfAoQEoWY">Are you out of your mind? David Allen [youtube.com]</a>
+        </li>
+        <li>
+          <a name="ref_8"></a>
+          <a href="https://en.wikipedia.org/wiki/Zettelkasten">Zettelkasten [wikipedia.org]</a>
+        </li>
+        <li>
+          <a name="ref_9"></a>
+          <a href="https://www.amazon.com/dp/B07RSVJ2P9">PAPERAGE Small Notepad [amazon.com]</a>
+        </li>
+        <li>
+          <a name="ref_10"></a>
+          <a href="https://www.amazon.com/gp/product/B007QFATEO">POST-IT &reg; Page Markers [amazon.com]</a>
+        </li>
+      </ol>
+    </section>
+
+    <section id="footer"><p>
+      This page was last updated on February 26, 2022. This
+      page is a part of the <a href="index.html">Design
+      Section</a>, which is part of
+      <a href="../../index.html">Meadhbh Hamrick's Web
+        Site</a>.      
+    </p></section>
+  </body>
+</html>
