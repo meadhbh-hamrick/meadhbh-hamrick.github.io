@@ -156,3 +156,10 @@ img.left {
 dl.blag > dd {
   margin-top: 12px;
 }
+
+dl.blag div.img {
+  margin-top: 12px;
+  border: solid 1px #6F6F6F;
+  position: relative;
+  width: 100%;
+}
