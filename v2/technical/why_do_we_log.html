@@ -16,9 +16,9 @@
       <h2>Abstract</h2>
       
       <p>
-        There are at least three reasons why we want online applications to log messages: program correctness, performance and application event monitoring.
-        Each log message may have a different audience: software engineers care about program correctness, dev-ops engineers and administrators care about performance and customers and product managers care about application events.
-        This document discusses how to figure out what category a particular message exists in.
+        There are at least three reasons why we want to log messages: program correctness, performance and application event monitoring.
+        Each log message has a different audience: software engineers care about program correctness, dev-ops engineers and administrators care about performance and product managers and support engineers care about application events.
+        This document discusses how to figure address each concern.
         It also makes the case for making logs easy to read by programs and not just humans.
       </p>
     </section>
@@ -127,7 +127,7 @@
 
     <p>
       The precise format is not as important as choosing a format which can be parsed easily by both humans and machines.
-      For inspiration, consider Tinlog <a href="#ref_5">[5]</a>, a Node.JS compatible package that (among other things) makes it easier to produce easily parsable log messages.
+      For inspiration, consider Antlog <a href="#ref_5">[5]</a>, a Node.JS compatible package that (among other things) makes it easier to produce easily parsable log messages.
     </p>
     
     <section>
@@ -177,14 +177,6 @@
     </section>
 
     <section>
-      <h2>Logging for Performance Monitoring</h2>
-
-    </section>
-
-
-    <section>
-      <h2>Logging Meaningful Messages</h2>
-    <section>
       
       <h2>Conclusion</h2>
 
@@ -211,7 +203,7 @@
         <a name="ref_4"></a>
         <li><a href="https://www.amazon.com/Programming-Perl-2nd-Larry-Wall/dp/B00005UL4D">Wall, L., Christiansen, T., Schwartz, R. L., Potter, S. (1996). <i>Programming Perl, 2nd Ed.</i> O'Reilly.</a></li>
         <a name="ref_5"></a>
-        <li><a href="https://github.com/meadhbh-hamrick/tinlog">meadhbh-hamrick/tinlog [GitHub]</a></li>
+        <li><a href="https://github.com/meadhbh-hamrick/antlog">meadhbh-hamrick/antlog [GitHub]</a></li>
         <a name="ref_6"></a>
         <li><a href="https://docs.aws.amazon.com/toolkit-for-jetbrains/index.html">AWS Toolkit for JetBrains Documentation</a></li>
         <a name="ref_7"></a>
@@ -228,12 +220,6 @@
         <li><a href="https://www.csail.mit.edu/research/kami-modular-deductive-hardware-verification-platform">Kami: A Modular Deductive Hardware Verification Platform</a></li>
         <a name="ref_13"></a>
         <li><a href="https://jestjs.io/">Jest: Delightful JavaScript Testing</a></li>
-        <a name="ref_"></a>
-        <li><a href=""></a></li>
-        <a name="ref_"></a>
-        <li><a href=""></a></li>
-        <a name="ref_"></a>
-        <li><a href=""></a></li>
       </ol>
       
     </section>
