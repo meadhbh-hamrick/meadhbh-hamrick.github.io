@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" type="text/css" href="../../css/index.css"/>
+    <title>Why Do We Log?</title>
+    <meta charset="utf-8"/>
+    <meta name="description" content="Trying to get clarity on what we're trying to accomplish with application logging."/>
+  </head>
+  <body class="content">
+    <title>Why Do We Log?</title>
+
+    <a name="00_Abstract"></a>
+    <section id="00_Abstract">
+
+      <h2>Abstract</h2>
+      
+      <p>
+        There are at least three reasons why we want to log messages: program correctness, performance and application event monitoring.
+        Each log message has a different audience: software engineers care about program correctness, dev-ops engineers and administrators care about performance and product managers and support engineers care about application events.
+        This document discusses how to figure address each concern.
+        It also makes the case for making logs easy to read by programs and not just humans.
+      </p>
+    </section>
+    
+    <a name="01_Intro"></a>
+    <section id="01_Intro">
+
+      <h2>Why do we log messages in online applications?</h2>
+      
+      <p>
+        It seems like it should have an obvious answer.
+        Why do we log things in online applications?
+        <i>To know what happened</i>, obviously.
+        But I assert our intent falls in at least three different categories:
+      </p>
+
+      <ol>
+        <li>To verify the program is behaving correctly (tracing)</li>
+        <li>To monitor the program's performance (telemetry)</li>
+        <li>To signal something meaningful happened (app domain)</li>
+      </ol>
+
+      <p>
+        In each of these cases, there is benefit to having an automated system monitoring logs.
+        But the specific type of system monitoring the logs may be different for each category.
+      </p>
+
+      <p>
+        In the tracing case, maybe it's an IDE (Integrated Development Environment) reading the logs, attempting to reconstruct what happened in the program.
+      </p>
+
+      <p>
+        Much has been written already about making telemetry <i>observable</i> <a href="#ref_1">[1]</a> <a href="#ref_2">[2]</a>.
+        Telemetry data is typically fed into a system which can (at least) warn human operators something is going wrong and (hopefully) take some basic actions to avert disaster.
+      </p>
+
+      <p>
+        As for the "application domain" category, these are log messages which assert something meaningful to the customer has occurred.
+        I sometimes call these types of logging messages <i>entropic</i> because of their irreversible nature.
+        You've either processed a request or you haven't; and once a request is processed, it's hard to unprocess.
+        It's a one-way operation.
+      </p>
+      
+      <p>
+        There's some overlap between telemetry and app domain log messages.
+        I like to think of <i>"telemetry"</i> being focused on the performance of the systems which implement the application while <i>"app domain"</i> log messages are focused on events that are meaningful to the customer.
+        Things like: <i>"we received your request"</i>, <i>"we updated the state of the application in response to your request"</i> or <i>"we think we're finished with this request."</i>
+      </p>
+
+      <p>
+        App domain messages might be useful to produce Service Level Agreement (SLA) or Operational Level Agreement (OLA) metrics.
+        But if you look at the list of Common Metrics in the Wikipedia's "Service Level Agreement" article <a href="#ref_3">[3]</a>, you'll see metrics that could fall into either the "telemetry" or "application domain" categories.
+        When I try to decide whether a log message is a telemetry or app domain message, <b>I think about its meaningfulness to the customer</b>.
+      </p>
+
+      <p>
+        Another way to think about it is to ask if a particular log message tells you about the performance of an underlying resource (telemetry) or whether the recorded event moves a customer's business process into or towards a subsequent state.
+        If the "business side" of the organization cares about it, it's <i>probably</i> an application domain metric.
+        If the "tech side" of the organization cares about it, it's <i>probably</i> telemetry.
+      </p>
+    </section>
+
+    <section>
+      <h2>Make it Easy for Programs to Read Your Logs</h2>
+
+      <p>
+        Larry Wall famously quipped <i>"computer languages differ not so much in what they make possible, but in what they make easy."</i> <a href="#ref_4">[4]</a>
+        We can borrow that quote to produce this bit of wisdom: <b><i>"logging systems differ not so much in what they log, but in how easy it is to read the logs."</i></b>
+        If you don't make a log message that can be consumed, why are you emitting that message?
+      </p>
+
+      <p>
+        Consider this log excerpt:
+      </p>
+
+      <pre class="code">
+2021-07-06T09:25:17.813Z DEBUG Entering foo() to process request d44dcf8c-df41-11eb-9186-6723ffa51662 with new state 16
+2021-07-06T09:25:18.501Z DEBUG Current state is 14.
+2021-07-06T09:25:18.556Z DEBUG Illegal state detected</pre>
+
+      <p>
+        This tells you (the human) everything you need to know.
+        But it's somewhat hard to parse.
+        If you wanted to make a tool that searched through the logs to find requests with illegal states, you would have to know about the specific text in these messages.
+        If someone ever changed the text of the log message, you would have to update your log search tool.
+      </p>
+
+      <p>
+        But if we had logs that looked like this, we could more easily process the log with a program:
+      </p>
+
+      <pre class="code">
+2021-07-06T09:25:17.813Z DEBUG foo_bar.js:56 ENTER {"function":"foo","id":"d44dcf8c-df41-11eb-9186-6723ffa51662","new_state":16}
+2021-07-06T09:25:18.501Z DEBUG foo_bar.js:68 CURSTATE {"current":14}
+2021-07-06T09:25:18.556Z DEBUG foo_bar.js:70 ILLSTATE</pre>
+
+    <p>
+      Human readable logs are important.
+      The example above is reasonably easy to read, but maybe this is slightly better:.
+    </p>
+
+      <pre class="code">
+2021-07-06T09:25:17.813Z DEBUG foo_bar.js:56 [ ENTER, "Entering function to process request", {"function":"foo","request_id":"d44dcf8c-df41-11eb-9186-6723ffa51662","new_state":16} ]
+2021-07-06T09:25:18.501Z DEBUG foo_bar.js:68 [ CURSTATE, "Current state", {"state":14} ]
+2021-07-06T09:25:18.556Z DEBUG foo_bar.js:70 [ ILLSTATE, "Illegal state transition detected" ]</pre>
+
+    <p>
+      The precise format is not as important as choosing a format which can be parsed easily by both humans and machines.
+      For inspiration, consider Antlog <a href="#ref_5">[5]</a>, a Node.JS compatible package that (among other things) makes it easier to produce easily parsable log messages.
+    </p>
+    
+    <section>
+      <h2>Is the program doing what it is supposed to?</h2>
+
+      <p>
+        Personally, I much prefer gdb to a list of printf's.
+        Yes, it takes time to learn how to use a "real debugger" -- but it's worth it.
+        The flexibility you get from a "real" debugger justifies the effort in learning how to use it.
+        "Real" debuggers are available for most (if not all) common platforms, even Node.JS Lambdas on AWS.
+        (See the "AWS Toolkit for JetBrains" <a href="#ref_6">[6]</a>)
+      </p>
+
+      <p>
+        But debugging isn't the whole "program correctness" story.
+      </p>
+
+      <p>
+        "Tracing" a program is a technique used extensively in embedded programming.
+        Time-sensitive embedded software often can't wait for a programmer to single-step through a program.
+        Specific aspects of the embedded program's state are stored in a buffer as the program executes.
+        The buffer is then transferred to a development system and examined after-the-fact, looking for incorrect behaviour.
+      </p>
+
+      <p>
+        GDB, for instance, allows developers to record the state of an application and play it back later, even allowing the programmer to step backwards in time from within the debugger. <a href="#ref_7">[7]</a>
+        Tools like Percepio's Tracalyzer give you an interactive graphical environment to search for bugs or good or bad execution patterns. <a href="#ref_8">[8]</a>
+      </p>
+
+      <p>
+        Tools for tracing AWS Lambdas are comparitively primitive, however.
+        AWS X-Ray <a href="#ref_9">[9]</a> and various OpenTracing tools <a href="#ref_10">[10]</a> focus on performance, not correctness.
+      </p>
+
+      <p>
+        But to make use of tracing tools in online applications, you have to instrument your code.
+        It should be straight-forward to instrument your code to emit DEBUG log messages, then use a tool to collect, display and analyze data collected.
+      </p>
+
+      <p>
+        Building a general-purpose tool to ensure program correctness exclusively from DEBUG logs is not simple.
+        How would the program checker know if the program was behaving correctly unless you wrote a description of the correct behaviour?
+        Languages like TLA+ <a href="#ref_11">[11]</a> or Kami <a href="#ref_12">[12]</a> are used to describe the state of software and hardware and to verify programs and circuits move from known states to other, correct known states.
+        But to use them properly requires a fair amount of study.
+      </p>
+      
+    </section>
+
+    <section>
+      
+      <h2>Conclusion</h2>
+
+      <ol type="a">
+        <li>Understanding the intent of logging makes it easier to reason about monitoring online applications.</li>
+        <li>Making it easy for programs to parse log messages is a Good Thing&trade;.</li>
+        <li>Tagging messages by intent (telemetry, tracing or app domain) makes it easier to find the information you're looking for.</li>
+        <li>Don't be afraid to write programs that consume logs, looking for anomalies, usage patterns and evidence of what your online system actually did.</li>
+      </ol>
+      
+    </section>
+    
+    <section id="98_References">
+      
+      <h2>References</h2>
+
+      <ol>
+        <a name="ref_1"></a>
+        <li><a href="https://lightstep.com/blog/opentelemetry-101-what-is-observability/">OpenTelemetry 101 : What is Observability? [lightstep.com]</a></li>
+        <a name="ref_2"></a>
+        <li><a href="https://www.honeycomb.io/blog/observability-101-terminology-and-concepts/">Observability 101 : Terminology and Concepts [honeycomb.io]</a></li>
+        <a name="ref_3"></a>
+        <li><a href="https://en.wikipedia.org/wiki/Service-level_agreement#Common_metrics">Service Level Agreement : Common Metrics [Wikipedia]</a></li>
+        <a name="ref_4"></a>
+        <li><a href="https://www.amazon.com/Programming-Perl-2nd-Larry-Wall/dp/B00005UL4D">Wall, L., Christiansen, T., Schwartz, R. L., Potter, S. (1996). <i>Programming Perl, 2nd Ed.</i> O'Reilly.</a></li>
+        <a name="ref_5"></a>
+        <li><a href="https://github.com/meadhbh-hamrick/antlog">meadhbh-hamrick/antlog [GitHub]</a></li>
+        <a name="ref_6"></a>
+        <li><a href="https://docs.aws.amazon.com/toolkit-for-jetbrains/index.html">AWS Toolkit for JetBrains Documentation</a></li>
+        <a name="ref_7"></a>
+        <li><a href="https://sourceware.org/gdb/wiki/ReverseDebug">Reverse Debug</a></li>
+        <a name="ref_8"></a>
+        <li><a href="https://percepio.com/tracealyzer/">Percepio Tracealyzer</a></li>
+        <a name="ref_9"></a>
+        <li><a href="https://docs.aws.amazon.com/lambda/latest/dg/services-xray.html">AWS X-Ray</a></li>
+        <a name="ref_10"></a>
+        <li><a href="https://opentracing.io/">OpenTracing.IO</a></li>
+        <a name="ref_11"></a>
+        <li><a href="https://en.wikipedia.org/wiki/TLA%2B">TLA+ [Wikipedia]</a></li>
+        <a name="ref_12"></a>
+        <li><a href="https://www.csail.mit.edu/research/kami-modular-deductive-hardware-verification-platform">Kami: A Modular Deductive Hardware Verification Platform</a></li>
+        <a name="ref_13"></a>
+        <li><a href="https://jestjs.io/">Jest: Delightful JavaScript Testing</a></li>
+      </ol>
+      
+    </section>
+    
+    <section id="footer"><p>
+      This page was last updated on April 1, 2021. This
+      page is a part of the <a href="index.html">Technical
+      Section</a>, which is part of
+      <a href="../../index.html">Meadhbh Hamrick's Web
+        Site</a>.      
+    </p></section>
+  </body>
+</html>
