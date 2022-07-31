@@ -1,0 +1,174 @@
+@font-face {
+  font-family: "MyWebFont";
+  src: url( "minisystem.regular.ttf" );
+}
+
+div#container {
+  margin-left: auto;
+  margin-right: auto;
+  width: 66%;
+  min-width: 8cm;
+  max-width: 12.5cm;
+  display: block;
+}
+
+div#timer {
+  border: solid 2px #3F3F3F;
+  border-radius: 8px;
+  position: relative;
+  display: block;
+  height: 168px;
+}
+
+.viz {
+  visibility: visible;
+}
+
+.inviz {
+  visibility: hidden;
+}
+
+.unselected {
+  background-color: #3F3F3F;
+}
+
+.selected {
+  background-color: #8F8F8F;
+}
+
+.idle {
+  background-color: lightgrey;  
+}
+
+.countdown {
+  background-color: #8FFF8F;  
+}
+
+.warn {
+  background-color: #FFFF8F;  
+}
+
+.expired {
+  background-color: #FF8F8F;  
+}
+
+div#button_silence {
+  position: absolute;
+  left: 199px;
+  right: 12px;
+  top: 12px;
+  background-color: #FF8F8F;
+  border-radius: 4px;
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 8px 0;
+  user-select: none;
+  font-family: Monospace;
+  font-size: 20px;
+}
+
+div#button_60 {
+  position: absolute;
+  left: 199px;
+  width: 76px;
+  top: 64px;
+  background-color: #3F3F3F;
+  border-radius: 4px;
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 8px 0;
+  user-select: none;
+  font-family: Monospace;
+  font-size: 20px;
+}
+
+div#button_30 {
+  position: absolute;
+  left: 290px;
+  width: 76px;
+  top: 64px;
+  background-color: #3F3F3F;
+  border-radius: 4px;
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 8px 0;
+  user-select: none;
+  font-family: Monospace;
+  font-size: 20px;
+}
+
+div#button_20 {
+  position: absolute;
+  left: 380px;
+  width: 76px;
+  top: 64px;
+  background-color: #3F3F3F;
+  border-radius: 4px;
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 8px 0;
+  user-select: none;
+  font-family: Monospace;
+  font-size: 20px;
+}
+
+div#button_beep {
+  position: absolute;
+  left: 199px;
+  width: 76px;
+  top: 116px;
+  border-radius: 4px;
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 8px 0;
+  user-select: none;
+  font-family: Monospace;
+  font-size: 20px;
+}
+
+div#button_custom {
+  position: absolute;
+  left: 290px;
+  width: 76px;
+  top: 116px;
+  border-radius: 4px;
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 8px 0;
+  user-select: none;
+  font-family: Monospace;
+  font-size: 20px;
+}
+
+div#button_silent {
+  position: absolute;
+  left: 380px;
+  width: 76px;
+  top: 116px;
+  border-radius: 4px;
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 8px 0;
+  user-select: none;
+  font-family: Monospace;
+  font-size: 20px;
+}
+
+div#display {
+  user-select: none;
+  font-family: "MyWebFont";
+  font-size: 120px;
+  display: block;
+  height: 136px;
+  width: 164px;
+  margin: 12px;
+  padding: 4px;
+  line-height: 120px;
+}
