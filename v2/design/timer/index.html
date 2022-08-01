@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+  <!-- This page uses the Minisystem Regular font by
+    -- Raymond Larabie.  I downloaded it from
+    -- https://www.1001fonts.com/minisystem-font.html
+    -- where it was presented as being free for personal
+    -- and commercial use, governed under these terms:
+    -- https://www.1001fonts.com/licenses/general-font-usage-terms.html -->    
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" type="text/css" href="../../../css/index.css"/>
+    <link rel="stylesheet" href="timer.css"/>
+    <title>Timer Mock-up</title>
+    <meta charset="utf-8"/>
+    <meta name="description" content="Mockup for a timer device I wanted to buy."/>
+    <script src="timer.js"></script>
+  </head>
+  <body class="content">
+    <title>Bathroom Sink Timer Mock-up</title>
+
+    <section id="00_Intro">
+
+      <p>
+        I was looking for a device with two LCD digits
+        that could count down 20, 30 and 60 seconds.  20
+        seconds is for hand-washing.  30 seconds is for
+        brushing teeth (you're supposed to spend 30
+        seconds on each top/outside, top/inside,
+        bottom/outside and bottom/inside.)  60 seconds is
+        how long I'm supposed to swish my fluoride rinse.
+      </p>
+
+      <p>
+        The idea is simple, you press one of the buttons
+        and a 20, 30 or 60 second timer starts and an LED
+        illuminates, making the LCD background green.
+        When the timer gets to 5 seconds, it turns
+        yellow.  When it gets to 0 seconds, the
+        background turns red and it beeps for 2 seconds.
+        After those two seconds complete, the background
+        LED is turned off and the beeping stops.
+      </p>
+
+      <p>
+        There's a three-way switch with positions: beep,
+        custom and silent.  When it's in the "beep"
+        position, it will beep when the timer expires.
+        When it's in the "silent" position, it will not
+        beep.  The "custom" position is reserved for
+        future use, but for now, it does the same thing
+        as the "beep" position.
+      </p>
+
+      <p>
+        There's also a "SILENCE" button you can press if
+        you forgot to flip it over into "silent" mode and
+        don't want to listen to it beep.
+      </p>
+
+    </section>
+
+    <section>
+      <p>
+        Here, try it yourself.  I was originally thinking
+        a thumbwheel on the side for the silent / custom
+        / beep selector, but implemented it as radio
+        buttons here.
+      </p>
+
+      <div id="container">
+        <div class="inviz" id="timer">
+          <div class="idle" id="display">00</div>
+          <div id="button_silence">SILENCE!</div>
+          <div id="button_60">60</div>
+          <div id="button_30">30</div>
+          <div id="button_20">20</div>
+          <div class="unselected" id="button_beep">BEEP</div>
+          <div class="unselected" id="button_custom">CUSTOM</div>
+          <div class="unselected" id="button_silent">SILENT</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="footer"><p>
+      This page was last updated on July 31, 2022. This
+      page is a part of the
+      <a href="../index.html">Design Section</a>,
+      which is part of
+      <a href="../../../index.html">Meadhbh Hamrick's Web
+        Site</a>.      
+    </p></section>
+
+  </body>
+</html>
