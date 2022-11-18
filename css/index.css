@@ -31,7 +31,7 @@ pre {
 }
 
 @media screen {
-  title, h2, p, ol, ul, hr, dl, pre, table {
+  title, h2, p, ol, ul, hr, dl, pre, table, blockquote {
     margin-left: auto;
     margin-right: auto;
     width: 66%;
