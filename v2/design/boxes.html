@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" type="text/css" href="../../css/index.css"/>
+    <title>6-Bit Color</title>
+    <meta charset="utf-8"/>
+    <meta name="description" content="Color Boxes and sample images for 6-bit Graphics Hardware"/>
+    <style>
+      
+      figure {
+        margin-left: auto;
+        margin-right: auto;
+        width: 66%;
+        min-width: 8cm;
+        max-width: 12.5cm;
+      }
+
+      figure > img {
+        width: 100%;
+      }
+
+      div#boxen {
+        margin-left: auto;
+        margin-right: auto;
+        width: 66%;
+        min-width: 8cm;
+        max-width: 12.5cm;
+        background-color: black;
+        position: relative;
+        top: 0px;
+        left: 0px;
+        width: 468px;
+        height: 468px;
+      }
+
+      div#boxen > div {
+        position: absolute;
+        background-color: #7F7F7F;
+        border: white solid 1px;
+        height: 45px;
+        width: 45px;
+      }
+    </style>
+    <script>
+     function _pad( input ) {
+         return ( "0" + input ).substr( -2 );
+     }
+     
+     window.addEventListener( "DOMContentLoaded", () => {
+         let _in_boxen = "";
+
+         for( var i = 0; i < 64; i++ ) {
+             let x = 12 + ( ( i % 8 ) * 57);
+             let y = 12 + ( Math.floor( i / 8 ) * 57 );
+             let r = _pad( Number( ( 0x03 & i ) * 85 ).toString( 16 ) );
+             let g = _pad( Number( ( 0x03 & ( i >> 2 ) ) * 85 ).toString( 16 ) );
+             let b = _pad( Number( ( 0x03 & ( i >> 4 ) ) * 85 ).toString( 16 ) );
+             
+             _in_boxen += `<div style="left:${x}px;top:${y}px;background-color:#${r}${g}${b};">&nbsp;</div>`;
+         }
+
+         let boxen =  document.getElementById( "boxen" );
+
+         boxen.innerHTML = _in_boxen;
+     } );
+    </script>
+  </head>
+  <body class="content">
+    <title>6-Bit Color</title>
+
+    <a name="00_Intro"></a>
+    <section id="00_Intro">
+      
+      <p>
+
+        In my copious spare time I like to design electronic
+        circuits.  I am by no means an expert, but I know
+        enough to be dangerous.  Inspired by Ben Eater's "Let's
+        build a video card!" page [<a href="#REF_1">1</a>], I
+        started thinking about a video circuit for a 6-bit
+        controller so it could drive a small touch-screen
+        display.
+        
+      </p>
+
+      <p>
+
+        As part of that design process I came up with a very
+        simple 6-bit color model.  It sort of reminds me of the
+        good 'ol 8-bit days when the 16 colors of the Commodore
+        64 and TI-99/4(a) were considered amazing.
+
+      </p>
+
+      <p>
+
+        The block below shows the different colors as a grid.
+        And then there are a couple of pictures which have
+        been modified to use that palette.
+
+      </p>
+
+      <div id="boxen">
+        <div>&nbsp;</div>
+      </div>
+
+      <p>
+
+        And here are the pictures.  They're not horrible when
+        you consider the target for these images is a process
+        controller that uses a touch-screen for a simple user
+        interface and the 6-bit color scheme is extremely
+        näive.
+
+      </p>
+
+      <figure>
+        <img src="img/NARA-EPA-001.gif"/>
+        <figcaption><a href="https://commons.wikimedia.org/wiki/File:YOUNG_MAN_PICKS_LEAVES_FROM_HIS_GIRL%27S_HAIR_AFTER_THEY_HAD_EMBRACED_ON_THE_BANKS_OF_THE_FRIO_CANYON_RIVER_NEAR..._-_NARA_-_554902.jpg">Young man picks leaves from his girl's hair after they had embraced on the banks of the Frio Canyon River Near...</a>
+        (By Marc St. Gil, released into the Public Domain)</figcaption>
+      </figure>
+
+      <figure>
+        <img src="img/NARA-EPA-002.gif"/>
+        <figcaption><a href="https://commons.wikimedia.org/wiki/File:Well_dressed_couple,_Michigan_Avenue,_Chicago,_July_1975.jpg">Well dressed couple, Michigan Avenue, Chicago, July 1975</a>
+        (By Perry Riddle, released into the Public Domain)</figcaption>
+      </figure>
+      
+    </section>
+    
+    <section id="XX_References">
+      
+      <h2>References</h2>
+
+      <ol>
+        <a name="REF_1"></a>
+        <li>Ben Eater's "Let's build a video card!" page,
+          <a href="https://eater.net/vga">https://eater.net/vga</a></li>
+      </ol>
+      
+    </section>
+    
+    <section id="footer"><p>
+      This page was last updated on May 14, 2023. This
+      page is a part of the <a href="index.html">Design
+      Section</a>, which is part of
+      <a href="../../index.html">Meadhbh Hamrick's Web
+        Site</a>.      
+    </p></section>
+  </body>
+</html>
